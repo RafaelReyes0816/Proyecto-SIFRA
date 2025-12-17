@@ -249,10 +249,6 @@
       "PackagePath": "staticwebassets/lib/jquery/dist/jquery.min.map"
     },
     {
-      "Id": "/home/rafaelreyes/Documentos/Proyectos web/Tienda-Repuestos-Demo/wwwroot/uploads/ci/cliente_20251216224844_5v002o0mk1701.jpg",
-      "PackagePath": "staticwebassets/uploads/ci/cliente_20251216224844_5v002o0mk1701.jpg"
-    },
-    {
       "Id": "obj/Debug/net8.0/staticwebassets/msbuild.Tienda-Repuestos-Demo.Microsoft.AspNetCore.StaticWebAssets.props",
       "PackagePath": "build\\Microsoft.AspNetCore.StaticWebAssets.props"
     },

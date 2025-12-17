@@ -1,6 +1,6 @@
 {
   "Version": 1,
-  "Hash": "2+WUWTPZcKXn7NbBYDN0yli550ebCY7xpB0GLQGVG9w=",
+  "Hash": "6hqfBD/K18HwMAghgFhvLpO/r/kI/9JuCJsuOFofJK0=",
   "Source": "Tienda-Repuestos-Demo",
   "BasePath": "_content/Tienda-Repuestos-Demo",
   "Mode": "Default",
@@ -1212,25 +1212,6 @@
       "CopyToOutputDirectory": "Never",
       "CopyToPublishDirectory": "PreserveNewest",
       "OriginalItemSpec": "wwwroot/lib/jquery/LICENSE.txt"
-    },
-    {
-      "Identity": "/home/rafaelreyes/Documentos/Proyectos web/Tienda-Repuestos-Demo/wwwroot/uploads/ci/cliente_20251216224844_5v002o0mk1701.jpg",
-      "SourceId": "Tienda-Repuestos-Demo",
-      "SourceType": "Discovered",
-      "ContentRoot": "/home/rafaelreyes/Documentos/Proyectos web/Tienda-Repuestos-Demo/wwwroot/",
-      "BasePath": "_content/Tienda-Repuestos-Demo",
-      "RelativePath": "uploads/ci/cliente_20251216224844_5v002o0mk1701.jpg",
-      "AssetKind": "All",
-      "AssetMode": "All",
-      "AssetRole": "Primary",
-      "AssetMergeBehavior": "PreferTarget",
-      "AssetMergeSource": "",
-      "RelatedAsset": "",
-      "AssetTraitName": "",
-      "AssetTraitValue": "",
-      "CopyToOutputDirectory": "Never",
-      "CopyToPublishDirectory": "PreserveNewest",
-      "OriginalItemSpec": "wwwroot/uploads/ci/cliente_20251216224844_5v002o0mk1701.jpg"
     }
   ]
 }
