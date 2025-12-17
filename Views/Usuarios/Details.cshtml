@@ -1,0 +1,83 @@
+@model Tienda_Repuestos_Demo.Models.Usuario
+
+@{
+    ViewData["Title"] = "Detalles del Usuario";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="container-fluid">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <div>
+            <h2 class="mb-1" style="color: var(--text-dark); font-weight: 700;">👤 Detalles del Usuario</h2>
+            <p class="text-muted mb-0">Información completa del usuario</p>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-6">
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="mb-0">📋 Información Personal</h5>
+                </div>
+                <div class="card-body">
+                    <dl class="row">
+                        <dt class="col-sm-4" style="color: var(--text-medium);">👤 Nombre:</dt>
+                        <dd class="col-sm-8"><strong>@Model.Nombre</strong></dd>
+
+                        <dt class="col-sm-4" style="color: var(--text-medium);">📧 Correo:</dt>
+                        <dd class="col-sm-8">@Model.Correo</dd>
+
+                        <dt class="col-sm-4" style="color: var(--text-medium);">🎭 Rol:</dt>
+                        <dd class="col-sm-8">
+                            @if (Model.Rol == "admin")
+                            {
+                                <span class="badge bg-danger">👨‍💼 Admin</span>
+                            }
+                            else
+                            {
+                                <span class="badge bg-info">👤 Vendedor</span>
+                            }
+                        </dd>
+
+                        <dt class="col-sm-4" style="color: var(--text-medium);">✅ Estado:</dt>
+                        <dd class="col-sm-8">
+                            @if (Model.Activo)
+                            {
+                                <span class="badge bg-success">✓ Activo</span>
+                            }
+                            else
+                            {
+                                <span class="badge bg-secondary">✗ Inactivo</span>
+                            }
+                        </dd>
+
+                        <dt class="col-sm-4" style="color: var(--text-medium);">📅 Fecha Registro:</dt>
+                        <dd class="col-sm-8">@Model.FechaRegistro.ToString("dd/MM/yyyy HH:mm")</dd>
+                    </dl>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="mb-0">📊 Estadísticas</h5>
+                </div>
+                <div class="card-body">
+                    <dl class="row">
+                        <dt class="col-sm-6" style="color: var(--text-medium);">💰 Total Ventas:</dt>
+                        <dd class="col-sm-6">
+                            <span class="badge bg-primary" style="font-size: 1rem;">
+                                @Model.Ventas.Count ventas
+                            </span>
+                        </dd>
+                    </dl>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="mt-3">
+        <a asp-action="Index" class="btn btn-secondary">↩️ Volver a la Lista</a>
+        <a asp-action="Edit" asp-route-id="@Model.IdUsuario" class="btn btn-warning">✏️ Editar</a>
+    </div>
+</div>

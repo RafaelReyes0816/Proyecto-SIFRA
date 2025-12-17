@@ -26,6 +26,13 @@ namespace Tienda_Repuestos_Demo.Controllers
                 return RedirectToAction("Login", "Account");
             }
 
+            var productosBajoStock = await _context.Productos
+                .Include(p => p.Categoria)
+                .Include(p => p.Proveedor)
+                .Where(p => p.Stock <= p.StockMinimo)
+                .OrderBy(p => p.Stock)
+                .ToListAsync();
+
             var estadisticas = new
             {
                 TotalUsuarios = await _context.Usuarios.CountAsync(),
@@ -35,15 +42,14 @@ namespace Tienda_Repuestos_Demo.Controllers
                 VentasHoy = await _context.Ventas
                     .Where(v => v.Fecha.Date == DateTime.Today)
                     .CountAsync(),
-                ProductosBajoStock = await _context.Productos
-                    .Where(p => p.Stock <= p.StockMinimo)
-                    .CountAsync(),
+                ProductosBajoStock = productosBajoStock.Count,
                 TotalIngresos = await _context.Ventas
                     .Where(v => v.Estado == "confirmada")
                     .SumAsync(v => v.Total)
             };
 
             ViewBag.Estadisticas = estadisticas;
+            ViewBag.ProductosBajoStock = productosBajoStock;
             return View();
         }
     }

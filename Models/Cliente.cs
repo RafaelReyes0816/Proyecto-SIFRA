@@ -28,6 +28,10 @@ namespace Tienda_Repuestos_Demo.Models
 
         public string? Direccion { get; set; }
 
+        [MaxLength(255)]
+        [Column("foto_ci")]
+        public string? FotoCI { get; set; }
+
         public bool Verificado { get; set; } = false;
 
         [Column("fecha_registro")]

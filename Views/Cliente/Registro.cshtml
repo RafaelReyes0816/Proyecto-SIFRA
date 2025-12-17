@@ -21,7 +21,7 @@
                         </div>
                     }
 
-                    <form asp-action="Registro" method="post">
+                    <form asp-action="Registro" method="post" enctype="multipart/form-data">
                         <div asp-validation-summary="ModelOnly" class="text-danger"></div>
                         
                         <div class="mb-3">
@@ -48,10 +48,19 @@
                             <span asp-validation-for="Telefono" class="text-danger"></span>
                         </div>
 
-                        <div class="mb-4">
+                        <div class="mb-3">
                             <label asp-for="Direccion" class="form-label">📍 Dirección (Opcional)</label>
                             <textarea asp-for="Direccion" class="form-control" rows="3" placeholder="Tu dirección completa"></textarea>
                             <span asp-validation-for="Direccion" class="text-danger"></span>
+                        </div>
+
+                        <div class="mb-4">
+                            <label for="fotoCI" class="form-label">🆔 Foto de Cédula de Identidad (Opcional)</label>
+                            <input type="file" class="form-control" id="fotoCI" name="fotoCI" accept="image/*" />
+                            <small class="text-muted">
+                                Formatos permitidos: JPG, PNG, GIF. Tamaño máximo: 5MB<br>
+                                <strong class="text-success">✅ Si subes tu CI, tu cuenta será verificada automáticamente</strong>
+                            </small>
                         </div>
 
                         <div class="d-grid mb-3">

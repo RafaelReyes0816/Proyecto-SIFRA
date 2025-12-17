@@ -28,11 +28,10 @@
                     <h5 class="mb-0">📝 Editar Información</h5>
                 </div>
                 <div class="card-body">
-                    <form asp-action="Perfil" method="post">
+                    <form asp-action="Perfil" method="post" enctype="multipart/form-data">
                         <div asp-validation-summary="ModelOnly" class="text-danger"></div>
                         <input type="hidden" asp-for="IdCliente" />
                         <input type="hidden" asp-for="FechaRegistro" />
-                        <input type="hidden" asp-for="Verificado" />
                         
                         <div class="mb-3">
                             <label asp-for="Nombre" class="form-label">👤 Nombre Completo</label>
@@ -59,21 +58,35 @@
                         </div>
 
                         <div class="mb-3">
-                            <div class="form-check">
-                                <input asp-for="Verificado" class="form-check-input" type="checkbox" disabled />
-                                <label asp-for="Verificado" class="form-check-label">
-                                    Cliente Verificado
-                                    @if (Model.Verificado)
-                                    {
-                                        <span class="badge bg-success ms-2">✓ Verificado</span>
-                                    }
-                                    else
-                                    {
-                                        <span class="badge bg-warning ms-2">Pendiente</span>
-                                    }
-                                </label>
+                            <label for="fotoCI" class="form-label">🆔 Foto de Cédula de Identidad</label>
+                            @if (!string.IsNullOrEmpty(Model.FotoCI))
+                            {
+                                <div class="mb-2">
+                                    <img src="@Model.FotoCI" alt="Foto CI" class="img-thumbnail" style="max-width: 200px; max-height: 200px;" />
+                                    <p class="text-muted small mb-0">Foto actual</p>
+                                </div>
+                            }
+                            <input type="file" class="form-control" id="fotoCI" name="fotoCI" accept="image/*" />
+                            <small class="text-muted">
+                                Formatos permitidos: JPG, PNG, GIF. Tamaño máximo: 5MB. Dejar vacío para mantener la foto actual.<br>
+                                <strong class="text-success">✅ Si subes un CI nuevo, tu cuenta será verificada automáticamente</strong>
+                            </small>
+                        </div>
+
+                        <div class="mb-3">
+                            <div class="alert alert-info">
+                                <strong>📋 Estado de Verificación:</strong>
+                                @if (Model.Verificado)
+                                {
+                                    <span class="badge bg-success ms-2">✓ Verificado</span>
+                                    <p class="mb-0 mt-2 small">Tu cuenta está verificada. Puedes realizar compras sin restricciones.</p>
+                                }
+                                else
+                                {
+                                    <span class="badge bg-warning ms-2">Pendiente</span>
+                                    <p class="mb-0 mt-2 small">Sube una foto de tu CI para verificar tu cuenta automáticamente.</p>
+                                }
                             </div>
-                            <small class="text-muted">El estado de verificación es gestionado por el administrador</small>
                         </div>
 
                         <div class="mb-3">

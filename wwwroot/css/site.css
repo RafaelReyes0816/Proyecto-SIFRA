@@ -238,6 +238,14 @@ body {
     background-color: rgba(255, 167, 38, 0.15) !important;
 }
 
+.table-danger {
+    background-color: rgba(220, 53, 69, 0.15) !important;
+}
+
+.border-warning {
+    border-color: var(--warning-color) !important;
+}
+
 /* ============================================
    Formularios Mejorados
    ============================================ */

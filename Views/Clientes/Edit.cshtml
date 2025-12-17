@@ -12,11 +12,21 @@
     </div>
 </div>
 
+@if (ViewBag.Error != null)
+{
+    <div class="alert alert-danger alert-dismissible fade show" role="alert">
+        <strong>⚠️ Error:</strong> @ViewBag.Error
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+}
+
 <div class="row">
     <div class="col-md-6">
-        <form asp-action="Edit">
-            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+        <form asp-action="Edit" method="post" id="editForm">
+            @Html.AntiForgeryToken()
+            <div asp-validation-summary="All" class="alert alert-danger" role="alert" style="display: none;"></div>
             <input type="hidden" asp-for="IdCliente" />
+            <input type="hidden" asp-for="FechaRegistro" />
             
             <div class="mb-3">
                 <label asp-for="Nombre" class="form-label"></label>
@@ -25,13 +35,19 @@
             </div>
 
             <div class="mb-3">
-                <label asp-for="Correo" class="form-label"></label>
+                <label asp-for="Correo" class="form-label">📧 Correo Electrónico</label>
                 <input asp-for="Correo" type="email" class="form-control" required />
                 <span asp-validation-for="Correo" class="text-danger"></span>
             </div>
 
             <div class="mb-3">
-                <label asp-for="Telefono" class="form-label"></label>
+                <label for="contraseña" class="form-label">🔒 Contraseña</label>
+                <input type="password" class="form-control" id="contraseña" name="contraseña" placeholder="Dejar vacío para mantener la actual" />
+                <small class="text-muted">Dejar vacío para mantener la contraseña actual. Ingresar nueva contraseña solo si desea cambiarla.</small>
+            </div>
+
+            <div class="mb-3">
+                <label asp-for="Telefono" class="form-label">📞 Teléfono</label>
                 <input asp-for="Telefono" class="form-control" />
                 <span asp-validation-for="Telefono" class="text-danger"></span>
             </div>
@@ -44,9 +60,11 @@
 
             <div class="mb-3">
                 <div class="form-check">
-                    <input asp-for="Verificado" class="form-check-input" type="checkbox" />
-                    <label asp-for="Verificado" class="form-check-label">Cliente Verificado</label>
+                    <input type="hidden" name="Verificado" value="false" />
+                    <input type="checkbox" name="Verificado" value="true" class="form-check-input" @(Model.Verificado ? "checked" : "") id="Verificado" />
+                    <label class="form-check-label" for="Verificado">Cliente Verificado</label>
                 </div>
+                <small class="text-muted">Marca esta casilla para verificar al cliente manualmente</small>
             </div>
 
             <div class="mb-3">
@@ -59,4 +77,19 @@
 
 @section Scripts {
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    <script>
+        // Mostrar errores de validación si existen
+        $(document).ready(function() {
+            var validationSummary = $('.alert-danger');
+            if (validationSummary.find('li').length > 0 || validationSummary.text().trim() !== '') {
+                validationSummary.show();
+            }
+        });
+
+        // Prevenir envío doble del formulario
+        $('#editForm').on('submit', function() {
+            var $submitBtn = $(this).find('button[type="submit"]');
+            $submitBtn.prop('disabled', true).text('Guardando...');
+        });
+    </script>
 }

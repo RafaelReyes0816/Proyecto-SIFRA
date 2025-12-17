@@ -1,0 +1,68 @@
+@model Tienda_Repuestos_Demo.Models.Usuario
+
+@{
+    ViewData["Title"] = "Editar Usuario";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <div>
+        <h2 class="mb-1" style="color: var(--text-dark); font-weight: 700;">✏️ Editar Usuario</h2>
+        <p class="text-muted mb-0">Modifica la información del usuario</p>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-6">
+        <div class="card">
+            <div class="card-body">
+                <form asp-action="Edit">
+                    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                    <input type="hidden" asp-for="IdUsuario" />
+                    <input type="hidden" asp-for="FechaRegistro" />
+                    
+                    <div class="mb-3">
+                        <label asp-for="Nombre" class="form-label">👤 Nombre Completo</label>
+                        <input asp-for="Nombre" class="form-control" required />
+                        <span asp-validation-for="Nombre" class="text-danger"></span>
+                    </div>
+
+                    <div class="mb-3">
+                        <label asp-for="Correo" class="form-label">📧 Correo Electrónico</label>
+                        <input asp-for="Correo" type="email" class="form-control" required />
+                        <span asp-validation-for="Correo" class="text-danger"></span>
+                    </div>
+
+                    <div class="mb-3">
+                        <label asp-for="Contraseña" class="form-label">🔒 Contraseña</label>
+                        <input asp-for="Contraseña" type="password" class="form-control" required />
+                        <span asp-validation-for="Contraseña" class="text-danger"></span>
+                        <small class="text-muted">Ingresa la nueva contraseña o deja la actual</small>
+                    </div>
+
+                    <div class="mb-3">
+                        <label asp-for="Rol" class="form-label">🎭 Rol</label>
+                        <select asp-for="Rol" class="form-select" asp-items="ViewBag.Roles" required></select>
+                        <span asp-validation-for="Rol" class="text-danger"></span>
+                    </div>
+
+                    <div class="mb-3">
+                        <div class="form-check">
+                            <input asp-for="Activo" class="form-check-input" type="checkbox" />
+                            <label asp-for="Activo" class="form-check-label">Usuario Activo</label>
+                        </div>
+                    </div>
+
+                    <div class="mb-3">
+                        <button type="submit" class="btn btn-primary">💾 Guardar Cambios</button>
+                        <a asp-action="Index" class="btn btn-secondary">↩️ Cancelar</a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

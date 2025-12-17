@@ -1,7 +1,3 @@
--- Script de base de datos para Tienda de Repuestos
--- Base de datos: sifra_db
--- Motor: MySQL
-
 -- Crear base de datos
 CREATE DATABASE IF NOT EXISTS sifra_db CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 USE sifra_db;
@@ -25,6 +21,7 @@ CREATE TABLE clientes (
     contraseña VARCHAR(255) NOT NULL,
     telefono VARCHAR(20),
     direccion TEXT,
+    foto_ci VARCHAR(255),
     verificado BOOLEAN DEFAULT FALSE,
     fecha_registro DATETIME DEFAULT CURRENT_TIMESTAMP
 );

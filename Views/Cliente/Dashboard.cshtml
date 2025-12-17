@@ -115,6 +115,18 @@
                         <dt style="color: var(--text-medium);">📍 Dirección:</dt>
                         <dd>@(cliente?.Direccion ?? "No registrada")</dd>
                         
+                        <dt style="color: var(--text-medium);">🆔 Foto CI:</dt>
+                        <dd>
+                            @if (!string.IsNullOrEmpty(cliente?.FotoCI))
+                            {
+                                <a href="@cliente.FotoCI" target="_blank" class="btn btn-sm btn-info">Ver Foto CI</a>
+                            }
+                            else
+                            {
+                                <span class="text-muted">No subida</span>
+                            }
+                        </dd>
+                        
                         <dt style="color: var(--text-medium);">✅ Estado:</dt>
                         <dd>
                             @if (cliente?.Verificado == true)

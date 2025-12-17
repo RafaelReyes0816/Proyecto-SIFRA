@@ -1,0 +1,72 @@
+@model IEnumerable<Tienda_Repuestos_Demo.Models.Usuario>
+
+@{
+    ViewData["Title"] = "Gestión de Usuarios";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="container-fluid">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <div>
+            <h2 class="mb-1" style="color: var(--text-dark); font-weight: 700;">👥 Gestión de Usuarios</h2>
+            <p class="text-muted mb-0">Administra los usuarios del sistema (admin y vendedor)</p>
+        </div>
+        <a asp-action="Create" class="btn btn-primary">
+            ➕ Nuevo Usuario
+        </a>
+    </div>
+
+    <div class="card">
+        <div class="card-body">
+            <table class="table table-striped table-hover">
+                <thead>
+                    <tr>
+                        <th>Nombre</th>
+                        <th>Correo</th>
+                        <th>Rol</th>
+                        <th>Estado</th>
+                        <th>Fecha Registro</th>
+                        <th>Acciones</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model)
+                    {
+                        <tr>
+                            <td>@item.Nombre</td>
+                            <td>@item.Correo</td>
+                            <td>
+                                @if (item.Rol == "admin")
+                                {
+                                    <span class="badge bg-danger">👨‍💼 Admin</span>
+                                }
+                                else
+                                {
+                                    <span class="badge bg-info">👤 Vendedor</span>
+                                }
+                            </td>
+                            <td>
+                                @if (item.Activo)
+                                {
+                                    <span class="badge bg-success">✓ Activo</span>
+                                }
+                                else
+                                {
+                                    <span class="badge bg-secondary">✗ Inactivo</span>
+                                }
+                            </td>
+                            <td>@item.FechaRegistro.ToString("dd/MM/yyyy")</td>
+                            <td>
+                                <div class="btn-group" role="group">
+                                    <a asp-action="Details" asp-route-id="@item.IdUsuario" class="btn btn-sm btn-info">👁️ Ver</a>
+                                    <a asp-action="Edit" asp-route-id="@item.IdUsuario" class="btn btn-sm btn-warning">✏️ Editar</a>
+                                    <a asp-action="Delete" asp-route-id="@item.IdUsuario" class="btn btn-sm btn-danger">🗑️ Eliminar</a>
+                                </div>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>

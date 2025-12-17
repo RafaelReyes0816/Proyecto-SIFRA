@@ -73,7 +73,7 @@ namespace Tienda_Repuestos_Demo.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Registro([Bind("Nombre,Correo,Contraseña,Telefono,Direccion")] Cliente cliente)
+        public async Task<IActionResult> Registro([Bind("Nombre,Correo,Contraseña,Telefono,Direccion")] Cliente cliente, IFormFile? fotoCI)
         {
             if (ModelState.IsValid)
             {
@@ -87,7 +87,39 @@ namespace Tienda_Repuestos_Demo.Controllers
                     return View(cliente);
                 }
 
-                cliente.Verificado = false;
+                // Procesar foto del CI si se subió
+                if (fotoCI != null && fotoCI.Length > 0)
+                {
+                    var uploadsFolder = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "uploads", "ci");
+                    
+                    // Crear directorio si no existe
+                    if (!Directory.Exists(uploadsFolder))
+                    {
+                        Directory.CreateDirectory(uploadsFolder);
+                    }
+
+                    // Generar nombre único para el archivo
+                    var fileName = $"cliente_{DateTime.Now:yyyyMMddHHmmss}_{Path.GetFileName(fotoCI.FileName)}";
+                    var filePath = Path.Combine(uploadsFolder, fileName);
+
+                    // Guardar archivo
+                    using (var stream = new FileStream(filePath, FileMode.Create))
+                    {
+                        await fotoCI.CopyToAsync(stream);
+                    }
+
+                    // Guardar ruta relativa en la base de datos
+                    cliente.FotoCI = $"/uploads/ci/{fileName}";
+                    
+                    // Si subió el CI, se marca como verificado automáticamente
+                    cliente.Verificado = true;
+                }
+                else
+                {
+                    // Si no subió CI, queda sin verificar
+                    cliente.Verificado = false;
+                }
+
                 cliente.FechaRegistro = DateTime.Now;
 
                 _context.Add(cliente);
@@ -145,7 +177,7 @@ namespace Tienda_Repuestos_Demo.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Perfil(int id, [Bind("IdCliente,Nombre,Correo,Telefono,Direccion,Verificado,FechaRegistro")] Cliente cliente)
+        public async Task<IActionResult> Perfil(int id, [Bind("IdCliente,Nombre,Correo,Telefono,Direccion,FechaRegistro")] Cliente cliente, IFormFile? fotoCI)
         {
             if (id != cliente.IdCliente)
             {
@@ -156,11 +188,56 @@ namespace Tienda_Repuestos_Demo.Controllers
             {
                 try
                 {
-                    // Mantener la contraseña actual si no se cambia
+                    // Obtener el cliente actual de la base de datos
                     var clienteActual = await _context.Clientes.FindAsync(id);
-                    if (clienteActual != null)
+                    if (clienteActual == null)
                     {
-                        cliente.Contraseña = clienteActual.Contraseña;
+                        return NotFound();
+                    }
+
+                    // Mantener la contraseña actual
+                    cliente.Contraseña = clienteActual.Contraseña;
+                    
+                    // Preservar el estado de verificación actual por defecto
+                    cliente.Verificado = clienteActual.Verificado;
+                    cliente.FotoCI = clienteActual.FotoCI; // Mantener foto actual por defecto
+
+                    // Procesar nueva foto del CI si se subió
+                    if (fotoCI != null && fotoCI.Length > 0)
+                    {
+                        var uploadsFolder = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "uploads", "ci");
+                        
+                        // Crear directorio si no existe
+                        if (!Directory.Exists(uploadsFolder))
+                        {
+                            Directory.CreateDirectory(uploadsFolder);
+                        }
+
+                        // Eliminar foto anterior si existe
+                        if (!string.IsNullOrEmpty(clienteActual.FotoCI))
+                        {
+                            var oldFilePath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", clienteActual.FotoCI.TrimStart('/'));
+                            if (System.IO.File.Exists(oldFilePath))
+                            {
+                                System.IO.File.Delete(oldFilePath);
+                            }
+                        }
+
+                        // Generar nombre único para el archivo
+                        var fileName = $"cliente_{id}_{DateTime.Now:yyyyMMddHHmmss}_{Path.GetFileName(fotoCI.FileName)}";
+                        var filePath = Path.Combine(uploadsFolder, fileName);
+
+                        // Guardar archivo
+                        using (var stream = new FileStream(filePath, FileMode.Create))
+                        {
+                            await fotoCI.CopyToAsync(stream);
+                        }
+
+                        // Guardar ruta relativa en la base de datos
+                        cliente.FotoCI = $"/uploads/ci/{fileName}";
+                        
+                        // Si subió un CI nuevo, se marca como verificado automáticamente
+                        cliente.Verificado = true;
                     }
 
                     _context.Update(cliente);

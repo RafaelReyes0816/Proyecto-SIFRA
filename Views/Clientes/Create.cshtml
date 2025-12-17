@@ -24,13 +24,19 @@
             </div>
 
             <div class="mb-3">
-                <label asp-for="Correo" class="form-label"></label>
+                <label asp-for="Correo" class="form-label">📧 Correo Electrónico</label>
                 <input asp-for="Correo" type="email" class="form-control" required />
                 <span asp-validation-for="Correo" class="text-danger"></span>
             </div>
 
             <div class="mb-3">
-                <label asp-for="Telefono" class="form-label"></label>
+                <label for="contraseña" class="form-label">🔒 Contraseña</label>
+                <input type="password" class="form-control" id="contraseña" name="contraseña" placeholder="Dejar vacío para generar contraseña temporal" />
+                <small class="text-muted">Si se deja vacío, se asignará una contraseña temporal: Cliente123!</small>
+            </div>
+
+            <div class="mb-3">
+                <label asp-for="Telefono" class="form-label">📞 Teléfono</label>
                 <input asp-for="Telefono" class="form-control" />
                 <span asp-validation-for="Telefono" class="text-danger"></span>
             </div>

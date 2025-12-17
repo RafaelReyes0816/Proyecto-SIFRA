@@ -1,0 +1,56 @@
+@model Tienda_Repuestos_Demo.Models.Usuario
+
+@{
+    ViewData["Title"] = "Eliminar Usuario";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="container-fluid">
+    <h2 class="mb-4">🗑️ Eliminar Usuario</h2>
+
+    <div class="alert alert-warning" role="alert">
+        <strong>⚠️ Advertencia:</strong> ¿Está seguro que desea eliminar este usuario? Esta acción no se puede deshacer.
+    </div>
+
+    <div class="card">
+        <div class="card-body">
+            <dl class="row">
+                <dt class="col-sm-3">Nombre:</dt>
+                <dd class="col-sm-9">@Model.Nombre</dd>
+
+                <dt class="col-sm-3">Correo:</dt>
+                <dd class="col-sm-9">@Model.Correo</dd>
+
+                <dt class="col-sm-3">Rol:</dt>
+                <dd class="col-sm-9">
+                    @if (Model.Rol == "admin")
+                    {
+                        <span class="badge bg-danger">👨‍💼 Admin</span>
+                    }
+                    else
+                    {
+                        <span class="badge bg-info">👤 Vendedor</span>
+                    }
+                </dd>
+
+                <dt class="col-sm-3">Estado:</dt>
+                <dd class="col-sm-9">
+                    @if (Model.Activo)
+                    {
+                        <span class="badge bg-success">✓ Activo</span>
+                    }
+                    else
+                    {
+                        <span class="badge bg-secondary">✗ Inactivo</span>
+                    }
+                </dd>
+            </dl>
+
+            <form asp-action="Delete" method="post" class="mt-3">
+                <input type="hidden" asp-for="IdUsuario" />
+                <button type="submit" class="btn btn-danger">🗑️ Eliminar</button>
+                <a asp-action="Index" class="btn btn-secondary">↩️ Cancelar</a>
+            </form>
+        </div>
+    </div>
+</div>
