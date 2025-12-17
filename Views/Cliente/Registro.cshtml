@@ -1,0 +1,79 @@
+@model Tienda_Repuestos_Demo.Models.Cliente
+
+@{
+    ViewData["Title"] = "Registro de Cliente";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="container">
+    <div class="row justify-content-center">
+        <div class="col-md-6">
+            <div class="card shadow-lg">
+                <div class="card-header">
+                    <h3 class="mb-0 text-center">🛒 Registro de Cliente</h3>
+                    <p class="text-center mb-0" style="opacity: 0.9;">Crea tu cuenta para comenzar a comprar</p>
+                </div>
+                <div class="card-body">
+                    @if (ViewBag.Error != null)
+                    {
+                        <div class="alert alert-danger" role="alert">
+                            <strong>⚠️ Error:</strong> @ViewBag.Error
+                        </div>
+                    }
+
+                    <form asp-action="Registro" method="post">
+                        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                        
+                        <div class="mb-3">
+                            <label asp-for="Nombre" class="form-label">👤 Nombre Completo</label>
+                            <input asp-for="Nombre" class="form-control" required placeholder="Tu nombre completo" />
+                            <span asp-validation-for="Nombre" class="text-danger"></span>
+                        </div>
+
+                        <div class="mb-3">
+                            <label asp-for="Correo" class="form-label">📧 Correo Electrónico</label>
+                            <input asp-for="Correo" type="email" class="form-control" required placeholder="tu@correo.com" />
+                            <span asp-validation-for="Correo" class="text-danger"></span>
+                        </div>
+
+                        <div class="mb-3">
+                            <label asp-for="Contraseña" class="form-label">🔒 Contraseña</label>
+                            <input asp-for="Contraseña" type="password" class="form-control" required placeholder="Mínimo 6 caracteres" minlength="6" />
+                            <span asp-validation-for="Contraseña" class="text-danger"></span>
+                        </div>
+
+                        <div class="mb-3">
+                            <label asp-for="Telefono" class="form-label">📞 Teléfono (Opcional)</label>
+                            <input asp-for="Telefono" class="form-control" placeholder="123-456-7890" />
+                            <span asp-validation-for="Telefono" class="text-danger"></span>
+                        </div>
+
+                        <div class="mb-4">
+                            <label asp-for="Direccion" class="form-label">📍 Dirección (Opcional)</label>
+                            <textarea asp-for="Direccion" class="form-control" rows="3" placeholder="Tu dirección completa"></textarea>
+                            <span asp-validation-for="Direccion" class="text-danger"></span>
+                        </div>
+
+                        <div class="d-grid mb-3">
+                            <button type="submit" class="btn btn-primary btn-lg">
+                                <strong>✅ Crear Cuenta</strong>
+                            </button>
+                        </div>
+                    </form>
+
+                    <hr>
+                    <div class="text-center">
+                        <p class="mb-0" style="color: var(--text-medium);">¿Ya tienes una cuenta?</p>
+                        <a asp-controller="Account" asp-action="Login" class="btn btn-link" style="text-decoration: none; color: var(--primary-color);">
+                            Inicia sesión aquí
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

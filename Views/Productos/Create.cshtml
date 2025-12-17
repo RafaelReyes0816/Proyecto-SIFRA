@@ -1,0 +1,86 @@
+@model Tienda_Repuestos_Demo.Models.Producto
+
+@{
+    ViewData["Title"] = "Crear Producto";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <div>
+        <h2 class="mb-1" style="color: var(--text-dark); font-weight: 700;">➕ Crear Nuevo Producto</h2>
+        <p class="text-muted mb-0">Completa el formulario para agregar un nuevo producto</p>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-6">
+        <form asp-action="Create">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            
+            <div class="mb-3">
+                <label asp-for="Codigo" class="form-label"></label>
+                <input asp-for="Codigo" class="form-control" />
+                <span asp-validation-for="Codigo" class="text-danger"></span>
+            </div>
+
+            <div class="mb-3">
+                <label asp-for="Nombre" class="form-label"></label>
+                <input asp-for="Nombre" class="form-control" required />
+                <span asp-validation-for="Nombre" class="text-danger"></span>
+            </div>
+
+            <div class="mb-3">
+                <label asp-for="Descripcion" class="form-label"></label>
+                <textarea asp-for="Descripcion" class="form-control" rows="3"></textarea>
+                <span asp-validation-for="Descripcion" class="text-danger"></span>
+            </div>
+
+            <div class="mb-3">
+                <label asp-for="IdCategoria" class="form-label">Categoría</label>
+                <select asp-for="IdCategoria" class="form-select" asp-items="ViewBag.IdCategoria" required></select>
+                <span asp-validation-for="IdCategoria" class="text-danger"></span>
+            </div>
+
+            <div class="mb-3">
+                <label asp-for="IdProveedor" class="form-label">Proveedor</label>
+                <select asp-for="IdProveedor" class="form-select" asp-items="ViewBag.IdProveedor" required></select>
+                <span asp-validation-for="IdProveedor" class="text-danger"></span>
+            </div>
+
+            <div class="row">
+                <div class="col-md-6 mb-3">
+                    <label asp-for="PrecioCompra" class="form-label">Precio de Compra</label>
+                    <input asp-for="PrecioCompra" class="form-control" type="number" step="0.01" required />
+                    <span asp-validation-for="PrecioCompra" class="text-danger"></span>
+                </div>
+                <div class="col-md-6 mb-3">
+                    <label asp-for="PrecioVenta" class="form-label">Precio de Venta</label>
+                    <input asp-for="PrecioVenta" class="form-control" type="number" step="0.01" required />
+                    <span asp-validation-for="PrecioVenta" class="text-danger"></span>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-md-6 mb-3">
+                    <label asp-for="Stock" class="form-label"></label>
+                    <input asp-for="Stock" class="form-control" type="number" value="0" />
+                    <span asp-validation-for="Stock" class="text-danger"></span>
+                </div>
+                <div class="col-md-6 mb-3">
+                    <label asp-for="StockMinimo" class="form-label">Stock Mínimo</label>
+                    <input asp-for="StockMinimo" class="form-control" type="number" value="5" />
+                    <span asp-validation-for="StockMinimo" class="text-danger"></span>
+                </div>
+            </div>
+
+            <div class="mb-3">
+                <button type="submit" class="btn btn-primary">Crear</button>
+                <a asp-action="Index" class="btn btn-secondary">Cancelar</a>
+            </div>
+        </form>
+    </div>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

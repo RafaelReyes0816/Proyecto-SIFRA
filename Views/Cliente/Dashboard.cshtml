@@ -1,0 +1,138 @@
+@{
+    ViewData["Title"] = "Mi Cuenta - Cliente";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+@{
+    var stats = ViewBag.Estadisticas as dynamic;
+    var cliente = ViewBag.Cliente as Tienda_Repuestos_Demo.Models.Cliente;
+    var ventasRecientes = ViewBag.VentasRecientes as List<Tienda_Repuestos_Demo.Models.Venta>;
+}
+
+<div class="container-fluid">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <div>
+            <h2 class="mb-1" style="color: var(--text-dark); font-weight: 700;">🛒 Mi Cuenta</h2>
+            <p class="text-muted mb-0">Bienvenido, @cliente?.Nombre</p>
+        </div>
+        <a asp-action="Perfil" class="btn btn-primary">✏️ Editar Perfil</a>
+    </div>
+
+    <div class="row mb-4">
+        <div class="col-md-3 mb-3">
+            <div class="stat-card bg-primary">
+                <h5>🛍️ Total Compras</h5>
+                <h2>@stats?.TotalCompras</h2>
+            </div>
+        </div>
+        <div class="col-md-3 mb-3">
+            <div class="stat-card bg-warning">
+                <h5>⏳ Pendientes</h5>
+                <h2>@stats?.ComprasPendientes</h2>
+            </div>
+        </div>
+        <div class="col-md-3 mb-3">
+            <div class="stat-card bg-success">
+                <h5>✅ Confirmadas</h5>
+                <h2>@stats?.ComprasConfirmadas</h2>
+            </div>
+        </div>
+        <div class="col-md-3 mb-3">
+            <div class="stat-card bg-info">
+                <h5>💵 Total Gastado</h5>
+                <h2>$@(stats?.TotalGastado?.ToString("N2") ?? "0.00")</h2>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-8">
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="mb-0">📋 Mis Compras Recientes</h5>
+                </div>
+                <div class="card-body">
+                    @if (ventasRecientes != null && ventasRecientes.Any())
+                    {
+                        <table class="table table-striped">
+                            <thead>
+                                <tr>
+                                    <th>Fecha</th>
+                                    <th>ID Venta</th>
+                                    <th>Tipo</th>
+                                    <th>Estado</th>
+                                    <th>Total</th>
+                                    <th>Acciones</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var venta in ventasRecientes)
+                                {
+                                    <tr>
+                                        <td>@venta.Fecha.ToString("dd/MM/yyyy HH:mm")</td>
+                                        <td>#@venta.IdVenta</td>
+                                        <td>@venta.TipoVenta</td>
+                                        <td>
+                                            <span class="badge bg-@(venta.Estado == "confirmada" ? "success" : venta.Estado == "pendiente" ? "warning" : "danger")">
+                                                @venta.Estado
+                                            </span>
+                                        </td>
+                                        <td><strong>$@venta.Total.ToString("N2")</strong></td>
+                                        <td>
+                                            <a href="@Url.Action("Details", "Ventas", new { id = venta.IdVenta })" class="btn btn-sm btn-info">👁️ Ver</a>
+                                        </td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                        <div class="text-center mt-3">
+                            <a asp-action="MisCompras" class="btn btn-primary">Ver Todas mis Compras</a>
+                        </div>
+                    }
+                    else
+                    {
+                        <div class="text-center py-5">
+                            <p class="text-muted mb-3">Aún no has realizado ninguna compra</p>
+                            <a asp-controller="Productos" asp-action="Index" class="btn btn-primary">Ver Catálogo</a>
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="mb-0">👤 Información</h5>
+                </div>
+                <div class="card-body">
+                    <dl>
+                        <dt style="color: var(--text-medium);">📧 Correo:</dt>
+                        <dd>@cliente?.Correo</dd>
+                        
+                        <dt style="color: var(--text-medium);">📞 Teléfono:</dt>
+                        <dd>@(cliente?.Telefono ?? "No registrado")</dd>
+                        
+                        <dt style="color: var(--text-medium);">📍 Dirección:</dt>
+                        <dd>@(cliente?.Direccion ?? "No registrada")</dd>
+                        
+                        <dt style="color: var(--text-medium);">✅ Estado:</dt>
+                        <dd>
+                            @if (cliente?.Verificado == true)
+                            {
+                                <span class="badge bg-success">Verificado</span>
+                            }
+                            else
+                            {
+                                <span class="badge bg-warning">No Verificado</span>
+                            }
+                        </dd>
+                    </dl>
+                    <div class="d-grid gap-2 mt-3">
+                        <a asp-action="Perfil" class="btn btn-warning">✏️ Editar Perfil</a>
+                        <a asp-controller="Productos" asp-action="Index" class="btn btn-success">🛒 Ver Catálogo</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

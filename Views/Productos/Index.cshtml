@@ -1,0 +1,67 @@
+@model IEnumerable<Tienda_Repuestos_Demo.Models.Producto>
+
+@{
+    ViewData["Title"] = "Productos";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="container-fluid">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <div>
+            <h2 class="mb-1" style="color: var(--text-dark); font-weight: 700;">📦 Gestión de Productos</h2>
+            <p class="text-muted mb-0">Administra el catálogo de productos</p>
+        </div>
+        @if (Context.Session.GetString("UsuarioRol") == "admin")
+        {
+            <a asp-action="Create" class="btn btn-primary">
+                ➕ Nuevo Producto
+            </a>
+        }
+    </div>
+
+    <div class="card">
+        <div class="card-body">
+            <table class="table table-striped table-hover">
+                <thead>
+                    <tr>
+                        <th>Código</th>
+                        <th>Nombre</th>
+                        <th>Categoría</th>
+                        <th>Proveedor</th>
+                        <th>Precio Venta</th>
+                        <th>Stock</th>
+                        <th>Stock Mínimo</th>
+                        <th>Acciones</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model)
+                    {
+                        var stockBajo = item.Stock <= item.StockMinimo;
+                        <tr class="@(stockBajo ? "table-warning" : "")">
+                            <td>@item.Codigo</td>
+                            <td>@item.Nombre</td>
+                            <td>@item.Categoria?.Nombre</td>
+                            <td>@item.Proveedor?.Nombre</td>
+                            <td>$@item.PrecioVenta.ToString("N2")</td>
+                            <td>
+                                <span class="@(stockBajo ? "text-danger fw-bold" : "")">@item.Stock</span>
+                            </td>
+                            <td>@item.StockMinimo</td>
+                            <td>
+                                <div class="btn-group" role="group">
+                                    <a asp-action="Details" asp-route-id="@item.IdProducto" class="btn btn-sm btn-info">👁️ Ver</a>
+                                    @if (Context.Session.GetString("UsuarioRol") == "admin")
+                                    {
+                                        <a asp-action="Edit" asp-route-id="@item.IdProducto" class="btn btn-sm btn-warning">✏️ Editar</a>
+                                        <a asp-action="Delete" asp-route-id="@item.IdProducto" class="btn btn-sm btn-danger">🗑️ Eliminar</a>
+                                    }
+                                </div>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>

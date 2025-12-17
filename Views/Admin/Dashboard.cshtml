@@ -1,0 +1,105 @@
+@{
+    ViewData["Title"] = "Dashboard - Administrador";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+@{
+    var stats = ViewBag.Estadisticas as dynamic;
+}
+
+<div class="container-fluid">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <div>
+            <h2 class="mb-1" style="color: var(--text-dark); font-weight: 700;">👨‍💼 Dashboard - Administrador</h2>
+            <p class="text-muted mb-0">Bienvenido, @Context.Session.GetString("UsuarioNombre")</p>
+        </div>
+    </div>
+
+    <div class="row mb-4">
+        <div class="col-md-3 mb-3">
+            <div class="stat-card bg-primary">
+                <h5>👥 Total Usuarios</h5>
+                <h2>@stats?.TotalUsuarios</h2>
+            </div>
+        </div>
+        <div class="col-md-3 mb-3">
+            <div class="stat-card bg-success">
+                <h5>👤 Total Clientes</h5>
+                <h2>@stats?.TotalClientes</h2>
+            </div>
+        </div>
+        <div class="col-md-3 mb-3">
+            <div class="stat-card bg-info">
+                <h5>📦 Total Productos</h5>
+                <h2>@stats?.TotalProductos</h2>
+            </div>
+        </div>
+        <div class="col-md-3 mb-3">
+            <div class="stat-card bg-warning">
+                <h5>💰 Total Ventas</h5>
+                <h2>@stats?.TotalVentas</h2>
+            </div>
+        </div>
+    </div>
+
+    <div class="row mb-4">
+        <div class="col-md-4 mb-3">
+            <div class="card">
+                <div class="card-body text-center">
+                    <h5 class="card-title" style="color: var(--text-medium);">📊 Ventas Hoy</h5>
+                    <h3 class="text-primary mb-0" style="font-weight: 700;">@stats?.VentasHoy</h3>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4 mb-3">
+            <div class="card">
+                <div class="card-body text-center">
+                    <h5 class="card-title" style="color: var(--text-medium);">⚠️ Productos Bajo Stock</h5>
+                    <h3 class="text-danger mb-0" style="font-weight: 700;">@stats?.ProductosBajoStock</h3>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4 mb-3">
+            <div class="card">
+                <div class="card-body text-center">
+                    <h5 class="card-title" style="color: var(--text-medium);">💵 Total Ingresos</h5>
+                    <h3 class="text-success mb-0" style="font-weight: 700;">$@(stats?.TotalIngresos?.ToString("N2") ?? "0.00")</h3>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-12">
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="mb-0">⚡ Acciones Rápidas</h5>
+                </div>
+                <div class="card-body">
+                    <div class="row g-3">
+                        <div class="col-md-3">
+                            <a href="@Url.Action("Index", "Productos")" class="btn btn-primary w-100">
+                                📦 Gestionar Productos
+                            </a>
+                        </div>
+                        <div class="col-md-3">
+                            <a href="@Url.Action("Index", "Clientes")" class="btn btn-success w-100">
+                                👤 Gestionar Clientes
+                            </a>
+                        </div>
+                        <div class="col-md-3">
+                            <a href="@Url.Action("Index", "Ventas")" class="btn btn-info w-100">
+                                💰 Ver Ventas
+                            </a>
+                        </div>
+                        <div class="col-md-3">
+                            <a href="@Url.Action("Index", "Usuarios")" class="btn btn-warning w-100">
+                                👥 Gestionar Usuarios
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

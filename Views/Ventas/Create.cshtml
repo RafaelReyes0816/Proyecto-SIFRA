@@ -1,0 +1,63 @@
+@model Tienda_Repuestos_Demo.Models.Venta
+
+@{
+    ViewData["Title"] = "Nueva Venta";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <div>
+        <h2 class="mb-1" style="color: var(--text-dark); font-weight: 700;">➕ Nueva Venta</h2>
+        <p class="text-muted mb-0">Registra una nueva venta en el sistema</p>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-6">
+        <form asp-action="Create">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            
+            <div class="mb-3">
+                <label asp-for="IdCliente" class="form-label">Cliente</label>
+                <select asp-for="IdCliente" class="form-select" asp-items="ViewBag.IdCliente" required></select>
+                <span asp-validation-for="IdCliente" class="text-danger"></span>
+            </div>
+
+            <div class="mb-3">
+                <label asp-for="TipoVenta" class="form-label">Tipo de Venta</label>
+                <select asp-for="TipoVenta" class="form-select" required>
+                    <option value="">Seleccione...</option>
+                    <option value="presencial">Presencial</option>
+                    <option value="web">Web</option>
+                </select>
+                <span asp-validation-for="TipoVenta" class="text-danger"></span>
+            </div>
+
+            <div class="mb-3">
+                <label asp-for="MetodoPago" class="form-label">Método de Pago</label>
+                <select asp-for="MetodoPago" class="form-select" required>
+                    <option value="">Seleccione...</option>
+                    <option value="efectivo">Efectivo</option>
+                    <option value="qr">QR</option>
+                    <option value="transferencia">Transferencia</option>
+                </select>
+                <span asp-validation-for="MetodoPago" class="text-danger"></span>
+            </div>
+
+            <div class="mb-3">
+                <label asp-for="Total" class="form-label">Total</label>
+                <input asp-for="Total" class="form-control" type="number" step="0.01" required />
+                <span asp-validation-for="Total" class="text-danger"></span>
+            </div>
+
+            <div class="mb-3">
+                <button type="submit" class="btn btn-primary">Crear Venta</button>
+                <a asp-action="Index" class="btn btn-secondary">Cancelar</a>
+            </div>
+        </form>
+    </div>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}
