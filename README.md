@@ -190,7 +190,6 @@ La base de datos `sifra_db` contiene las siguientes tablas:
 - **proveedores** - Proveedores de productos
 - **ventas** - Registro de ventas
 - **detalles_venta** - Detalles de cada venta
-- **reportes** - Reportes del sistema (opcional)
 
 ### Scripts SQL Incluidos
 

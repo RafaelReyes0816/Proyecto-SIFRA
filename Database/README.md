@@ -64,7 +64,6 @@ Consulta el archivo `Usuarios_Prueba.md` para ver los usuarios disponibles y sus
 - **productos**: Catálogo de productos
 - **ventas**: Registro de ventas
 - **detalles_venta**: Detalles de cada venta
-- **reportes**: Reportes generados del sistema
 
 ## Notas
 

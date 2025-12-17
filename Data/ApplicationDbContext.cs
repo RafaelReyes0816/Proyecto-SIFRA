@@ -17,7 +17,6 @@ namespace Tienda_Repuestos_Demo.Data
         public DbSet<Producto> Productos { get; set; }
         public DbSet<Venta> Ventas { get; set; }
         public DbSet<DetalleVenta> DetallesVenta { get; set; }
-        public DbSet<Reporte> Reportes { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -69,12 +68,6 @@ namespace Tienda_Repuestos_Demo.Data
             modelBuilder.Entity<DetalleVenta>(entity =>
             {
                 entity.ToTable("detalles_venta");
-            });
-
-            // Configuración de Reporte
-            modelBuilder.Entity<Reporte>(entity =>
-            {
-                entity.ToTable("reportes");
             });
         }
     }

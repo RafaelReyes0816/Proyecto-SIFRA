@@ -34,6 +34,5 @@ namespace Tienda_Repuestos_Demo.Models
 
         // Navegación
         public ICollection<Venta> Ventas { get; set; } = new List<Venta>();
-        public ICollection<Reporte> Reportes { get; set; } = new List<Reporte>();
     }
 }

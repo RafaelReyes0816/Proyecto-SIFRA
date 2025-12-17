@@ -83,16 +83,6 @@ CREATE TABLE detalles_venta (
     FOREIGN KEY (id_producto) REFERENCES productos(id_producto) ON DELETE RESTRICT ON UPDATE CASCADE
 );
 
--- Tabla: reportes (opcional, si se almacenan)
-CREATE TABLE reportes (
-    id_reporte INT PRIMARY KEY AUTO_INCREMENT,
-    tipo VARCHAR(50) NOT NULL,
-    contenido JSON,
-    fecha_generacion DATETIME DEFAULT CURRENT_TIMESTAMP,
-    id_usuario INT NOT NULL,
-    FOREIGN KEY (id_usuario) REFERENCES usuarios(id_usuario) ON DELETE RESTRICT ON UPDATE CASCADE
-);
-
 -- Índices recomendados para rendimiento
 CREATE INDEX idx_productos_stock ON productos(stock);
 CREATE INDEX idx_ventas_fecha ON ventas(fecha);
