@@ -45,6 +45,17 @@
                                 <li class="nav-item">
                                     <a class="nav-link text-dark" asp-controller="Ventas" asp-action="Index">Ventas</a>
                                 </li>
+
+                                <!-- pegando boton aqui 18/12/2025 -->
+                                <li class="nav-item">
+                                    <a class="nav-link text-dark" asp-controller="Admin" asp-action="Reportes">Reportes</a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link text-dark" asp-controller="Admin" asp-action="Actividad">Actividad</a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link text-dark" asp-controller="Admin" asp-action="Configuracion">Configuración</a>
+                                </li>
                             }
                             else if (usuarioRol == "vendedor")
                             {
@@ -71,6 +82,14 @@
                                 </li>
                                 <li class="nav-item">
                                     <a class="nav-link text-dark" asp-controller="Productos" asp-action="Index">Catálogo</a>
+                                </li>
+
+                                <!-- pegando boton aqui 18/12/2025 -->
+                                <li class="nav-item">
+                                    <a class="nav-link text-dark" asp-controller="Cliente" asp-action="Notificaciones">Notificaciones</a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link text-dark" asp-controller="Cliente" asp-action="Favoritos">Favoritos</a>
                                 </li>
                             }
                         </ul>

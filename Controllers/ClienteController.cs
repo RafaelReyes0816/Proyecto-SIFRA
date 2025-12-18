@@ -265,6 +265,93 @@ namespace Tienda_Repuestos_Demo.Controllers
             return View(cliente);
         }
 
+        // ============================================
+        // NUEVOS MÉTODOS PARA ClienteController.cs
+        // Copia estos 2 métodos dentro de tu clase ClienteController
+        // ============================================
+
+        public async Task<IActionResult> Notificaciones()
+        {
+            if (!IsCliente())
+            {
+                return RedirectToAction("Login", "Account");
+            }
+
+            var clienteId = GetClienteId();
+
+            // Obtener todas las ventas del cliente con sus detalles
+            var ventas = await _context.Ventas
+                .Include(v => v.DetallesVenta)
+                    .ThenInclude(d => d.Producto)
+                .Where(v => v.IdCliente == clienteId)
+                .OrderByDescending(v => v.Fecha)
+                .ToListAsync();
+
+            // Crear notificaciones basadas en el estado de las ventas
+            var notificaciones = ventas.Select(v => new
+            {
+                Tipo = v.Estado == "confirmada" ? "success" : 
+                       v.Estado == "pendiente" ? "warning" : "danger",
+                Mensaje = v.Estado == "confirmada" ? $"Tu compra #{v.IdVenta} ha sido confirmada" :
+                         v.Estado == "pendiente" ? $"Tu compra #{v.IdVenta} está pendiente de confirmación" :
+                         $"Tu compra #{v.IdVenta} ha sido cancelada",
+                Fecha = v.Fecha,
+                VentaId = v.IdVenta,
+                Estado = v.Estado,
+                Total = v.Total
+            }).ToList();
+
+            ViewBag.Notificaciones = notificaciones;
+            ViewBag.TotalNotificaciones = notificaciones.Count;
+            ViewBag.NotificacionesPendientes = notificaciones.Count(n => n.Estado == "pendiente");
+
+            return View();
+        }
+
+        public async Task<IActionResult> Favoritos()
+        {
+            if (!IsCliente())
+            {
+                return RedirectToAction("Login", "Account");
+            }
+
+            var clienteId = GetClienteId();
+
+            // Obtener los productos que el cliente ha comprado más frecuentemente
+            var productosFavoritos = await _context.DetallesVenta
+                .Include(d => d.Venta)
+                .Include(d => d.Producto)
+                    .ThenInclude(p => p.Categoria)
+                .Where(d => d.Venta.IdCliente == clienteId && d.Venta.Estado == "confirmada")
+                .GroupBy(d => new { 
+                    d.Producto.IdProducto, 
+                    ProductoNombre = d.Producto.Nombre,  // CORREGIDO: Nombre explícito
+                    d.Producto.Descripcion,
+                    d.Producto.PrecioVenta,
+                    d.Producto.Stock,
+                    CategoriaNombre = d.Producto.Categoria.Nombre // CORREGIDO: Nombre explícito
+                })
+                .Select(g => new {
+                    ProductoId = g.Key.IdProducto,
+                    ProductoNombre = g.Key.ProductoNombre, // Usamos el nombre corregido
+                    ProductoDescripcion = g.Key.Descripcion,
+                    Precio = g.Key.PrecioVenta,
+                    Stock = g.Key.Stock,
+                    CategoriaNombre = g.Key.CategoriaNombre, // Usamos el nombre corregido
+                    CantidadComprada = g.Sum(d => d.Cantidad),
+                    UltimaCompra = g.Max(d => d.Venta.Fecha),
+                    TotalGastado = g.Sum(d => d.PrecioUnitario * d.Cantidad)
+                })
+                .OrderByDescending(x => x.CantidadComprada)
+                .Take(20)
+                .ToListAsync();
+
+            ViewBag.ProductosFavoritos = productosFavoritos;
+            ViewBag.TotalFavoritos = productosFavoritos.Count;
+
+            return View();
+        }
+
         private bool ClienteExists(int id)
         {
             return _context.Clientes.Any(e => e.IdCliente == id);

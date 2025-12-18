@@ -1,25 +1,28 @@
 {
   "format": 1,
   "restore": {
-    "/home/rafaelreyes/Documentos/Proyectos web/Tienda-Repuestos-Demo/Tienda-Repuestos-Demo.csproj": {}
+    "C:\\Users\\User\\source\\repos\\Proyecto-SIFRA\\Tienda-Repuestos-Demo.csproj": {}
   },
   "projects": {
-    "/home/rafaelreyes/Documentos/Proyectos web/Tienda-Repuestos-Demo/Tienda-Repuestos-Demo.csproj": {
+    "C:\\Users\\User\\source\\repos\\Proyecto-SIFRA\\Tienda-Repuestos-Demo.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "/home/rafaelreyes/Documentos/Proyectos web/Tienda-Repuestos-Demo/Tienda-Repuestos-Demo.csproj",
+        "projectUniqueName": "C:\\Users\\User\\source\\repos\\Proyecto-SIFRA\\Tienda-Repuestos-Demo.csproj",
         "projectName": "Tienda-Repuestos-Demo",
-        "projectPath": "/home/rafaelreyes/Documentos/Proyectos web/Tienda-Repuestos-Demo/Tienda-Repuestos-Demo.csproj",
-        "packagesPath": "/home/rafaelreyes/.nuget/packages/",
-        "outputPath": "/home/rafaelreyes/Documentos/Proyectos web/Tienda-Repuestos-Demo/obj/",
+        "projectPath": "C:\\Users\\User\\source\\repos\\Proyecto-SIFRA\\Tienda-Repuestos-Demo.csproj",
+        "packagesPath": "C:\\Users\\User\\.nuget\\packages\\",
+        "outputPath": "C:\\Users\\User\\source\\repos\\Proyecto-SIFRA\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
-          "/home/rafaelreyes/.nuget/NuGet/NuGet.Config"
+          "C:\\Users\\User\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
         ],
         "originalTargetFrameworks": [
           "net8.0"
         ],
         "sources": {
+          "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
+          "C:\\Program Files\\dotnet\\library-packs": {},
           "https://api.nuget.org/v3/index.json": {}
         },
         "frameworks": {
@@ -32,6 +35,11 @@
           "warnAsError": [
             "NU1605"
           ]
+        },
+        "restoreAuditProperties": {
+          "enableAudit": "true",
+          "auditLevel": "low",
+          "auditMode": "direct"
         }
       },
       "frameworks": {
@@ -49,6 +57,10 @@
               "suppressParent": "All",
               "target": "Package",
               "version": "[8.0.0, )"
+            },
+            "MySql.Data": {
+              "target": "Package",
+              "version": "[9.5.0, )"
             },
             "Pomelo.EntityFrameworkCore.MySql": {
               "target": "Package",
@@ -74,7 +86,7 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "/usr/lib/dotnet/sdk/8.0.122/PortableRuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\8.0.303/PortableRuntimeIdentifierGraph.json"
         }
       }
     }
