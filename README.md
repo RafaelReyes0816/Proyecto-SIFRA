@@ -123,9 +123,11 @@ Antes de comenzar, asegúrate de tener instalado:
 ### 1. Clonar el Repositorio
 
 ```bash
-git clone <url-del-repositorio>
+git clone https://github.com/RafaelReyes0816/Proyecto-SIFRA.git
 cd Tienda-Repuestos-Demo
 ```
+
+> **📌 Nota para equipos**: Si eres parte de un equipo, consulta el archivo `CONFIGURACION_GIT.md` para configurar tus credenciales de Git correctamente.
 
 ### 2. Restaurar Dependencias
 
@@ -613,6 +615,33 @@ Este proyecto es de código abierto y está disponible bajo la licencia MIT.
 ## 📞 Soporte
 
 Para preguntas o problemas, abre un issue en el repositorio.
+
+---
+
+## 👥 Trabajo en Equipo
+
+Este es un proyecto grupal. Para configurar Git correctamente:
+
+1. **Lee el archivo `CONFIGURACION_GIT.md`** - Contiene instrucciones detalladas
+2. **Cada miembro debe configurar sus propias credenciales** (token o SSH)
+3. **NUNCA compartas tu token de acceso personal**
+4. El remote está configurado sin credenciales para seguridad del equipo
+
+### Configuración Rápida
+
+```bash
+# Configurar tu usuario
+git config user.name "Tu Nombre"
+git config user.email "tu.email@ejemplo.com"
+
+# Configurar para guardar credenciales
+git config --global credential.helper store
+
+# Hacer push (te pedirá usuario y token la primera vez)
+git push
+```
+
+Para más detalles, consulta `CONFIGURACION_GIT.md`.
 
 ---
 
