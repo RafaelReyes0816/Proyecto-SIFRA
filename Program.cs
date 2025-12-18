@@ -17,8 +17,13 @@ builder.Services.AddSession(options =>
 
 // Configurar Entity Framework con MySQL
 var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
+if (string.IsNullOrEmpty(connectionString))
+{
+    throw new InvalidOperationException("La cadena de conexión 'DefaultConnection' no está configurada.");
+}
+
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
-    options.UseMySql(connectionString, ServerVersion.AutoDetect(connectionString)));
+    options.UseMySql(connectionString, new MySqlServerVersion(new Version(8, 0, 21))));
 
 var app = builder.Build();
 
