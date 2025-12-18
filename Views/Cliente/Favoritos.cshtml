@@ -1,0 +1,244 @@
+@{
+    ViewData["Title"] = "Mis Productos Favoritos";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+@{
+    // Convertimos a List<dynamic>
+    var source = ViewBag.ProductosFavoritos as System.Collections.IEnumerable;
+    var productosFavoritos = source?.Cast<dynamic>().ToList() ?? new List<dynamic>();
+    
+    var totalFavoritos = ViewBag.TotalFavoritos as int?;
+    
+    // Extraemos el primer producto de forma segura para usarlo en el resumen
+    var topProducto = productosFavoritos.FirstOrDefault();
+}
+
+<div class="container-fluid dark-theme" style="min-height: 100vh; padding: 2rem;">
+    <div class="d-flex justify-content-between align-items-center mb-4 fade-in-up">
+        <div>
+            <h2 class="mb-1" style="font-weight: 700;">⭐ Mis Productos Favoritos</h2>
+            <p class="text-muted mb-0">Productos que has comprado con mayor frecuencia</p>
+        </div>
+        <a asp-action="Dashboard" class="btn btn-outline-light">
+            ← Volver al Dashboard
+        </a>
+    </div>
+
+    <!-- Estadística de Favoritos -->
+    <div class="row mb-4">
+        <div class="col-md-12">
+            <div class="stat-card-dark bg-dark-primary">
+                <div class="row align-items-center">
+                    <div class="col-md-8">
+                        <h5>🛍️ Total de Productos en tu Lista</h5>
+                        <h2>@(totalFavoritos ?? 0) Productos</h2>
+                        <small style="opacity: 0.8;">Basado en tus compras anteriores</small>
+                    </div>
+                    <div class="col-md-4 text-end">
+                        <a asp-controller="Productos" asp-action="Index" class="btn btn-success btn-lg">
+                            🛒 Explorar Más Productos
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Lista de Productos Favoritos -->
+    <div class="row">
+        <div class="col-md-12">
+            <div class="card fade-in-up">
+                <div class="card-header">
+                    <h5 class="mb-0 icon-glow">📦 Tus Productos Más Comprados</h5>
+                </div>
+                <div class="card-body">
+                    @if (productosFavoritos.Count > 0)
+                    {
+                        <div class="table-responsive">
+                            <table class="table table-hover">
+                                <thead>
+                                    <tr>
+                                        <th>Ranking</th>
+                                        <th>Producto</th>
+                                        <th>Categoría</th>
+                                        <th>Precio</th>
+                                        <th>Veces Comprado</th>
+                                        <th>Total Gastado</th>
+                                        <th>Última Compra</th>
+                                        <th>Stock</th>
+                                        <th>Acción</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @{int ranking = 1;}
+                                    @foreach (var rawItem in productosFavoritos)
+                                    {
+                                        // Casting explícito y check de nulidad para evitar CS8602
+                                        var producto = rawItem as dynamic;
+                                        if (producto == null) continue;
+
+                                        var stock = (int)(producto.Stock ?? 0);
+                                        var stockBajo = stock <= 5;
+                                        var medallaIcon = ranking == 1 ? "🥇" : ranking == 2 ? "🥈" : ranking == 3 ? "🥉" : "🏅";
+                                        
+                                        <tr>
+                                            <td>
+                                                <span style="font-size: 1.5rem;">@medallaIcon</span>
+                                                <strong style="color: #667eea;">#@ranking</strong>
+                                            </td>
+                                            <td>
+                                                <strong style="color: #ffffff;">@(producto.ProductoNombre ?? "Sin Nombre")</strong>
+                                                @if (producto.ProductoDescripcion != null)
+                                                {
+                                                    <br />
+                                                    <small class="text-muted">@producto.ProductoDescripcion</small>
+                                                }
+                                            </td>
+                                            <td>
+                                                <span class="badge bg-info">@(producto.CategoriaNombre ?? "N/A")</span>
+                                            </td>
+                                            <td>
+                                                <strong style="color: #38ef7d; font-size: 1.1rem;">
+                                                    $@(((decimal)(producto.Precio ?? 0)).ToString("N2"))
+                                                </strong>
+                                            </td>
+                                            <td>
+                                                <span class="badge bg-primary" style="font-size: 1rem; padding: 0.5rem 1rem;">
+                                                    @(producto.CantidadComprada ?? 0) unidades
+                                                </span>
+                                            </td>
+                                            <td>
+                                                <strong style="color: #4facfe;">
+                                                    $@(((decimal)(producto.TotalGastado ?? 0)).ToString("N2"))
+                                                </strong>
+                                            </td>
+                                            <td>
+                                                <small class="text-muted">
+                                                    @(producto.UltimaCompra != null ? producto.UltimaCompra.ToString("dd/MM/yyyy") : "-")
+                                                </small>
+                                            </td>
+                                            <td>
+                                                @if (stockBajo)
+                                                {
+                                                    <span class="badge bg-warning">
+                                                        ⚠️ @stock disponibles
+                                                    </span>
+                                                }
+                                                else
+                                                {
+                                                    <span class="badge bg-success">
+                                                        ✅ @stock disponibles
+                                                    </span>
+                                                }
+                                            </td>
+                                            <td>
+                                                <a href="@Url.Action("Details", "Productos", new { id = producto.ProductoId })" class="btn btn-sm btn-info">
+                                                    👁️ Ver
+                                                </a>
+                                            </td>
+                                        </tr>
+                                        ranking++;
+                                    }
+                                </tbody>
+                            </table>
+                        </div>
+
+                        <!-- Información Adicional -->
+                        <div class="mt-4 p-3" style="background: rgba(102, 126, 234, 0.1); border-radius: 10px;">
+                            <div class="row text-center">
+                                <div class="col-md-4">
+                                    <div style="font-size: 2rem; margin-bottom: 0.5rem;">🏆</div>
+                                    <h6 style="color: #ffffff;">Producto Favorito</h6>
+                                    <!-- Aquí usamos la variable segura topProducto -->
+                                    <p class="text-muted small mb-0">@(topProducto?.ProductoNombre ?? "N/A")</p>
+                                </div>
+                                <div class="col-md-4">
+                                    <div style="font-size: 2rem; margin-bottom: 0.5rem;">📊</div>
+                                    <h6 style="color: #ffffff;">Total Productos</h6>
+                                    <p class="text-muted small mb-0">@(totalFavoritos ?? 0) en tu lista</p>
+                                </div>
+                                <div class="col-md-4">
+                                    <div style="font-size: 2rem; margin-bottom: 0.5rem;">💰</div>
+                                    <h6 style="color: #ffffff;">Total Invertido</h6>
+                                    <p class="text-muted small mb-0">
+                                        $@{
+                                            var totalInvertido = 0m;
+                                            foreach (var p in productosFavoritos)
+                                            {
+                                                if(p != null) {
+                                                    totalInvertido += (decimal)(p.TotalGastado ?? 0);
+                                                }
+                                            }
+                                            @totalInvertido.ToString("N2")
+                                        }
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                    }
+                    else
+                    {
+                        <div class="text-center py-5">
+                            <div style="font-size: 4rem; margin-bottom: 1rem; opacity: 0.5;">⭐</div>
+                            <h5 class="mb-3" style="color: #b0b0b0;">Aún no tienes productos favoritos</h5>
+                            <p class="text-muted mb-4">
+                                Tus productos favoritos aparecerán aquí basados en tu historial de compras
+                            </p>
+                            <a asp-controller="Productos" asp-action="Index" class="btn btn-primary btn-lg">
+                                🛒 Explorar Catálogo de Productos
+                            </a>
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Recomendaciones -->
+    @if (productosFavoritos.Count > 0)
+    {
+        <div class="row mt-4">
+            <div class="col-md-12">
+                <div class="card fade-in-up">
+                    <div class="card-header">
+                        <h5 class="mb-0 icon-glow">💡 Recomendaciones Basadas en tus Favoritos</h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="alert" style="background: rgba(102, 126, 234, 0.1); border: 1px solid rgba(102, 126, 234, 0.3); color: #e0e0e0;">
+                            <h6 style="color: #667eea;">✨ Sugerencia:</h6>
+                            <p class="mb-2">
+                                Basándonos en tus productos favoritos, te recomendamos revisar productos similares 
+                                en la misma categoría o de precios similares.
+                            </p>
+                            <a asp-controller="Productos" asp-action="Index" class="btn btn-sm btn-outline-light">
+                                Ver Catálogo Completo →
+                            </a>
+                        </div>
+
+                        <div class="row mt-3">
+                            <div class="col-md-6">
+                                <div class="p-3" style="background: rgba(45, 53, 97, 0.3); border-radius: 10px;">
+                                    <h6 style="color: #38ef7d; margin-bottom: 1rem;">📦 Compras Inteligentes</h6>
+                                    <p class="text-muted small mb-0">
+                                        Algunos de tus productos favoritos tienen stock bajo. 
+                                        ¡Considera hacer tu pedido pronto!
+                                    </p>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="p-3" style="background: rgba(45, 53, 97, 0.3); border-radius: 10px;">
+                                    <h6 style="color: #4facfe; margin-bottom: 1rem;">🔔 Notificaciones</h6>
+                                    <p class="text-muted small mb-0">
+                                        Revisa la sección de notificaciones para estar al tanto 
+                                        del estado de tus compras.
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    }
+</div>

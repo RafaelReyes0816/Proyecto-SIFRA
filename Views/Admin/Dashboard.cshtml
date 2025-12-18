@@ -1,0 +1,198 @@
+@{
+    ViewData["Title"] = "Dashboard - Administrador";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+@{
+    var stats = ViewBag.Estadisticas as dynamic;
+    var productosBajoStock = ViewBag.ProductosBajoStock as List<Tienda_Repuestos_Demo.Models.Producto>;
+}
+
+<div class="container-fluid">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <div>
+            <h2 class="mb-1" style="color: var(--text-dark); font-weight: 700;">👨‍💼 Dashboard - Administrador</h2>
+            <p class="text-muted mb-0">Bienvenido, @Context.Session.GetString("UsuarioNombre")</p>
+        </div>
+    </div>
+
+    @if (productosBajoStock != null && productosBajoStock.Any())
+    {
+        <div class="alert alert-warning alert-dismissible fade show" role="alert" style="border-left: 4px solid var(--warning-color);">
+            <h5 class="alert-heading mb-2">
+                ⚠️ <strong>Alerta de Stock Bajo</strong>
+            </h5>
+            <p class="mb-2">
+                Tienes <strong>@productosBajoStock.Count</strong> producto(s) con stock bajo o agotado que requieren atención inmediata.
+            </p>
+            <hr>
+            <p class="mb-0">
+                <a href="#productos-bajo-stock" class="alert-link">Ver lista de productos con stock bajo ↓</a>
+            </p>
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    }
+
+    <div class="row mb-4">
+        <div class="col-md-3 mb-3">
+            <div class="stat-card bg-primary">
+                <h5>👥 Total Usuarios</h5>
+                <h2>@stats?.TotalUsuarios</h2>
+            </div>
+        </div>
+        <div class="col-md-3 mb-3">
+            <div class="stat-card bg-success">
+                <h5>👤 Total Clientes</h5>
+                <h2>@stats?.TotalClientes</h2>
+            </div>
+        </div>
+        <div class="col-md-3 mb-3">
+            <div class="stat-card bg-info">
+                <h5>📦 Total Productos</h5>
+                <h2>@stats?.TotalProductos</h2>
+            </div>
+        </div>
+        <div class="col-md-3 mb-3">
+            <div class="stat-card bg-warning">
+                <h5>💰 Total Ventas</h5>
+                <h2>@stats?.TotalVentas</h2>
+            </div>
+        </div>
+    </div>
+
+    <div class="row mb-4">
+        <div class="col-md-4 mb-3">
+            <div class="card">
+                <div class="card-body text-center">
+                    <h5 class="card-title" style="color: var(--text-medium);">📊 Ventas Hoy</h5>
+                    <h3 class="text-primary mb-0" style="font-weight: 700;">@stats?.VentasHoy</h3>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4 mb-3">
+            <div class="card @(stats?.ProductosBajoStock > 0 ? "border-warning" : "")" style="@(stats?.ProductosBajoStock > 0 ? "border-width: 3px;" : "")">
+                <div class="card-body text-center">
+                    <h5 class="card-title" style="color: var(--text-medium);">⚠️ Productos Bajo Stock</h5>
+                    <h3 class="@(stats?.ProductosBajoStock > 0 ? "text-danger" : "text-success") mb-0" style="font-weight: 700;">
+                        @stats?.ProductosBajoStock
+                    </h3>
+                    @if (stats?.ProductosBajoStock > 0)
+                    {
+                        <small class="text-danger">Requiere atención</small>
+                    }
+                    else
+                    {
+                        <small class="text-success">Todo en orden</small>
+                    }
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4 mb-3">
+            <div class="card">
+                <div class="card-body text-center">
+                    <h5 class="card-title" style="color: var(--text-medium);">💵 Total Ingresos</h5>
+                    <h3 class="text-success mb-0" style="font-weight: 700;">$@(stats?.TotalIngresos?.ToString("N2") ?? "0.00")</h3>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    @if (productosBajoStock != null && productosBajoStock.Any())
+    {
+        <div class="row mb-4" id="productos-bajo-stock">
+            <div class="col-md-12">
+                <div class="card border-warning">
+                    <div class="card-header bg-warning text-dark">
+                        <h5 class="mb-0">⚠️ Productos con Stock Bajo (@productosBajoStock.Count)</h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="table-responsive">
+                            <table class="table table-hover">
+                                <thead>
+                                    <tr>
+                                        <th>Código</th>
+                                        <th>Producto</th>
+                                        <th>Categoría</th>
+                                        <th>Stock Actual</th>
+                                        <th>Stock Mínimo</th>
+                                        <th>Estado</th>
+                                        <th>Acción</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach (var producto in productosBajoStock)
+                                    {
+                                        var porcentajeStock = producto.StockMinimo > 0 ? (producto.Stock * 100.0 / producto.StockMinimo) : 0;
+                                        var nivelAlerta = producto.Stock <= 0 ? "Agotado" : 
+                                                         producto.Stock <= (producto.StockMinimo * 0.5) ? "Crítico" : "Bajo";
+                                        var badgeColor = producto.Stock <= 0 ? "danger" : 
+                                                        producto.Stock <= (producto.StockMinimo * 0.5) ? "danger" : "warning";
+                                        
+                                        <tr class="@(producto.Stock <= 0 ? "table-danger" : "table-warning")">
+                                            <td><strong>@producto.Codigo</strong></td>
+                                            <td>@producto.Nombre</td>
+                                            <td>@producto.Categoria?.Nombre</td>
+                                            <td>
+                                                <span class="badge bg-@badgeColor" style="font-size: 1rem;">
+                                                    @producto.Stock unidades
+                                                </span>
+                                            </td>
+                                            <td>@producto.StockMinimo unidades</td>
+                                            <td>
+                                                <span class="badge bg-@badgeColor">⚠️ @nivelAlerta</span>
+                                            </td>
+                                            <td>
+                                                <a href="@Url.Action("Edit", "Productos", new { id = producto.IdProducto })" class="btn btn-sm btn-warning">
+                                                    ✏️ Actualizar Stock
+                                                </a>
+                                            </td>
+                                        </tr>
+                                    }
+                                </tbody>
+                            </table>
+                        </div>
+                        <div class="mt-3">
+                            <a href="@Url.Action("Index", "Productos")" class="btn btn-primary">
+                                📦 Ver Todos los Productos
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    }
+
+    <div class="row">
+        <div class="col-md-12">
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="mb-0">⚡ Acciones Rápidas</h5>
+                </div>
+                <div class="card-body">
+                    <div class="row g-3">
+                        <div class="col-md-3">
+                            <a href="@Url.Action("Index", "Productos")" class="btn btn-primary w-100">
+                                📦 Gestionar Productos
+                            </a>
+                        </div>
+                        <div class="col-md-3">
+                            <a href="@Url.Action("Index", "Usuarios")" class="btn btn-warning w-100">
+                                👥 Gestionar Usuarios
+                            </a>
+                        </div>
+                        <div class="col-md-3">
+                            <a href="@Url.Action("Index", "Clientes")" class="btn btn-success w-100">
+                                👤 Gestionar Clientes
+                            </a>
+                        </div>
+                        <div class="col-md-3">
+                            <a href="@Url.Action("Index", "Ventas")" class="btn btn-info w-100">
+                                💰 Ver Ventas
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

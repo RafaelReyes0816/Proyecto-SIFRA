@@ -1,0 +1,2 @@
+# Este archivo asegura que el directorio wwwroot se incluya en git
+# Los archivos subidos se guardarán en wwwroot/uploads/ci/

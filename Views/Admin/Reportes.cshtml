@@ -1,0 +1,265 @@
+@{
+    ViewData["Title"] = "Reportes y Estadísticas";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+@{
+    // Convertimos a IEnumerable<dynamic> para evitar problemas en los foreach
+    var ventasPorMes = ViewBag.VentasPorMes as IEnumerable<dynamic>;
+    var topProductos = ViewBag.TopProductos as IEnumerable<dynamic>;
+    var topClientes = ViewBag.TopClientes as IEnumerable<dynamic>;
+    var ventasPorMetodo = ViewBag.VentasPorMetodo as IEnumerable<dynamic>;
+    var stats = ViewBag.Estadisticas as dynamic;
+}
+
+<div class="container-fluid dark-theme" style="min-height: 100vh; padding: 2rem;">
+    <div class="d-flex justify-content-between align-items-center mb-4 fade-in-up">
+        <div>
+            <h2 class="mb-1" style="font-weight: 700;">📈 Reportes y Estadísticas</h2>
+            <p class="text-muted mb-0">Análisis detallado del rendimiento del negocio</p>
+        </div>
+        <a asp-action="Dashboard" class="btn btn-outline-light">
+            ← Volver al Dashboard
+        </a>
+    </div>
+
+    <!-- Estadísticas Generales -->
+    <div class="row mb-4">
+        <div class="col-md-3 mb-3">
+            <div class="stat-card-dark bg-dark-primary">
+                <h5>💰 Ingresos Totales</h5>
+                <!-- Agregamos ? para verificar nulos antes de usar ToString -->
+                <h2>$@(stats?.IngresosTotales?.ToString("N2") ?? "0.00")</h2>
+            </div>
+        </div>
+        <div class="col-md-3 mb-3">
+            <div class="stat-card-dark bg-dark-success">
+                <h5>📊 Ventas Totales</h5>
+                <h2>@(stats?.VentasTotales ?? 0)</h2>
+            </div>
+        </div>
+        <div class="col-md-3 mb-3">
+            <div class="stat-card-dark bg-dark-info">
+                <h5>📈 Promedio por Venta</h5>
+                <h2>$@(stats?.PromedioVenta?.ToString("N2") ?? "0.00")</h2>
+            </div>
+        </div>
+        <div class="col-md-3 mb-3">
+            <div class="stat-card-dark bg-dark-warning">
+                <h5>🗓️ Ventas Este Mes</h5>
+                <h2>@(stats?.VentasEsteMes ?? 0)</h2>
+            </div>
+        </div>
+    </div>
+
+    <!-- Top Productos Más Vendidos -->
+    <div class="row mb-4">
+        <div class="col-md-12">
+            <div class="card fade-in-up">
+                <div class="card-header">
+                    <h5 class="mb-0 icon-glow">🏆 Top 10 Productos Más Vendidos</h5>
+                </div>
+                <div class="card-body">
+                    @if (topProductos != null && topProductos.Any())
+                    {
+                        <div class="table-responsive">
+                            <table class="table table-hover">
+                                <thead>
+                                    <tr>
+                                        <th>#</th>
+                                        <th>Producto</th>
+                                        <th>Cantidad Vendida</th>
+                                        <th>Total Ventas</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @{int posicion = 1;}
+                                    @foreach (var producto in topProductos)
+                                    {
+                                        <tr>
+                                            <td>
+                                                @if (posicion <= 3)
+                                                {
+                                                    <span class="badge bg-warning">🥇 @posicion</span>
+                                                }
+                                                else
+                                                {
+                                                    <span class="badge bg-secondary">@posicion</span>
+                                                }
+                                            </td>
+                                            <td><strong>@producto.ProductoNombre</strong></td>
+                                            <td>
+                                                <span class="badge bg-info">@producto.CantidadVendida unidades</span>
+                                            </td>
+                                            <!-- Aquí corregimos la advertencia CS8602 usando ?.ToString -->
+                                            <td><strong>$@(producto.TotalVentas?.ToString("N2") ?? "0.00")</strong></td>
+                                        </tr>
+                                        posicion++;
+                                    }
+                                </tbody>
+                            </table>
+                        </div>
+                    }
+                    else
+                    {
+                        <div class="alert alert-info">
+                            No hay datos de productos vendidos aún.
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Top Clientes y Métodos de Pago -->
+    <div class="row mb-4">
+        <div class="col-md-8">
+            <div class="card fade-in-up">
+                <div class="card-header">
+                    <h5 class="mb-0 icon-glow">👥 Top 10 Mejores Clientes</h5>
+                </div>
+                <div class="card-body">
+                    @if (topClientes != null && topClientes.Any())
+                    {
+                        <div class="table-responsive">
+                            <table class="table table-hover">
+                                <thead>
+                                    <tr>
+                                        <th>#</th>
+                                        <th>Cliente</th>
+                                        <th>Total Compras</th>
+                                        <th>Total Gastado</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @{int pos = 1;}
+                                    @foreach (var cliente in topClientes)
+                                    {
+                                        <tr>
+                                            <td>
+                                                @if (pos <= 3)
+                                                {
+                                                    <span class="badge bg-success">⭐ @pos</span>
+                                                }
+                                                else
+                                                {
+                                                    <span class="badge bg-secondary">@pos</span>
+                                                }
+                                            </td>
+                                            <td><strong>@cliente.ClienteNombre</strong></td>
+                                            <td>
+                                                <span class="badge bg-info">@cliente.TotalCompras compras</span>
+                                            </td>
+                                            <!-- Corregido CS8602 -->
+                                            <td><strong>$@(cliente.TotalGastado?.ToString("N2") ?? "0.00")</strong></td>
+                                        </tr>
+                                        pos++;
+                                    }
+                                </tbody>
+                            </table>
+                        </div>
+                    }
+                    else
+                    {
+                        <div class="alert alert-info">
+                            No hay datos de clientes aún.
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-4">
+            <div class="card fade-in-up">
+                <div class="card-header">
+                    <h5 class="mb-0 icon-glow">💳 Ventas por Método de Pago</h5>
+                </div>
+                <div class="card-body">
+                    @if (ventasPorMetodo != null && ventasPorMetodo.Any())
+                    {
+                        @foreach (var metodo in ventasPorMetodo)
+                        {
+                            <div class="mb-3 p-3" style="background: rgba(45, 53, 97, 0.3); border-radius: 10px; border-left: 3px solid #667eea;">
+                                <div class="d-flex justify-content-between align-items-center mb-2">
+                                    <strong style="text-transform: capitalize;">
+                                        @if (metodo.Metodo == "efectivo")
+                                        {
+                                            <span>💵 Efectivo</span>
+                                        }
+                                        else if (metodo.Metodo == "qr")
+                                        {
+                                            <span>📱 QR</span>
+                                        }
+                                        else if (metodo.Metodo == "transferencia")
+                                        {
+                                            <span>🏦 Transferencia</span>
+                                        }
+                                        else
+                                        {
+                                            <span>@metodo.Metodo</span>
+                                        }
+                                    </strong>
+                                    <span class="badge bg-primary">@metodo.Cantidad ventas</span>
+                                </div>
+                                <!-- Corregido CS8602 -->
+                                <h5 class="mb-0" style="color: #4facfe;">$@(metodo.Total?.ToString("N2") ?? "0.00")</h5>
+                            </div>
+                        }
+                    }
+                    else
+                    {
+                        <div class="alert alert-info">
+                            No hay datos de métodos de pago aún.
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Ventas por Mes -->
+    <div class="row">
+        <div class="col-md-12">
+            <div class="card fade-in-up">
+                <div class="card-header">
+                    <h5 class="mb-0 icon-glow">📅 Ventas por Mes (Últimos 6 Meses)</h5>
+                </div>
+                <div class="card-body">
+                    @if (ventasPorMes != null && ventasPorMes.Any())
+                    {
+                        <div class="table-responsive">
+                            <table class="table table-hover">
+                                <thead>
+                                    <tr>
+                                        <th>Mes</th>
+                                        <th>Cantidad de Ventas</th>
+                                        <th>Total Ingresos</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach (var mes in ventasPorMes)
+                                    {
+                                        <tr>
+                                            <td><strong>@mes.Mes</strong></td>
+                                            <td>
+                                                <span class="badge bg-info">@mes.Cantidad ventas</span>
+                                            </td>
+                                            <!-- Corregido CS8602 -->
+                                            <td><strong style="color: #38ef7d;">$@(mes.Total?.ToString("N2") ?? "0.00")</strong></td>
+                                        </tr>
+                                    }
+                                </tbody>
+                            </table>
+                        </div>
+                    }
+                    else
+                    {
+                        <div class="alert alert-info">
+                            No hay datos de ventas mensuales aún.
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

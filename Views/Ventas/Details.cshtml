@@ -1,0 +1,99 @@
+@model Tienda_Repuestos_Demo.Models.Venta
+
+@{
+    ViewData["Title"] = "Detalles de la Venta";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="container-fluid">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <div>
+            <h2 class="mb-1" style="color: var(--text-dark); font-weight: 700;">💰 Detalles de la Venta #@Model.IdVenta</h2>
+            <p class="text-muted mb-0">Información completa de la venta</p>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-6">
+            <div class="card">
+                <div class="card-header">
+                    <h5>Información de la Venta</h5>
+                </div>
+                <div class="card-body">
+                    <dl class="row">
+                        <dt class="col-sm-5">Fecha:</dt>
+                        <dd class="col-sm-7">@Model.Fecha.ToString("dd/MM/yyyy HH:mm")</dd>
+
+                        <dt class="col-sm-5">Cliente:</dt>
+                        <dd class="col-sm-7">@Model.Cliente.Nombre</dd>
+
+                        <dt class="col-sm-5">Vendedor:</dt>
+                        <dd class="col-sm-7">@Model.Vendedor.Nombre</dd>
+
+                        <dt class="col-sm-5">Tipo de Venta:</dt>
+                        <dd class="col-sm-7">@Model.TipoVenta</dd>
+
+                        <dt class="col-sm-5">Estado:</dt>
+                        <dd class="col-sm-7">
+                            <span class="badge bg-@(Model.Estado == "confirmada" ? "success" : Model.Estado == "pendiente" ? "warning" : "danger")">
+                                @Model.Estado
+                            </span>
+                        </dd>
+
+                        <dt class="col-sm-5">Método de Pago:</dt>
+                        <dd class="col-sm-7">@Model.MetodoPago</dd>
+
+                        <dt class="col-sm-5">Comprobante:</dt>
+                        <dd class="col-sm-7">@(Model.ComprobantePago ?? "N/A")</dd>
+
+                        <dt class="col-sm-5"><strong>Total:</strong></dt>
+                        <dd class="col-sm-7"><strong>$@Model.Total.ToString("N2")</strong></dd>
+                    </dl>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-6">
+            <div class="card">
+                <div class="card-header">
+                    <h5>Detalles de Productos</h5>
+                </div>
+                <div class="card-body">
+                    @if (Model.DetallesVenta != null && Model.DetallesVenta.Any())
+                    {
+                        <table class="table table-sm">
+                            <thead>
+                                <tr>
+                                    <th>Producto</th>
+                                    <th>Cantidad</th>
+                                    <th>Precio Unit.</th>
+                                    <th>Subtotal</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var detalle in Model.DetallesVenta)
+                                {
+                                    <tr>
+                                        <td>@detalle.Producto?.Nombre</td>
+                                        <td>@detalle.Cantidad</td>
+                                        <td>$@detalle.PrecioUnitario.ToString("N2")</td>
+                                        <td>$@((detalle.Cantidad * detalle.PrecioUnitario).ToString("N2"))</td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    }
+                    else
+                    {
+                        <p class="text-muted">No hay detalles de productos registrados.</p>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="mt-3">
+        <a asp-action="Index" class="btn btn-secondary">Volver a la Lista</a>
+        <a asp-action="Edit" asp-route-id="@Model.IdVenta" class="btn btn-warning">Editar</a>
+    </div>
+</div>

@@ -1,0 +1,67 @@
+@model Tienda_Repuestos_Demo.Models.Cliente
+
+@{
+    ViewData["Title"] = "Crear Cliente";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <div>
+        <h2 class="mb-1" style="color: var(--text-dark); font-weight: 700;">➕ Crear Nuevo Cliente</h2>
+        <p class="text-muted mb-0">Completa el formulario para agregar un nuevo cliente</p>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-6">
+        <form asp-action="Create">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            
+            <div class="mb-3">
+                <label asp-for="Nombre" class="form-label"></label>
+                <input asp-for="Nombre" class="form-control" required />
+                <span asp-validation-for="Nombre" class="text-danger"></span>
+            </div>
+
+            <div class="mb-3">
+                <label asp-for="Correo" class="form-label">📧 Correo Electrónico</label>
+                <input asp-for="Correo" type="email" class="form-control" required />
+                <span asp-validation-for="Correo" class="text-danger"></span>
+            </div>
+
+            <div class="mb-3">
+                <label for="contraseña" class="form-label">🔒 Contraseña</label>
+                <input type="password" class="form-control" id="contraseña" name="contraseña" placeholder="Dejar vacío para generar contraseña temporal" />
+                <small class="text-muted">Si se deja vacío, se asignará una contraseña temporal: Cliente123!</small>
+            </div>
+
+            <div class="mb-3">
+                <label asp-for="Telefono" class="form-label">📞 Teléfono</label>
+                <input asp-for="Telefono" class="form-control" />
+                <span asp-validation-for="Telefono" class="text-danger"></span>
+            </div>
+
+            <div class="mb-3">
+                <label asp-for="Direccion" class="form-label"></label>
+                <textarea asp-for="Direccion" class="form-control" rows="3"></textarea>
+                <span asp-validation-for="Direccion" class="text-danger"></span>
+            </div>
+
+            <div class="mb-3">
+                <div class="form-check">
+                    <input asp-for="Verificado" class="form-check-input" type="checkbox" />
+                    <label asp-for="Verificado" class="form-check-label">Cliente Verificado</label>
+                </div>
+            </div>
+
+            <div class="mb-3">
+                <button type="submit" class="btn btn-primary">Crear</button>
+                <a asp-action="Index" class="btn btn-secondary">Cancelar</a>
+            </div>
+        </form>
+    </div>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

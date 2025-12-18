@@ -1,0 +1,40 @@
+@model Tienda_Repuestos_Demo.Models.Producto
+
+@{
+    ViewData["Title"] = "Eliminar Producto";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>Eliminar Producto</h2>
+<hr />
+
+<h3>¿Está seguro que desea eliminar este producto?</h3>
+<div class="card mt-3">
+    <div class="card-body">
+        <dl class="row">
+            <dt class="col-sm-3">Código:</dt>
+            <dd class="col-sm-9">@Model.Codigo</dd>
+
+            <dt class="col-sm-3">Nombre:</dt>
+            <dd class="col-sm-9">@Model.Nombre</dd>
+
+            <dt class="col-sm-3">Categoría:</dt>
+            <dd class="col-sm-9">@Model.Categoria?.Nombre</dd>
+
+            <dt class="col-sm-3">Proveedor:</dt>
+            <dd class="col-sm-9">@Model.Proveedor?.Nombre</dd>
+
+            <dt class="col-sm-3">Precio de Venta:</dt>
+            <dd class="col-sm-9">$@Model.PrecioVenta.ToString("N2")</dd>
+
+            <dt class="col-sm-3">Stock:</dt>
+            <dd class="col-sm-9">@Model.Stock</dd>
+        </dl>
+
+        <form asp-action="Delete" method="post" class="mt-3">
+            <input type="hidden" asp-for="IdProducto" />
+            <button type="submit" class="btn btn-danger">Eliminar</button>
+            <a asp-action="Index" class="btn btn-secondary">Cancelar</a>
+        </form>
+    </div>
+</div>

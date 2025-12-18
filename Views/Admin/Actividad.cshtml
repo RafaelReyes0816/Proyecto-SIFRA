@@ -1,0 +1,283 @@
+@{
+    ViewData["Title"] = "Actividad del Sistema";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+@{
+    var ultimasVentas = ViewBag.UltimasVentas as List<Tienda_Repuestos_Demo.Models.Venta>;
+    var ultimosUsuarios = ViewBag.UltimosUsuarios as List<Tienda_Repuestos_Demo.Models.Usuario>;
+    var ultimosClientes = ViewBag.UltimosClientes as List<Tienda_Repuestos_Demo.Models.Cliente>;
+    var productosRecientes = ViewBag.ProductosRecientes as List<Tienda_Repuestos_Demo.Models.Producto>;
+    var stats = ViewBag.Estadisticas as dynamic;
+}
+
+<div class="container-fluid dark-theme" style="min-height: 100vh; padding: 2rem;">
+    <div class="d-flex justify-content-between align-items-center mb-4 fade-in-up">
+        <div>
+            <h2 class="mb-1" style="font-weight: 700;">📋 Actividad del Sistema</h2>
+            <p class="text-muted mb-0">Monitoreo en tiempo real de las operaciones</p>
+        </div>
+        <a asp-action="Dashboard" class="btn btn-outline-light">
+            ← Volver al Dashboard
+        </a>
+    </div>
+
+    <!-- Resumen de Actividad -->
+    <div class="row mb-4">
+        <div class="col-md-3 mb-3">
+            <div class="stat-card-dark bg-dark-primary">
+                <h5>🛒 Ventas Hoy</h5>
+                <h2>@stats?.VentasHoy</h2>
+            </div>
+        </div>
+        <div class="col-md-3 mb-3">
+            <div class="stat-card-dark bg-dark-success">
+                <h5>👥 Usuarios Activos</h5>
+                <h2>@stats?.UsuariosActivos</h2>
+            </div>
+        </div>
+        <div class="col-md-3 mb-3">
+            <div class="stat-card-dark bg-dark-info">
+                <h5>✅ Clientes Verificados</h5>
+                <h2>@stats?.ClientesVerificados</h2>
+            </div>
+        </div>
+        <div class="col-md-3 mb-3">
+            <div class="stat-card-dark bg-dark-warning">
+                <h5>⚠️ Productos Bajo Stock</h5>
+                <h2>@stats?.ProductosBajoStock</h2>
+            </div>
+        </div>
+    </div>
+
+    <!-- Últimas Ventas -->
+    <div class="row mb-4">
+        <div class="col-md-12">
+            <div class="card fade-in-up">
+                <div class="card-header">
+                    <h5 class="mb-0 icon-glow">💰 Últimas 10 Ventas Realizadas</h5>
+                </div>
+                <div class="card-body">
+                    @if (ultimasVentas != null && ultimasVentas.Any())
+                    {
+                        <div class="table-responsive">
+                            <table class="table table-hover">
+                                <thead>
+                                    <tr>
+                                        <th>ID</th>
+                                        <th>Fecha</th>
+                                        <th>Cliente</th>
+                                        <th>Vendedor</th>
+                                        <th>Tipo</th>
+                                        <th>Estado</th>
+                                        <th>Total</th>
+                                        <th>Acciones</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach (var venta in ultimasVentas)
+                                    {
+                                        <tr>
+                                            <td><strong>#@venta.IdVenta</strong></td>
+                                            <td>@venta.Fecha.ToString("dd/MM/yyyy HH:mm")</td>
+                                            <td>@venta.Cliente?.Nombre</td>
+                                            <td>@venta.Vendedor?.Nombre</td>
+                                            <td>
+                                                <span class="badge bg-info">@venta.TipoVenta</span>
+                                            </td>
+                                            <td>
+                                                <span class="badge bg-@(venta.Estado == "confirmada" ? "success" : venta.Estado == "pendiente" ? "warning" : "danger")">
+                                                    @venta.Estado
+                                                </span>
+                                            </td>
+                                            <td><strong>$@venta.Total.ToString("N2")</strong></td>
+                                            <td>
+                                                <a href="@Url.Action("Details", "Ventas", new { id = venta.IdVenta })" class="btn btn-sm btn-info">
+                                                    👁️ Ver
+                                                </a>
+                                            </td>
+                                        </tr>
+                                    }
+                                </tbody>
+                            </table>
+                        </div>
+                    }
+                    else
+                    {
+                        <div class="alert alert-info">
+                            No hay ventas registradas aún.
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Últimos Usuarios y Clientes -->
+    <div class="row mb-4">
+        <div class="col-md-6">
+            <div class="card fade-in-up">
+                <div class="card-header">
+                    <h5 class="mb-0 icon-glow">👤 Últimos Usuarios Registrados</h5>
+                </div>
+                <div class="card-body">
+                    @if (ultimosUsuarios != null && ultimosUsuarios.Any())
+                    {
+                        @foreach (var usuario in ultimosUsuarios)
+                        {
+                            <div class="timeline-item mb-3">
+                                <div class="d-flex justify-content-between align-items-start">
+                                    <div>
+                                        <h6 class="mb-1" style="color: #ffffff;">
+                                            @usuario.Nombre
+                                        </h6>
+                                        <p class="mb-1 text-muted small">
+                                            📧 @usuario.Correo
+                                        </p>
+                                        <span class="badge bg-@(usuario.Rol == "admin" ? "danger" : usuario.Rol == "vendedor" ? "warning" : "info")">
+                                            @usuario.Rol
+                                        </span>
+                                        @if (usuario.Activo)
+                                        {
+                                            <span class="badge bg-success">✅ Activo</span>
+                                        }
+                                        else
+                                        {
+                                            <span class="badge bg-secondary">❌ Inactivo</span>
+                                        }
+                                    </div>
+                                    <small class="text-muted">
+                                        @usuario.FechaRegistro.ToString("dd/MM/yyyy")
+                                    </small>
+                                </div>
+                            </div>
+                        }
+                    }
+                    else
+                    {
+                        <div class="alert alert-info">
+                            No hay usuarios registrados.
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-6">
+            <div class="card fade-in-up">
+                <div class="card-header">
+                    <h5 class="mb-0 icon-glow">👥 Últimos Clientes Registrados</h5>
+                </div>
+                <div class="card-body">
+                    @if (ultimosClientes != null && ultimosClientes.Any())
+                    {
+                        @foreach (var cliente in ultimosClientes)
+                        {
+                            <div class="timeline-item mb-3">
+                                <div class="d-flex justify-content-between align-items-start">
+                                    <div>
+                                        <h6 class="mb-1" style="color: #ffffff;">
+                                            @cliente.Nombre
+                                        </h6>
+                                        <p class="mb-1 text-muted small">
+                                            📧 @cliente.Correo
+                                        </p>
+                                        @if (cliente.Verificado)
+                                        {
+                                            <span class="badge bg-success">✅ Verificado</span>
+                                        }
+                                        else
+                                        {
+                                            <span class="badge bg-warning">⏳ Pendiente</span>
+                                        }
+                                        @if (!string.IsNullOrEmpty(cliente.FotoCI))
+                                        {
+                                            <span class="badge bg-info">📄 CI Subido</span>
+                                        }
+                                    </div>
+                                    <small class="text-muted">
+                                        @cliente.FechaRegistro.ToString("dd/MM/yyyy")
+                                    </small>
+                                </div>
+                            </div>
+                        }
+                    }
+                    else
+                    {
+                        <div class="alert alert-info">
+                            No hay clientes registrados.
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Productos que Requieren Atención -->
+    <div class="row">
+        <div class="col-md-12">
+            <div class="card fade-in-up">
+                <div class="card-header">
+                    <h5 class="mb-0 icon-glow">📦 Productos que Requieren Atención</h5>
+                </div>
+                <div class="card-body">
+                    @if (productosRecientes != null && productosRecientes.Any())
+                    {
+                        <div class="table-responsive">
+                            <table class="table table-hover">
+                                <thead>
+                                    <tr>
+                                        <th>Código</th>
+                                        <th>Producto</th>
+                                        <th>Categoría</th>
+                                        <th>Stock Actual</th>
+                                        <th>Stock Mínimo</th>
+                                        <th>Estado</th>
+                                        <th>Acción</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach (var producto in productosRecientes)
+                                    {
+                                        var alerta = producto.Stock <= 0 ? "Agotado" : 
+                                                    producto.Stock <= producto.StockMinimo ? "Crítico" : "Normal";
+                                        var color = producto.Stock <= 0 ? "danger" : 
+                                                   producto.Stock <= producto.StockMinimo ? "warning" : "success";
+                                        
+                                        <tr class="@(producto.Stock <= 0 ? "table-danger" : producto.Stock <= producto.StockMinimo ? "table-warning" : "")">
+                                            <td><strong>@producto.Codigo</strong></td>
+                                            <td>@producto.Nombre</td>
+                                            <td>@producto.Categoria?.Nombre</td>
+                                            <td>
+                                                <span class="badge bg-@color">
+                                                    @producto.Stock unidades
+                                                </span>
+                                            </td>
+                                            <td>@producto.StockMinimo unidades</td>
+                                            <td>
+                                                <span class="badge bg-@color">
+                                                    @alerta
+                                                </span>
+                                            </td>
+                                            <td>
+                                                <a href="@Url.Action("Edit", "Productos", new { id = producto.IdProducto })" class="btn btn-sm btn-warning">
+                                                    ✏️ Actualizar
+                                                </a>
+                                            </td>
+                                        </tr>
+                                    }
+                                </tbody>
+                            </table>
+                        </div>
+                    }
+                    else
+                    {
+                        <div class="alert alert-success">
+                            ✅ Todos los productos tienen stock adecuado.
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

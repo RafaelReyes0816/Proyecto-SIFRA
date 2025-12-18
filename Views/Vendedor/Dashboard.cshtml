@@ -1,0 +1,118 @@
+@{
+    ViewData["Title"] = "Dashboard - Vendedor";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+@{
+    var stats = ViewBag.Estadisticas as dynamic;
+    var ventasRecientes = ViewBag.VentasRecientes as List<Tienda_Repuestos_Demo.Models.Venta>;
+}
+
+<div class="container-fluid">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <div>
+            <h2 class="mb-1" style="color: var(--text-dark); font-weight: 700;">👤 Dashboard - Vendedor</h2>
+            <p class="text-muted mb-0">Bienvenido, @Context.Session.GetString("UsuarioNombre")</p>
+        </div>
+    </div>
+
+    <div class="row mb-4">
+        <div class="col-md-3 mb-3">
+            <div class="stat-card bg-primary">
+                <h5>📊 Ventas Hoy</h5>
+                <h2>@stats?.VentasHoy</h2>
+            </div>
+        </div>
+        <div class="col-md-3 mb-3">
+            <div class="stat-card bg-success">
+                <h5>📅 Ventas del Mes</h5>
+                <h2>@stats?.VentasMes</h2>
+            </div>
+        </div>
+        <div class="col-md-3 mb-3">
+            <div class="stat-card bg-info">
+                <h5>💰 Total Ventas</h5>
+                <h2>@stats?.TotalVentas</h2>
+            </div>
+        </div>
+        <div class="col-md-3 mb-3">
+            <div class="stat-card bg-warning">
+                <h5>💵 Ingresos del Mes</h5>
+                <h2>$@(stats?.IngresosMes?.ToString("N2") ?? "0.00")</h2>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-8">
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="mb-0">📋 Ventas Recientes</h5>
+                </div>
+                <div class="card-body">
+                    @if (ventasRecientes != null && ventasRecientes.Any())
+                    {
+                        <table class="table table-striped">
+                            <thead>
+                                <tr>
+                                    <th>Fecha</th>
+                                    <th>Cliente</th>
+                                    <th>Tipo</th>
+                                    <th>Estado</th>
+                                    <th>Total</th>
+                                    <th>Acciones</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var venta in ventasRecientes)
+                                {
+                                    <tr>
+                                        <td>@venta.Fecha.ToString("dd/MM/yyyy HH:mm")</td>
+                                        <td>@venta.Cliente.Nombre</td>
+                                        <td>@venta.TipoVenta</td>
+                                        <td>
+                                            <span class="badge bg-@(venta.Estado == "confirmada" ? "success" : venta.Estado == "pendiente" ? "warning" : "danger")">
+                                                @venta.Estado
+                                            </span>
+                                        </td>
+                                        <td>$@venta.Total.ToString("N2")</td>
+                                        <td>
+                                            <a href="@Url.Action("Details", "Ventas", new { id = venta.IdVenta })" class="btn btn-sm btn-info">Ver</a>
+                                        </td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    }
+                    else
+                    {
+                        <p class="text-muted">No hay ventas recientes.</p>
+                    }
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="mb-0">⚡ Acciones Rápidas</h5>
+                </div>
+                <div class="card-body">
+                    <div class="d-grid gap-2">
+                        <a href="@Url.Action("Create", "Ventas")" class="btn btn-primary">
+                            ➕ Nueva Venta
+                        </a>
+                        <a href="@Url.Action("Index", "Ventas")" class="btn btn-info">
+                            📋 Ver Todas las Ventas
+                        </a>
+                        <a href="@Url.Action("Index", "Productos")" class="btn btn-success">
+                            📦 Ver Productos
+                        </a>
+                        <a href="@Url.Action("Index", "Clientes")" class="btn btn-secondary">
+                            👤 Ver Clientes
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

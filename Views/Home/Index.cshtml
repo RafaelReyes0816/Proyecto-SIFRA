@@ -1,0 +1,20 @@
+@{
+    ViewData["Title"] = "Tienda de Repuestos";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="container-fluid">
+    <div class="row justify-content-center align-items-center" style="min-height: 60vh;">
+        <div class="col-md-8 text-center">
+            <div class="card shadow-lg border-0" style="background: linear-gradient(135deg, #4A90E2 0%, #357ABD 100%); color: white; border-radius: 20px; padding: 3rem;">
+                <h1 class="display-4 mb-3" style="font-weight: 700;">🔧 Bienvenido a la Tienda de Repuestos</h1>
+                <p class="lead mb-4" style="opacity: 0.95;">Sistema de gestión de inventario y ventas</p>
+                <hr style="border-color: rgba(255,255,255,0.3); margin: 2rem 0;">
+                <p class="mb-4" style="font-size: 1.1rem;">Por favor, inicia sesión para acceder al sistema</p>
+                <a asp-controller="Account" asp-action="Login" class="btn btn-light btn-lg" style="padding: 0.75rem 2rem; font-weight: 600; border-radius: 10px;">
+                    🚀 Iniciar Sesión
+                </a>
+            </div>
+        </div>
+    </div>
+</div>

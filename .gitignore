@@ -1,0 +1,87 @@
+## .NET Core
+bin/
+obj/
+*.user
+*.suo
+*.cache
+*.dll
+*.pdb
+*.exe
+*.log
+
+## Visual Studio
+.vs/
+.vscode/
+*.userprefs
+*.sln.docstates
+
+## Build results
+[Dd]ebug/
+[Rr]elease/
+x64/
+x86/
+[Bb]uild/
+[Bb]in/
+[Oo]bj/
+[Ll]og/
+
+## NuGet Packages
+*.nupkg
+*.snupkg
+**/packages/*
+!**/packages/build/
+project.lock.json
+project.fragment.lock.json
+artifacts/
+
+## ASP.NET Core
+appsettings.Development.json
+appsettings.Local.json
+*.db
+*.db-shm
+*.db-wal
+
+## Archivos sensibles - NUNCA subir estos archivos
+.git-credentials
+*.key
+*.pem
+*.p12
+*.pfx
+secrets.json
+.env
+.env.local
+.env.*.local
+
+## Archivos de usuario
+*.user
+*.suo
+*.userosscache
+*.sln.docstates
+
+## Archivos de IDE
+.idea/
+*.swp
+*.swo
+*~
+
+## Archivos temporales
+*.tmp
+*.temp
+*.bak
+*.cache
+
+## Logs
+logs/
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+## Archivos subidos (mantener estructura pero no los archivos)
+wwwroot/uploads/ci/*
+!wwwroot/uploads/ci/.gitkeep
+
+## Archivos de sistema
+.DS_Store
+Thumbs.db
+desktop.ini

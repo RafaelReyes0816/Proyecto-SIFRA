@@ -1,0 +1,66 @@
+@model IEnumerable<Tienda_Repuestos_Demo.Models.Venta>
+
+@{
+    ViewData["Title"] = "Mis Compras";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="container-fluid">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <div>
+            <h2 class="mb-1" style="color: var(--text-dark); font-weight: 700;">🛍️ Mis Compras</h2>
+            <p class="text-muted mb-0">Historial completo de tus compras</p>
+        </div>
+        <a asp-controller="Productos" asp-action="Index" class="btn btn-primary">🛒 Seguir Comprando</a>
+    </div>
+
+    <div class="card">
+        <div class="card-body">
+            @if (Model != null && Model.Any())
+            {
+                <table class="table table-striped table-hover">
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Fecha</th>
+                            <th>Tipo</th>
+                            <th>Estado</th>
+                            <th>Método Pago</th>
+                            <th>Total</th>
+                            <th>Acciones</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var venta in Model)
+                        {
+                            <tr>
+                                <td><strong>#@venta.IdVenta</strong></td>
+                                <td>@venta.Fecha.ToString("dd/MM/yyyy HH:mm")</td>
+                                <td>
+                                    <span class="badge bg-info">@venta.TipoVenta</span>
+                                </td>
+                                <td>
+                                    <span class="badge bg-@(venta.Estado == "confirmada" ? "success" : venta.Estado == "pendiente" ? "warning" : "danger")">
+                                        @venta.Estado
+                                    </span>
+                                </td>
+                                <td>@venta.MetodoPago</td>
+                                <td><strong>$@venta.Total.ToString("N2")</strong></td>
+                                <td>
+                                    <a href="@Url.Action("Details", "Ventas", new { id = venta.IdVenta })" class="btn btn-sm btn-info">👁️ Ver Detalles</a>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            }
+            else
+            {
+                <div class="text-center py-5">
+                    <p class="text-muted mb-3" style="font-size: 1.1rem;">Aún no has realizado ninguna compra</p>
+                    <a asp-controller="Productos" asp-action="Index" class="btn btn-primary btn-lg">🛒 Ver Catálogo de Productos</a>
+                </div>
+            }
+        </div>
+    </div>
+</div>

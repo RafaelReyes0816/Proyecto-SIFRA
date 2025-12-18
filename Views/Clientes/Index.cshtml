@@ -1,0 +1,79 @@
+@model IEnumerable<Tienda_Repuestos_Demo.Models.Cliente>
+
+@{
+    ViewData["Title"] = "Clientes";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="container-fluid">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <div>
+            <h2 class="mb-1" style="color: var(--text-dark); font-weight: 700;">👤 Gestión de Clientes</h2>
+            <p class="text-muted mb-0">Administra la base de clientes</p>
+        </div>
+        @if (Context.Session.GetString("UsuarioRol") == "admin")
+        {
+            <a asp-action="Create" class="btn btn-primary">
+                ➕ Nuevo Cliente
+            </a>
+        }
+    </div>
+
+    @if (TempData["Success"] != null)
+    {
+        <div class="alert alert-success alert-dismissible fade show" role="alert">
+            <strong>✅ Éxito:</strong> @TempData["Success"]
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    }
+
+    <div class="card">
+        <div class="card-body">
+            <table class="table table-striped table-hover">
+                <thead>
+                    <tr>
+                        <th>Nombre</th>
+                        <th>Correo</th>
+                        <th>Teléfono</th>
+                        <th>Dirección</th>
+                        <th>Verificado</th>
+                        <th>Fecha Registro</th>
+                        <th>Acciones</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model)
+                    {
+                        <tr>
+                            <td>@item.Nombre</td>
+                            <td>@item.Correo</td>
+                            <td>@(item.Telefono ?? "N/A")</td>
+                            <td>@(item.Direccion ?? "N/A")</td>
+                            <td>
+                                @if (item.Verificado)
+                                {
+                                    <span class="badge bg-success">Sí</span>
+                                }
+                                else
+                                {
+                                    <span class="badge bg-warning">No</span>
+                                }
+                            </td>
+                            <td>@item.FechaRegistro.ToString("dd/MM/yyyy")</td>
+                            <td>
+                                <div class="btn-group" role="group">
+                                    <a asp-action="Details" asp-route-id="@item.IdCliente" class="btn btn-sm btn-info">👁️ Ver</a>
+                                    @if (Context.Session.GetString("UsuarioRol") == "admin")
+                                    {
+                                        <a asp-action="Edit" asp-route-id="@item.IdCliente" class="btn btn-sm btn-warning">✏️ Editar</a>
+                                        <a asp-action="Delete" asp-route-id="@item.IdCliente" class="btn btn-sm btn-danger">🗑️ Eliminar</a>
+                                    }
+                                </div>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>

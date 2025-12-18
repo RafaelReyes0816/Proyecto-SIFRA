@@ -1,0 +1,161 @@
+@{
+    ViewData["Title"] = "Mis Notificaciones";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+@{
+    // Convertimos a IEnumerable para evitar problemas en el foreach y usamos una lista vacía por defecto
+    var notificaciones = (ViewBag.Notificaciones as IEnumerable<dynamic>) ?? new List<dynamic>();
+    var totalNotificaciones = ViewBag.TotalNotificaciones as int?;
+    var notificacionesPendientes = ViewBag.NotificacionesPendientes as int?;
+}
+
+<div class="container-fluid dark-theme" style="min-height: 100vh; padding: 2rem;">
+    <div class="d-flex justify-content-between align-items-center mb-4 fade-in-up">
+        <div>
+            <h2 class="mb-1" style="font-weight: 700;">🔔 Mis Notificaciones</h2>
+            <p class="text-muted mb-0">Centro de notificaciones de tus compras</p>
+        </div>
+        <a asp-action="Dashboard" class="btn btn-outline-light">
+            ← Volver al Dashboard
+        </a>
+    </div>
+
+    <!-- Resumen de Notificaciones -->
+    <div class="row mb-4">
+        <div class="col-md-6 mb-3">
+            <div class="stat-card-dark bg-dark-primary">
+                <h5>📊 Total Notificaciones</h5>
+                <h2>@(totalNotificaciones ?? 0)</h2>
+                <small style="opacity: 0.8;">Todas tus notificaciones</small>
+            </div>
+        </div>
+        <div class="col-md-6 mb-3">
+            <div class="stat-card-dark bg-dark-warning">
+                <h5>⏳ Pendientes de Confirmación</h5>
+                <h2>@(notificacionesPendientes ?? 0)</h2>
+                <small style="opacity: 0.8;">Compras por confirmar</small>
+            </div>
+        </div>
+    </div>
+
+    <!-- Lista de Notificaciones -->
+    <div class="row">
+        <div class="col-md-12">
+            <div class="card fade-in-up">
+                <div class="card-header">
+                    <h5 class="mb-0 icon-glow">📬 Todas las Notificaciones</h5>
+                </div>
+                <div class="card-body">
+                    @if (notificaciones != null && notificaciones.Any())
+                    {
+                        <div class="timeline">
+                            @foreach (var notif in notificaciones)
+                            {
+                                // Corregimos las referencias nulas usando el operador ?.
+                                var tipo = notif?.Tipo;
+                                var mensaje = notif?.Mensaje;
+                                var fecha = notif?.Fecha;
+                                var ventaId = notif?.VentaId;
+                                var estado = notif?.Estado;
+                                var total = notif?.Total;
+
+                                var iconoNotif = tipo == "success" ? "✅" : 
+                                               tipo == "warning" ? "⏳" : "❌";
+                                var colorBorde = tipo == "success" ? "#38ef7d" : 
+                                               tipo == "warning" ? "#f5576c" : "#fa709a";
+                                var bgColor = tipo == "success" ? "rgba(56, 239, 125, 0.1)" : 
+                                            tipo == "warning" ? "rgba(245, 87, 108, 0.1)" : "rgba(247, 112, 154, 0.1)";
+                                
+                                <div class="mb-3 p-3 fade-in-up" style="background: @bgColor; border-radius: 10px; border-left: 4px solid @colorBorde;">
+                                    <div class="d-flex justify-content-between align-items-start">
+                                        <div class="flex-grow-1">
+                                            <div class="d-flex align-items-center mb-2">
+                                                <span style="font-size: 1.5rem; margin-right: 0.5rem;">@iconoNotif</span>
+                                                <h6 class="mb-0" style="color: #ffffff;">@mensaje</h6>
+                                            </div>
+                                            <div class="d-flex align-items-center gap-3 mb-2">
+                                                <small class="text-muted">
+                                                    🕒 @(fecha != null ? fecha.ToString("dd/MM/yyyy HH:mm") : "")
+                                                </small>
+                                                <span class="badge bg-@(tipo == "success" ? "success" : tipo == "warning" ? "warning" : "danger")">
+                                                    @estado
+                                                </span>
+                                                <strong style="color: #4facfe;">$@(total != null ? total.ToString("N2") : "0.00")</strong>
+                                            </div>
+                                            <a href="@Url.Action("Details", "Ventas", new { id = ventaId })" class="btn btn-sm btn-outline-light">
+                                                👁️ Ver Detalles de la Compra
+                                            </a>
+                                        </div>
+                                    </div>
+                                </div>
+                            }
+                        </div>
+
+                        <!-- Filtros y Acciones -->
+                        <div class="mt-4 p-3" style="background: rgba(26, 31, 58, 0.5); border-radius: 10px;">
+                            <div class="row">
+                                <div class="col-md-12 text-center">
+                                    <p class="text-muted mb-3">¿Necesitas más información sobre tus compras?</p>
+                                    <a asp-action="MisCompras" class="btn btn-primary me-2">
+                                        🛍️ Ver Todas mis Compras
+                                    </a>
+                                    <a asp-controller="Productos" asp-action="Index" class="btn btn-success">
+                                        🛒 Ir al Catálogo
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    }
+                    else
+                    {
+                        <div class="text-center py-5">
+                            <div style="font-size: 4rem; margin-bottom: 1rem; opacity: 0.5;">🔔</div>
+                            <h5 class="mb-3" style="color: #b0b0b0;">No tienes notificaciones</h5>
+                            <p class="text-muted mb-4">Cuando realices compras, aparecerán notificaciones aquí</p>
+                            <a asp-controller="Productos" asp-action="Index" class="btn btn-primary btn-lg">
+                                🛒 Explorar Catálogo de Productos
+                            </a>
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Información Adicional -->
+    <div class="row mt-4">
+        <div class="col-md-12">
+            <div class="card fade-in-up">
+                <div class="card-header">
+                    <h5 class="mb-0 icon-glow">ℹ️ Sobre las Notificaciones</h5>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-4 mb-3">
+                            <div class="text-center p-3" style="background: rgba(45, 53, 97, 0.3); border-radius: 10px;">
+                                <div style="font-size: 2rem; margin-bottom: 0.5rem;">✅</div>
+                                <h6 style="color: #38ef7d;">Confirmada</h6>
+                                <p class="text-muted small mb-0">Tu compra ha sido procesada exitosamente</p>
+                            </div>
+                        </div>
+                        <div class="col-md-4 mb-3">
+                            <div class="text-center p-3" style="background: rgba(45, 53, 97, 0.3); border-radius: 10px;">
+                                <div style="font-size: 2rem; margin-bottom: 0.5rem;">⏳</div>
+                                <h6 style="color: #f5576c;">Pendiente</h6>
+                                <p class="text-muted small mb-0">Esperando confirmación del pago</p>
+                            </div>
+                        </div>
+                        <div class="col-md-4 mb-3">
+                            <div class="text-center p-3" style="background: rgba(45, 53, 97, 0.3); border-radius: 10px;">
+                                <div style="font-size: 2rem; margin-bottom: 0.5rem;">❌</div>
+                                <h6 style="color: #fa709a;">Cancelada</h6>
+                                <p class="text-muted small mb-0">La compra ha sido cancelada</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
