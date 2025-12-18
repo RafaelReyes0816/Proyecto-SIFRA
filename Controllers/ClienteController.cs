@@ -118,6 +118,7 @@ namespace Tienda_Repuestos_Demo.Controllers
                 {
                     // Si no subió CI, queda sin verificar
                     cliente.Verificado = false;
+                    cliente.FotoCI = null;
                 }
 
                 cliente.FechaRegistro = DateTime.Now;
@@ -198,10 +199,6 @@ namespace Tienda_Repuestos_Demo.Controllers
                     // Mantener la contraseña actual
                     cliente.Contraseña = clienteActual.Contraseña;
                     
-                    // Preservar el estado de verificación actual por defecto
-                    cliente.Verificado = clienteActual.Verificado;
-                    cliente.FotoCI = clienteActual.FotoCI; // Mantener foto actual por defecto
-
                     // Procesar nueva foto del CI si se subió
                     if (fotoCI != null && fotoCI.Length > 0)
                     {
@@ -238,6 +235,15 @@ namespace Tienda_Repuestos_Demo.Controllers
                         
                         // Si subió un CI nuevo, se marca como verificado automáticamente
                         cliente.Verificado = true;
+                    }
+                    else
+                    {
+                        // Si no se subió nueva foto, mantener la foto actual
+                        cliente.FotoCI = clienteActual.FotoCI;
+                        
+                        // Verificar automáticamente el estado de verificación basado en si tiene fotoCI
+                        // Si tiene fotoCI, debe estar verificado; si no tiene, no verificado
+                        cliente.Verificado = !string.IsNullOrEmpty(cliente.FotoCI);
                     }
 
                     _context.Update(cliente);

@@ -15,7 +15,7 @@
 <div class="container-fluid">
     <div class="d-flex justify-content-between align-items-center mb-4">
         <div>
-            <h2 class="mb-1" style="color: var(--text-dark); font-weight: 700;">👨‍💼 Dashboard - Administrador</h2>
+            <h2 class="mb-1" style="color: #ffffff; font-weight: 700;">👨‍💼 Dashboard - Administrador</h2>
             <p class="text-muted mb-0">Bienvenido, @Context.Session.GetString("UsuarioNombre")</p>
         </div>
     </div>
@@ -366,37 +366,4 @@
         </div>
     </div>
 
-    <div class="row">
-        <div class="col-md-12">
-            <div class="card">
-                <div class="card-header">
-                    <h5 class="mb-0">⚡ Acciones Rápidas</h5>
-                </div>
-                <div class="card-body">
-                    <div class="row g-3">
-                        <div class="col-md-3">
-                            <a href="@Url.Action("Index", "Productos")" class="btn btn-primary w-100">
-                                📦 Gestionar Productos
-                            </a>
-                        </div>
-                        <div class="col-md-3">
-                            <a href="@Url.Action("Index", "Usuarios")" class="btn btn-warning w-100">
-                                👥 Gestionar Usuarios
-                            </a>
-                        </div>
-                        <div class="col-md-3">
-                            <a href="@Url.Action("Index", "Clientes")" class="btn btn-success w-100">
-                                👤 Gestionar Clientes
-                            </a>
-                        </div>
-                        <div class="col-md-3">
-                            <a href="@Url.Action("Index", "Ventas")" class="btn btn-info w-100">
-                                💰 Ver Ventas
-                            </a>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
 </div>

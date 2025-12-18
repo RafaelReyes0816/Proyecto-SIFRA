@@ -9,211 +9,211 @@ build_property.EnforceExtendedAnalyzerRules =
 build_property._SupportedPlatformList = Linux,macOS,Windows
 build_property.RootNamespace = Tienda_Repuestos_Demo
 build_property.RootNamespace = Tienda_Repuestos_Demo
-build_property.ProjectDir = C:\Proyecto-SIFRA\
+build_property.ProjectDir = /home/rafaelreyes/Documentos/Proyectos web/Tienda-Repuestos-Demo/
 build_property.EnableComHosting = 
 build_property.EnableGeneratedComInterfaceComImportInterop = 
 build_property.RazorLangVersion = 8.0
 build_property.SupportLocalizedComponentNames = 
 build_property.GenerateRazorMetadataSourceChecksumAttributes = 
-build_property.MSBuildProjectDirectory = C:\Proyecto-SIFRA
+build_property.MSBuildProjectDirectory = /home/rafaelreyes/Documentos/Proyectos web/Tienda-Repuestos-Demo
 build_property._RazorSourceGeneratorDebug = 
 
-[C:/Proyecto-SIFRA/Views/Account/Login.cshtml]
-build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQWNjb3VudFxMb2dpbi5jc2h0bWw=
+[/home/rafaelreyes/Documentos/Proyectos web/Tienda-Repuestos-Demo/Views/Account/Login.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3MvQWNjb3VudC9Mb2dpbi5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Proyecto-SIFRA/Views/Admin/Actividad.cshtml]
-build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQWRtaW5cQWN0aXZpZGFkLmNzaHRtbA==
+[/home/rafaelreyes/Documentos/Proyectos web/Tienda-Repuestos-Demo/Views/Admin/Actividad.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3MvQWRtaW4vQWN0aXZpZGFkLmNzaHRtbA==
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Proyecto-SIFRA/Views/Admin/Configuracion.cshtml]
-build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQWRtaW5cQ29uZmlndXJhY2lvbi5jc2h0bWw=
+[/home/rafaelreyes/Documentos/Proyectos web/Tienda-Repuestos-Demo/Views/Admin/Configuracion.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3MvQWRtaW4vQ29uZmlndXJhY2lvbi5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Proyecto-SIFRA/Views/Admin/Dashboard.cshtml]
-build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQWRtaW5cRGFzaGJvYXJkLmNzaHRtbA==
+[/home/rafaelreyes/Documentos/Proyectos web/Tienda-Repuestos-Demo/Views/Admin/Dashboard.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3MvQWRtaW4vRGFzaGJvYXJkLmNzaHRtbA==
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Proyecto-SIFRA/Views/Admin/Reportes.cshtml]
-build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQWRtaW5cUmVwb3J0ZXMuY3NodG1s
+[/home/rafaelreyes/Documentos/Proyectos web/Tienda-Repuestos-Demo/Views/Admin/Reportes.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3MvQWRtaW4vUmVwb3J0ZXMuY3NodG1s
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Proyecto-SIFRA/Views/Categorias/Create.cshtml]
-build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQ2F0ZWdvcmlhc1xDcmVhdGUuY3NodG1s
+[/home/rafaelreyes/Documentos/Proyectos web/Tienda-Repuestos-Demo/Views/Categorias/Create.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3MvQ2F0ZWdvcmlhcy9DcmVhdGUuY3NodG1s
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Proyecto-SIFRA/Views/Categorias/Delete.cshtml]
-build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQ2F0ZWdvcmlhc1xEZWxldGUuY3NodG1s
+[/home/rafaelreyes/Documentos/Proyectos web/Tienda-Repuestos-Demo/Views/Categorias/Delete.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3MvQ2F0ZWdvcmlhcy9EZWxldGUuY3NodG1s
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Proyecto-SIFRA/Views/Categorias/Details.cshtml]
-build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQ2F0ZWdvcmlhc1xEZXRhaWxzLmNzaHRtbA==
+[/home/rafaelreyes/Documentos/Proyectos web/Tienda-Repuestos-Demo/Views/Categorias/Details.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3MvQ2F0ZWdvcmlhcy9EZXRhaWxzLmNzaHRtbA==
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Proyecto-SIFRA/Views/Categorias/Edit.cshtml]
-build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQ2F0ZWdvcmlhc1xFZGl0LmNzaHRtbA==
+[/home/rafaelreyes/Documentos/Proyectos web/Tienda-Repuestos-Demo/Views/Categorias/Edit.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3MvQ2F0ZWdvcmlhcy9FZGl0LmNzaHRtbA==
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Proyecto-SIFRA/Views/Categorias/Index.cshtml]
-build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQ2F0ZWdvcmlhc1xJbmRleC5jc2h0bWw=
+[/home/rafaelreyes/Documentos/Proyectos web/Tienda-Repuestos-Demo/Views/Categorias/Index.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3MvQ2F0ZWdvcmlhcy9JbmRleC5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Proyecto-SIFRA/Views/Clientes/Create.cshtml]
-build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQ2xpZW50ZXNcQ3JlYXRlLmNzaHRtbA==
+[/home/rafaelreyes/Documentos/Proyectos web/Tienda-Repuestos-Demo/Views/Cliente/Dashboard.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3MvQ2xpZW50ZS9EYXNoYm9hcmQuY3NodG1s
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Proyecto-SIFRA/Views/Clientes/Delete.cshtml]
-build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQ2xpZW50ZXNcRGVsZXRlLmNzaHRtbA==
+[/home/rafaelreyes/Documentos/Proyectos web/Tienda-Repuestos-Demo/Views/Cliente/Favoritos.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3MvQ2xpZW50ZS9GYXZvcml0b3MuY3NodG1s
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Proyecto-SIFRA/Views/Clientes/Details.cshtml]
-build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQ2xpZW50ZXNcRGV0YWlscy5jc2h0bWw=
+[/home/rafaelreyes/Documentos/Proyectos web/Tienda-Repuestos-Demo/Views/Cliente/MisCompras.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3MvQ2xpZW50ZS9NaXNDb21wcmFzLmNzaHRtbA==
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Proyecto-SIFRA/Views/Clientes/Edit.cshtml]
-build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQ2xpZW50ZXNcRWRpdC5jc2h0bWw=
+[/home/rafaelreyes/Documentos/Proyectos web/Tienda-Repuestos-Demo/Views/Cliente/Notificaciones.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3MvQ2xpZW50ZS9Ob3RpZmljYWNpb25lcy5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Proyecto-SIFRA/Views/Clientes/Index.cshtml]
-build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQ2xpZW50ZXNcSW5kZXguY3NodG1s
+[/home/rafaelreyes/Documentos/Proyectos web/Tienda-Repuestos-Demo/Views/Cliente/Perfil.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3MvQ2xpZW50ZS9QZXJmaWwuY3NodG1s
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Proyecto-SIFRA/Views/Cliente/Dashboard.cshtml]
-build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQ2xpZW50ZVxEYXNoYm9hcmQuY3NodG1s
+[/home/rafaelreyes/Documentos/Proyectos web/Tienda-Repuestos-Demo/Views/Cliente/Registro.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3MvQ2xpZW50ZS9SZWdpc3Ryby5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Proyecto-SIFRA/Views/Cliente/Favoritos.cshtml]
-build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQ2xpZW50ZVxGYXZvcml0b3MuY3NodG1s
+[/home/rafaelreyes/Documentos/Proyectos web/Tienda-Repuestos-Demo/Views/Clientes/Create.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3MvQ2xpZW50ZXMvQ3JlYXRlLmNzaHRtbA==
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Proyecto-SIFRA/Views/Cliente/MisCompras.cshtml]
-build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQ2xpZW50ZVxNaXNDb21wcmFzLmNzaHRtbA==
+[/home/rafaelreyes/Documentos/Proyectos web/Tienda-Repuestos-Demo/Views/Clientes/Delete.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3MvQ2xpZW50ZXMvRGVsZXRlLmNzaHRtbA==
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Proyecto-SIFRA/Views/Cliente/Notificaciones.cshtml]
-build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQ2xpZW50ZVxOb3RpZmljYWNpb25lcy5jc2h0bWw=
+[/home/rafaelreyes/Documentos/Proyectos web/Tienda-Repuestos-Demo/Views/Clientes/Details.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3MvQ2xpZW50ZXMvRGV0YWlscy5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Proyecto-SIFRA/Views/Cliente/Perfil.cshtml]
-build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQ2xpZW50ZVxQZXJmaWwuY3NodG1s
+[/home/rafaelreyes/Documentos/Proyectos web/Tienda-Repuestos-Demo/Views/Clientes/Edit.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3MvQ2xpZW50ZXMvRWRpdC5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Proyecto-SIFRA/Views/Cliente/Registro.cshtml]
-build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQ2xpZW50ZVxSZWdpc3Ryby5jc2h0bWw=
+[/home/rafaelreyes/Documentos/Proyectos web/Tienda-Repuestos-Demo/Views/Clientes/Index.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3MvQ2xpZW50ZXMvSW5kZXguY3NodG1s
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Proyecto-SIFRA/Views/Home/Index.cshtml]
-build_metadata.AdditionalFiles.TargetPath = Vmlld3NcSG9tZVxJbmRleC5jc2h0bWw=
+[/home/rafaelreyes/Documentos/Proyectos web/Tienda-Repuestos-Demo/Views/Home/Index.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3MvSG9tZS9JbmRleC5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Proyecto-SIFRA/Views/Home/Privacy.cshtml]
-build_metadata.AdditionalFiles.TargetPath = Vmlld3NcSG9tZVxQcml2YWN5LmNzaHRtbA==
+[/home/rafaelreyes/Documentos/Proyectos web/Tienda-Repuestos-Demo/Views/Home/Privacy.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3MvSG9tZS9Qcml2YWN5LmNzaHRtbA==
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Proyecto-SIFRA/Views/Productos/Catalogo.cshtml]
-build_metadata.AdditionalFiles.TargetPath = Vmlld3NcUHJvZHVjdG9zXENhdGFsb2dvLmNzaHRtbA==
+[/home/rafaelreyes/Documentos/Proyectos web/Tienda-Repuestos-Demo/Views/Productos/Catalogo.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3MvUHJvZHVjdG9zL0NhdGFsb2dvLmNzaHRtbA==
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Proyecto-SIFRA/Views/Productos/Comprar.cshtml]
-build_metadata.AdditionalFiles.TargetPath = Vmlld3NcUHJvZHVjdG9zXENvbXByYXIuY3NodG1s
+[/home/rafaelreyes/Documentos/Proyectos web/Tienda-Repuestos-Demo/Views/Productos/Comprar.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3MvUHJvZHVjdG9zL0NvbXByYXIuY3NodG1s
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Proyecto-SIFRA/Views/Productos/Create.cshtml]
-build_metadata.AdditionalFiles.TargetPath = Vmlld3NcUHJvZHVjdG9zXENyZWF0ZS5jc2h0bWw=
+[/home/rafaelreyes/Documentos/Proyectos web/Tienda-Repuestos-Demo/Views/Productos/Create.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3MvUHJvZHVjdG9zL0NyZWF0ZS5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Proyecto-SIFRA/Views/Productos/Delete.cshtml]
-build_metadata.AdditionalFiles.TargetPath = Vmlld3NcUHJvZHVjdG9zXERlbGV0ZS5jc2h0bWw=
+[/home/rafaelreyes/Documentos/Proyectos web/Tienda-Repuestos-Demo/Views/Productos/Delete.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3MvUHJvZHVjdG9zL0RlbGV0ZS5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Proyecto-SIFRA/Views/Productos/Details.cshtml]
-build_metadata.AdditionalFiles.TargetPath = Vmlld3NcUHJvZHVjdG9zXERldGFpbHMuY3NodG1s
+[/home/rafaelreyes/Documentos/Proyectos web/Tienda-Repuestos-Demo/Views/Productos/Details.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3MvUHJvZHVjdG9zL0RldGFpbHMuY3NodG1s
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Proyecto-SIFRA/Views/Productos/Edit.cshtml]
-build_metadata.AdditionalFiles.TargetPath = Vmlld3NcUHJvZHVjdG9zXEVkaXQuY3NodG1s
+[/home/rafaelreyes/Documentos/Proyectos web/Tienda-Repuestos-Demo/Views/Productos/Edit.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3MvUHJvZHVjdG9zL0VkaXQuY3NodG1s
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Proyecto-SIFRA/Views/Productos/Index.cshtml]
-build_metadata.AdditionalFiles.TargetPath = Vmlld3NcUHJvZHVjdG9zXEluZGV4LmNzaHRtbA==
+[/home/rafaelreyes/Documentos/Proyectos web/Tienda-Repuestos-Demo/Views/Productos/Index.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3MvUHJvZHVjdG9zL0luZGV4LmNzaHRtbA==
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Proyecto-SIFRA/Views/Proveedores/Create.cshtml]
-build_metadata.AdditionalFiles.TargetPath = Vmlld3NcUHJvdmVlZG9yZXNcQ3JlYXRlLmNzaHRtbA==
+[/home/rafaelreyes/Documentos/Proyectos web/Tienda-Repuestos-Demo/Views/Proveedores/Create.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3MvUHJvdmVlZG9yZXMvQ3JlYXRlLmNzaHRtbA==
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Proyecto-SIFRA/Views/Proveedores/Delete.cshtml]
-build_metadata.AdditionalFiles.TargetPath = Vmlld3NcUHJvdmVlZG9yZXNcRGVsZXRlLmNzaHRtbA==
+[/home/rafaelreyes/Documentos/Proyectos web/Tienda-Repuestos-Demo/Views/Proveedores/Delete.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3MvUHJvdmVlZG9yZXMvRGVsZXRlLmNzaHRtbA==
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Proyecto-SIFRA/Views/Proveedores/Details.cshtml]
-build_metadata.AdditionalFiles.TargetPath = Vmlld3NcUHJvdmVlZG9yZXNcRGV0YWlscy5jc2h0bWw=
+[/home/rafaelreyes/Documentos/Proyectos web/Tienda-Repuestos-Demo/Views/Proveedores/Details.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3MvUHJvdmVlZG9yZXMvRGV0YWlscy5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Proyecto-SIFRA/Views/Proveedores/Edit.cshtml]
-build_metadata.AdditionalFiles.TargetPath = Vmlld3NcUHJvdmVlZG9yZXNcRWRpdC5jc2h0bWw=
+[/home/rafaelreyes/Documentos/Proyectos web/Tienda-Repuestos-Demo/Views/Proveedores/Edit.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3MvUHJvdmVlZG9yZXMvRWRpdC5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Proyecto-SIFRA/Views/Proveedores/Index.cshtml]
-build_metadata.AdditionalFiles.TargetPath = Vmlld3NcUHJvdmVlZG9yZXNcSW5kZXguY3NodG1s
+[/home/rafaelreyes/Documentos/Proyectos web/Tienda-Repuestos-Demo/Views/Proveedores/Index.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3MvUHJvdmVlZG9yZXMvSW5kZXguY3NodG1s
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Proyecto-SIFRA/Views/Shared/Error.cshtml]
-build_metadata.AdditionalFiles.TargetPath = Vmlld3NcU2hhcmVkXEVycm9yLmNzaHRtbA==
+[/home/rafaelreyes/Documentos/Proyectos web/Tienda-Repuestos-Demo/Views/Shared/Error.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3MvU2hhcmVkL0Vycm9yLmNzaHRtbA==
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Proyecto-SIFRA/Views/Shared/_ValidationScriptsPartial.cshtml]
-build_metadata.AdditionalFiles.TargetPath = Vmlld3NcU2hhcmVkXF9WYWxpZGF0aW9uU2NyaXB0c1BhcnRpYWwuY3NodG1s
+[/home/rafaelreyes/Documentos/Proyectos web/Tienda-Repuestos-Demo/Views/Shared/_ValidationScriptsPartial.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3MvU2hhcmVkL19WYWxpZGF0aW9uU2NyaXB0c1BhcnRpYWwuY3NodG1s
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Proyecto-SIFRA/Views/Usuarios/Create.cshtml]
-build_metadata.AdditionalFiles.TargetPath = Vmlld3NcVXN1YXJpb3NcQ3JlYXRlLmNzaHRtbA==
+[/home/rafaelreyes/Documentos/Proyectos web/Tienda-Repuestos-Demo/Views/Usuarios/Create.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3MvVXN1YXJpb3MvQ3JlYXRlLmNzaHRtbA==
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Proyecto-SIFRA/Views/Usuarios/Delete.cshtml]
-build_metadata.AdditionalFiles.TargetPath = Vmlld3NcVXN1YXJpb3NcRGVsZXRlLmNzaHRtbA==
+[/home/rafaelreyes/Documentos/Proyectos web/Tienda-Repuestos-Demo/Views/Usuarios/Delete.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3MvVXN1YXJpb3MvRGVsZXRlLmNzaHRtbA==
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Proyecto-SIFRA/Views/Usuarios/Details.cshtml]
-build_metadata.AdditionalFiles.TargetPath = Vmlld3NcVXN1YXJpb3NcRGV0YWlscy5jc2h0bWw=
+[/home/rafaelreyes/Documentos/Proyectos web/Tienda-Repuestos-Demo/Views/Usuarios/Details.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3MvVXN1YXJpb3MvRGV0YWlscy5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Proyecto-SIFRA/Views/Usuarios/Edit.cshtml]
-build_metadata.AdditionalFiles.TargetPath = Vmlld3NcVXN1YXJpb3NcRWRpdC5jc2h0bWw=
+[/home/rafaelreyes/Documentos/Proyectos web/Tienda-Repuestos-Demo/Views/Usuarios/Edit.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3MvVXN1YXJpb3MvRWRpdC5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Proyecto-SIFRA/Views/Usuarios/Index.cshtml]
-build_metadata.AdditionalFiles.TargetPath = Vmlld3NcVXN1YXJpb3NcSW5kZXguY3NodG1s
+[/home/rafaelreyes/Documentos/Proyectos web/Tienda-Repuestos-Demo/Views/Usuarios/Index.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3MvVXN1YXJpb3MvSW5kZXguY3NodG1s
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Proyecto-SIFRA/Views/Vendedor/Dashboard.cshtml]
-build_metadata.AdditionalFiles.TargetPath = Vmlld3NcVmVuZGVkb3JcRGFzaGJvYXJkLmNzaHRtbA==
+[/home/rafaelreyes/Documentos/Proyectos web/Tienda-Repuestos-Demo/Views/Vendedor/Dashboard.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3MvVmVuZGVkb3IvRGFzaGJvYXJkLmNzaHRtbA==
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Proyecto-SIFRA/Views/Ventas/Create.cshtml]
-build_metadata.AdditionalFiles.TargetPath = Vmlld3NcVmVudGFzXENyZWF0ZS5jc2h0bWw=
+[/home/rafaelreyes/Documentos/Proyectos web/Tienda-Repuestos-Demo/Views/Ventas/Create.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3MvVmVudGFzL0NyZWF0ZS5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Proyecto-SIFRA/Views/Ventas/Details.cshtml]
-build_metadata.AdditionalFiles.TargetPath = Vmlld3NcVmVudGFzXERldGFpbHMuY3NodG1s
+[/home/rafaelreyes/Documentos/Proyectos web/Tienda-Repuestos-Demo/Views/Ventas/Details.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3MvVmVudGFzL0RldGFpbHMuY3NodG1s
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Proyecto-SIFRA/Views/Ventas/Edit.cshtml]
-build_metadata.AdditionalFiles.TargetPath = Vmlld3NcVmVudGFzXEVkaXQuY3NodG1s
+[/home/rafaelreyes/Documentos/Proyectos web/Tienda-Repuestos-Demo/Views/Ventas/Edit.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3MvVmVudGFzL0VkaXQuY3NodG1s
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Proyecto-SIFRA/Views/Ventas/Index.cshtml]
-build_metadata.AdditionalFiles.TargetPath = Vmlld3NcVmVudGFzXEluZGV4LmNzaHRtbA==
+[/home/rafaelreyes/Documentos/Proyectos web/Tienda-Repuestos-Demo/Views/Ventas/Index.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3MvVmVudGFzL0luZGV4LmNzaHRtbA==
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Proyecto-SIFRA/Views/_ViewImports.cshtml]
-build_metadata.AdditionalFiles.TargetPath = Vmlld3NcX1ZpZXdJbXBvcnRzLmNzaHRtbA==
+[/home/rafaelreyes/Documentos/Proyectos web/Tienda-Repuestos-Demo/Views/_ViewImports.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3MvX1ZpZXdJbXBvcnRzLmNzaHRtbA==
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Proyecto-SIFRA/Views/_ViewStart.cshtml]
-build_metadata.AdditionalFiles.TargetPath = Vmlld3NcX1ZpZXdTdGFydC5jc2h0bWw=
+[/home/rafaelreyes/Documentos/Proyectos web/Tienda-Repuestos-Demo/Views/_ViewStart.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3MvX1ZpZXdTdGFydC5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 
 
-[C:/Proyecto-SIFRA/Views/Shared/_Layout.cshtml]
-build_metadata.AdditionalFiles.TargetPath = Vmlld3NcU2hhcmVkXF9MYXlvdXQuY3NodG1s
-build_metadata.AdditionalFiles.CssScope = b-esfwzicco2
+[/home/rafaelreyes/Documentos/Proyectos web/Tienda-Repuestos-Demo/Views/Shared/_Layout.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3MvU2hhcmVkL19MYXlvdXQuY3NodG1s
+build_metadata.AdditionalFiles.CssScope = b-nf9s0p10lg

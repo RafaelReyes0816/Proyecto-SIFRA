@@ -35,6 +35,7 @@ project.fragment.lock.json
 artifacts/
 
 ## ASP.NET Core
+appsettings.json
 appsettings.Development.json
 appsettings.Local.json
 *.db
