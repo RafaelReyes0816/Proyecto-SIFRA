@@ -33,15 +33,49 @@ namespace Tienda_Repuestos_Demo.Controllers
                 .OrderBy(p => p.Stock)
                 .ToListAsync();
 
+            // Últimas ventas (5 más recientes)
+            var ultimasVentas = await _context.Ventas
+                .Include(v => v.Cliente)
+                .Include(v => v.Vendedor)
+                .OrderByDescending(v => v.Fecha)
+                .Take(5)
+                .ToListAsync();
+
+            // Últimos usuarios registrados (5 más recientes)
+            var ultimosUsuarios = await _context.Usuarios
+                .OrderByDescending(u => u.FechaRegistro)
+                .Take(5)
+                .ToListAsync();
+
+            // Últimos clientes registrados (5 más recientes)
+            var ultimosClientes = await _context.Clientes
+                .OrderByDescending(c => c.FechaRegistro)
+                .Take(5)
+                .ToListAsync();
+
+            // Distribución de roles
+            var distribucionRoles = await _context.Usuarios
+                .GroupBy(u => u.Rol)
+                .Select(g => new {
+                    Rol = g.Key,
+                    Cantidad = g.Count()
+                })
+                .ToListAsync();
+
             var estadisticas = new
             {
                 TotalUsuarios = await _context.Usuarios.CountAsync(),
+                UsuariosActivos = await _context.Usuarios.Where(u => u.Activo).CountAsync(),
                 TotalClientes = await _context.Clientes.CountAsync(),
+                ClientesVerificados = await _context.Clientes.Where(c => c.Verificado).CountAsync(),
                 TotalProductos = await _context.Productos.CountAsync(),
+                TotalCategorias = await _context.Categorias.CountAsync(),
+                TotalProveedores = await _context.Proveedores.CountAsync(),
                 TotalVentas = await _context.Ventas.CountAsync(),
                 VentasHoy = await _context.Ventas
                     .Where(v => v.Fecha.Date == DateTime.Today)
                     .CountAsync(),
+                VentasPendientes = await _context.Ventas.Where(v => v.Estado == "pendiente").CountAsync(),
                 ProductosBajoStock = productosBajoStock.Count,
                 TotalIngresos = await _context.Ventas
                     .Where(v => v.Estado == "confirmada")
@@ -50,13 +84,12 @@ namespace Tienda_Repuestos_Demo.Controllers
 
             ViewBag.Estadisticas = estadisticas;
             ViewBag.ProductosBajoStock = productosBajoStock;
+            ViewBag.UltimasVentas = ultimasVentas;
+            ViewBag.UltimosUsuarios = ultimosUsuarios;
+            ViewBag.UltimosClientes = ultimosClientes;
+            ViewBag.DistribucionRoles = distribucionRoles;
             return View();
         }
-
-        // ============================================
-        // NUEVOS MÉTODOS PARA AdminController.cs 18/12/2025 marco
-        // 3 metodos añadidos
-        // ============================================
 
         public async Task<IActionResult> Reportes()
         {
@@ -145,92 +178,6 @@ namespace Tienda_Repuestos_Demo.Controllers
             ViewBag.TopClientes = topClientes;
             ViewBag.VentasPorMetodo = ventasPorMetodo;
             ViewBag.Estadisticas = estadisticas;
-
-            return View();
-        }
-
-        public async Task<IActionResult> Actividad()
-        {
-            if (!IsAdmin())
-            {
-                return RedirectToAction("Login", "Account");
-            }
-
-            // Últimas ventas
-            var ultimasVentas = await _context.Ventas
-                .Include(v => v.Cliente)
-                .Include(v => v.Vendedor)
-                .OrderByDescending(v => v.Fecha)
-                .Take(10)
-                .ToListAsync();
-
-            // Últimos usuarios registrados
-            var ultimosUsuarios = await _context.Usuarios
-                .OrderByDescending(u => u.FechaRegistro)
-                .Take(10)
-                .ToListAsync();
-
-            // Últimos clientes registrados
-            var ultimosClientes = await _context.Clientes
-                .OrderByDescending(c => c.FechaRegistro)
-                .Take(10)
-                .ToListAsync();
-
-            // Productos con cambios recientes (simulado con stock bajo)
-            var productosRecientes = await _context.Productos
-                .Include(p => p.Categoria)
-                .OrderBy(p => p.Stock)
-                .Take(10)
-                .ToListAsync();
-
-            ViewBag.UltimasVentas = ultimasVentas;
-            ViewBag.UltimosUsuarios = ultimosUsuarios;
-            ViewBag.UltimosClientes = ultimosClientes;
-            ViewBag.ProductosRecientes = productosRecientes;
-
-            var estadisticas = new
-            {
-                VentasHoy = await _context.Ventas.Where(v => v.Fecha.Date == DateTime.Today).CountAsync(),
-                UsuariosActivos = await _context.Usuarios.Where(u => u.Activo).CountAsync(),
-                ClientesVerificados = await _context.Clientes.Where(c => c.Verificado).CountAsync(),
-                ProductosBajoStock = await _context.Productos.Where(p => p.Stock <= p.StockMinimo).CountAsync()
-            };
-
-            ViewBag.Estadisticas = estadisticas;
-
-            return View();
-        }
-
-        public async Task<IActionResult> Configuracion()
-        {
-            if (!IsAdmin())
-            {
-                return RedirectToAction("Login", "Account");
-            }
-
-            var configuracion = new
-            {
-                TotalUsuarios = await _context.Usuarios.CountAsync(),
-                UsuariosActivos = await _context.Usuarios.Where(u => u.Activo).CountAsync(),
-                TotalClientes = await _context.Clientes.CountAsync(),
-                ClientesVerificados = await _context.Clientes.Where(c => c.Verificado).CountAsync(),
-                TotalProductos = await _context.Productos.CountAsync(),
-                TotalCategorias = await _context.Categorias.CountAsync(),
-                TotalProveedores = await _context.Proveedores.CountAsync(),
-                VentasPendientes = await _context.Ventas.Where(v => v.Estado == "pendiente").CountAsync()
-            };
-
-            // Distribución de roles
-            var distribucionRoles = await _context.Usuarios
-                .GroupBy(u => u.Rol)
-                .Select(g => new {
-                    Rol = g.Key,
-                    Cantidad = g.Count()
-                })
-                .ToListAsync();
-
-            ViewBag.Configuracion = configuracion;
-            ViewBag.DistribucionRoles = distribucionRoles;
 
             return View();
         }

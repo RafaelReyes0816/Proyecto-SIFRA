@@ -1,0 +1,60 @@
+@model Tienda_Repuestos_Demo.Models.Categoria
+
+@{
+    ViewData["Title"] = "Crear Categoría";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="container-fluid">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <div>
+            <h2 class="mb-1" style="color: var(--text-dark); font-weight: 700;">➕ Crear Nueva Categoría</h2>
+            <p class="text-muted mb-0">Completa el formulario para agregar una nueva categoría</p>
+        </div>
+    </div>
+
+    @if (ViewBag.Error != null)
+    {
+        <div class="alert alert-danger alert-dismissible fade show" role="alert">
+            <strong>⚠️ Error:</strong> @ViewBag.Error
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    }
+
+    <div class="row">
+        <div class="col-md-6">
+            <div class="card">
+                <div class="card-body">
+                    <form asp-action="Create" method="post">
+                        @Html.AntiForgeryToken()
+                        <div asp-validation-summary="All" class="alert alert-danger" role="alert" style="display: none;"></div>
+                        
+                        <div class="mb-3">
+                            <label asp-for="Nombre" class="form-label">📂 Nombre de la Categoría *</label>
+                            <input asp-for="Nombre" class="form-control" required maxlength="50" />
+                            <small class="text-muted">Máximo 50 caracteres</small>
+                            <span asp-validation-for="Nombre" class="text-danger"></span>
+                        </div>
+
+                        <div class="mb-3">
+                            <button type="submit" class="btn btn-primary">Crear Categoría</button>
+                            <a asp-action="Index" class="btn btn-secondary">Cancelar</a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    <script>
+        $(document).ready(function() {
+            var validationSummary = $('.alert-danger');
+            if (validationSummary.find('li').length > 0 || validationSummary.text().trim() !== '') {
+                validationSummary.show();
+            }
+        });
+    </script>
+}

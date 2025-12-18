@@ -23,8 +23,9 @@
                     </div>
                 }
 
-                <form asp-action="Create">
-                    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                <form asp-action="Create" method="post">
+                    @Html.AntiForgeryToken()
+                    <div asp-validation-summary="All" class="alert alert-danger" role="alert" style="display: none;"></div>
                     
                     <div class="mb-3">
                         <label asp-for="Nombre" class="form-label">👤 Nombre Completo</label>
@@ -71,4 +72,12 @@
 
 @section Scripts {
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    <script>
+        $(document).ready(function() {
+            var validationSummary = $('.alert-danger');
+            if (validationSummary.find('li').length > 0 || validationSummary.text().trim() !== '') {
+                validationSummary.show();
+            }
+        });
+    </script>
 }

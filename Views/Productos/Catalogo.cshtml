@@ -1,0 +1,183 @@
+@model IEnumerable<Tienda_Repuestos_Demo.Models.Producto>
+
+@{
+    ViewData["Title"] = "Catálogo de Productos";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    var categorias = ViewBag.Categorias as List<Tienda_Repuestos_Demo.Models.Categoria>;
+}
+
+<div class="container-fluid" style="padding: 2rem;">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <div>
+            <h2 class="mb-1" style="color: var(--text-dark); font-weight: 700;">🛒 Catálogo de Productos</h2>
+            <p class="text-muted mb-0">Explora nuestro catálogo completo de repuestos</p>
+        </div>
+    </div>
+
+    <!-- Filtros -->
+    <div class="card mb-4">
+        <div class="card-body">
+            <div class="row g-3">
+                <div class="col-md-4">
+                    <label for="filtroCategoria" class="form-label">📂 Filtrar por Categoría</label>
+                    <select class="form-select" id="filtroCategoria" onchange="filtrarProductos()">
+                        <option value="">Todas las categorías</option>
+                        @if (categorias != null)
+                        {
+                            @foreach (var categoria in categorias)
+                            {
+                                <option value="@categoria.IdCategoria">@categoria.Nombre</option>
+                            }
+                        }
+                    </select>
+                </div>
+                <div class="col-md-4">
+                    <label for="buscarProducto" class="form-label">🔍 Buscar Producto</label>
+                    <input type="text" class="form-control" id="buscarProducto" placeholder="Nombre o código del producto..." onkeyup="filtrarProductos()">
+                </div>
+                <div class="col-md-4 d-flex align-items-end">
+                    <button class="btn btn-secondary w-100" onclick="limpiarFiltros()">
+                        🔄 Limpiar Filtros
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Grid de Productos -->
+    <div id="productosContainer" class="row g-4">
+        @foreach (var producto in Model)
+        {
+            <div class="col-md-4 col-lg-3 producto-card" 
+                 data-categoria="@producto.IdCategoria" 
+                 data-nombre="@producto.Nombre.ToLower()" 
+                 data-codigo="@(producto.Codigo?.ToLower() ?? "")">
+                <div class="card h-100 shadow-sm hover-card" style="transition: transform 0.2s, box-shadow 0.2s;">
+                    <div class="card-body d-flex flex-column">
+                        <div class="text-center mb-3">
+                            <div class="bg-primary text-white rounded p-3 mb-2" style="font-size: 2.5rem;">
+                                📦
+                            </div>
+                            <h5 class="card-title mb-1" style="font-weight: 600;">@producto.Nombre</h5>
+                            <span class="badge bg-info">@producto.Categoria?.Nombre</span>
+                            @if (!string.IsNullOrEmpty(producto.Codigo))
+                            {
+                                <small class="text-muted d-block mt-1">Código: @producto.Codigo</small>
+                            }
+                        </div>
+
+                        @if (!string.IsNullOrEmpty(producto.Descripcion))
+                        {
+                            <p class="card-text text-muted small mb-3" style="flex-grow: 1;">
+                                @(producto.Descripcion.Length > 100 ? producto.Descripcion.Substring(0, 100) + "..." : producto.Descripcion)
+                            </p>
+                        }
+
+                        <div class="mt-auto">
+                            <div class="d-flex justify-content-between align-items-center mb-3">
+                                <div>
+                                    <strong class="text-success" style="font-size: 1.5rem;">
+                                        $@producto.PrecioVenta.ToString("N2")
+                                    </strong>
+                                </div>
+                                <div class="text-end">
+                                    <small class="text-muted d-block">Stock disponible</small>
+                                    <span class="badge @(producto.Stock > 10 ? "bg-success" : producto.Stock > 5 ? "bg-warning" : "bg-danger")">
+                                        @producto.Stock unidades
+                                    </span>
+                                </div>
+                            </div>
+
+                            <div class="d-grid gap-2">
+                                <a href="@Url.Action("Details", "Productos", new { id = producto.IdProducto })" 
+                                   class="btn btn-primary">
+                                    👁️ Ver Detalles
+                                </a>
+                                @if (producto.Stock > 0)
+                                {
+                                    <a href="@Url.Action("Comprar", "Productos", new { id = producto.IdProducto })" 
+                                       class="btn btn-success">
+                                        🛒 Comprar Ahora
+                                    </a>
+                                }
+                                else
+                                {
+                                    <button class="btn btn-secondary" disabled>
+                                        ⚠️ Sin Stock
+                                    </button>
+                                }
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+
+    <!-- Mensaje cuando no hay productos -->
+    <div id="sinProductos" class="alert alert-info text-center" style="display: none;">
+        <h5>🔍 No se encontraron productos</h5>
+        <p class="mb-0">Intenta ajustar los filtros de búsqueda</p>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        function filtrarProductos() {
+            const categoria = document.getElementById('filtroCategoria').value;
+            const busqueda = document.getElementById('buscarProducto').value.toLowerCase();
+            const productos = document.querySelectorAll('.producto-card');
+            let visibleCount = 0;
+
+            productos.forEach(producto => {
+                const productoCategoria = producto.getAttribute('data-categoria');
+                const productoNombre = producto.getAttribute('data-nombre');
+                const productoCodigo = producto.getAttribute('data-codigo');
+
+                const coincideCategoria = !categoria || productoCategoria === categoria;
+                const coincideBusqueda = !busqueda || 
+                    productoNombre.includes(busqueda) || 
+                    productoCodigo.includes(busqueda);
+
+                if (coincideCategoria && coincideBusqueda) {
+                    producto.style.display = '';
+                    visibleCount++;
+                } else {
+                    producto.style.display = 'none';
+                }
+            });
+
+            // Mostrar mensaje si no hay productos
+            const sinProductos = document.getElementById('sinProductos');
+            if (visibleCount === 0) {
+                sinProductos.style.display = 'block';
+            } else {
+                sinProductos.style.display = 'none';
+            }
+        }
+
+        function limpiarFiltros() {
+            document.getElementById('filtroCategoria').value = '';
+            document.getElementById('buscarProducto').value = '';
+            filtrarProductos();
+        }
+
+        // Efecto hover en las cards
+        document.querySelectorAll('.hover-card').forEach(card => {
+            card.addEventListener('mouseenter', function() {
+                this.style.transform = 'translateY(-5px)';
+                this.style.boxShadow = '0 4px 8px rgba(0,0,0,0.15)';
+            });
+            card.addEventListener('mouseleave', function() {
+                this.style.transform = 'translateY(0)';
+                this.style.boxShadow = '';
+            });
+        });
+    </script>
+}
+
+<style>
+    .hover-card:hover {
+        cursor: pointer;
+    }
+</style>

@@ -14,8 +14,9 @@
 
 <div class="row">
     <div class="col-md-6">
-        <form asp-action="Edit">
-            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+        <form asp-action="Edit" method="post">
+            @Html.AntiForgeryToken()
+            <div asp-validation-summary="All" class="alert alert-danger" role="alert" style="display: none;"></div>
             <input type="hidden" asp-for="IdProducto" />
             
             <div class="mb-3">
@@ -37,14 +38,18 @@
             </div>
 
             <div class="mb-3">
-                <label asp-for="IdCategoria" class="form-label">Categoría</label>
-                <select asp-for="IdCategoria" class="form-select" asp-items="ViewBag.IdCategoria" required></select>
+                <label asp-for="IdCategoria" class="form-label">Categoría *</label>
+                <select asp-for="IdCategoria" class="form-select" asp-items="ViewBag.IdCategoria" required>
+                    <option value="">-- Seleccione una categoría --</option>
+                </select>
                 <span asp-validation-for="IdCategoria" class="text-danger"></span>
             </div>
 
             <div class="mb-3">
-                <label asp-for="IdProveedor" class="form-label">Proveedor</label>
-                <select asp-for="IdProveedor" class="form-select" asp-items="ViewBag.IdProveedor" required></select>
+                <label asp-for="IdProveedor" class="form-label">Proveedor *</label>
+                <select asp-for="IdProveedor" class="form-select" asp-items="ViewBag.IdProveedor" required>
+                    <option value="">-- Seleccione un proveedor --</option>
+                </select>
                 <span asp-validation-for="IdProveedor" class="text-danger"></span>
             </div>
 
@@ -84,4 +89,25 @@
 
 @section Scripts {
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    <script>
+        // Mostrar errores de validación si existen
+        $(document).ready(function() {
+            var validationSummary = $('.alert-danger');
+            var hasErrors = false;
+            
+            $('span[asp-validation-for]').each(function() {
+                if ($(this).text().trim() !== '') {
+                    hasErrors = true;
+                }
+            });
+            
+            if (validationSummary.find('li').length > 0 || validationSummary.text().trim() !== '') {
+                hasErrors = true;
+            }
+            
+            if (hasErrors) {
+                validationSummary.show();
+            }
+        });
+    </script>
 }

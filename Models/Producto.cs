@@ -18,9 +18,11 @@ namespace Tienda_Repuestos_Demo.Models
 
         public string? Descripcion { get; set; }
 
+        [Required(ErrorMessage = "La categoría es requerida")]
         [Column("id_categoria")]
         public int IdCategoria { get; set; }
 
+        [Required(ErrorMessage = "El proveedor es requerido")]
         [Column("id_proveedor")]
         public int IdProveedor { get; set; }
 

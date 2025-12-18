@@ -267,7 +267,7 @@ namespace Tienda_Repuestos_Demo.Controllers
 
         // ============================================
         // NUEVOS MÉTODOS PARA ClienteController.cs
-        // Copia estos 2 métodos dentro de tu clase ClienteController
+        // 2 métodos  añadidos marco 18/12/2025
         // ============================================
 
         public async Task<IActionResult> Notificaciones()
@@ -323,21 +323,14 @@ namespace Tienda_Repuestos_Demo.Controllers
                 .Include(d => d.Producto)
                     .ThenInclude(p => p.Categoria)
                 .Where(d => d.Venta.IdCliente == clienteId && d.Venta.Estado == "confirmada")
-                .GroupBy(d => new { 
-                    d.Producto.IdProducto, 
-                    ProductoNombre = d.Producto.Nombre,  // CORREGIDO: Nombre explícito
-                    d.Producto.Descripcion,
-                    d.Producto.PrecioVenta,
-                    d.Producto.Stock,
-                    CategoriaNombre = d.Producto.Categoria.Nombre // CORREGIDO: Nombre explícito
-                })
+                .GroupBy(d => d.Producto.IdProducto)
                 .Select(g => new {
-                    ProductoId = g.Key.IdProducto,
-                    ProductoNombre = g.Key.ProductoNombre, // Usamos el nombre corregido
-                    ProductoDescripcion = g.Key.Descripcion,
-                    Precio = g.Key.PrecioVenta,
-                    Stock = g.Key.Stock,
-                    CategoriaNombre = g.Key.CategoriaNombre, // Usamos el nombre corregido
+                    ProductoId = g.Key,
+                    ProductoNombre = g.First().Producto.Nombre,
+                    ProductoDescripcion = g.First().Producto.Descripcion,
+                    Precio = g.First().Producto.PrecioVenta,
+                    Stock = g.First().Producto.Stock,
+                    CategoriaNombre = g.First().Producto.Categoria != null ? g.First().Producto.Categoria.Nombre : "Sin categoría",
                     CantidadComprada = g.Sum(d => d.Cantidad),
                     UltimaCompra = g.Max(d => d.Venta.Fecha),
                     TotalGastado = g.Sum(d => d.PrecioUnitario * d.Cantidad)

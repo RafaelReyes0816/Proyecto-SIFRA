@@ -1,0 +1,147 @@
+@model Tienda_Repuestos_Demo.Models.Producto
+
+@{
+    ViewData["Title"] = "Comprar Producto";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    var producto = ViewBag.Producto as Tienda_Repuestos_Demo.Models.Producto;
+}
+
+@if (producto == null)
+{
+    <div class="alert alert-danger">
+        Producto no encontrado
+    </div>
+    return;
+}
+
+<div class="container-fluid" style="padding: 2rem;">
+    <div class="row">
+        <div class="col-md-8 mx-auto">
+            <div class="card shadow">
+                <div class="card-header bg-primary text-white">
+                    <h4 class="mb-0">🛒 Realizar Compra</h4>
+                </div>
+                <div class="card-body">
+                    @if (TempData["Error"] != null)
+                    {
+                        <div class="alert alert-danger alert-dismissible fade show">
+                            <strong>⚠️ Error:</strong> @TempData["Error"]
+                            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                        </div>
+                    }
+
+                    <div class="row mb-4">
+                        <div class="col-md-4 text-center">
+                            <div class="bg-primary text-white rounded p-4 mb-3" style="font-size: 4rem;">
+                                📦
+                            </div>
+                        </div>
+                        <div class="col-md-8">
+                            <h3>@producto.Nombre</h3>
+                            <p class="text-muted">@producto.Descripcion</p>
+                            <div class="mb-2">
+                                <span class="badge bg-info">@producto.Categoria?.Nombre</span>
+                                @if (!string.IsNullOrEmpty(producto.Codigo))
+                                {
+                                    <span class="badge bg-secondary">Código: @producto.Codigo</span>
+                                }
+                            </div>
+                            <div class="mt-3">
+                                <h4 class="text-success mb-0">
+                                    Precio: <strong>$@producto.PrecioVenta.ToString("N2")</strong>
+                                </h4>
+                                <small class="text-muted">Por unidad</small>
+                            </div>
+                            <div class="mt-2">
+                                <span class="badge @(producto.Stock > 10 ? "bg-success" : producto.Stock > 5 ? "bg-warning" : "bg-danger")">
+                                    Stock disponible: @producto.Stock unidades
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <form asp-action="Comprar" method="post" id="compraForm">
+                        @Html.AntiForgeryToken()
+                        <input type="hidden" name="id" value="@producto.IdProducto" />
+
+                        <div class="mb-3">
+                            <label for="cantidad" class="form-label">📊 Cantidad</label>
+                            <input type="number" 
+                                   class="form-control" 
+                                   id="cantidad" 
+                                   name="cantidad" 
+                                   min="1" 
+                                   max="@producto.Stock" 
+                                   value="1" 
+                                   required
+                                   onchange="calcularTotal()">
+                            <small class="text-muted">Máximo disponible: @producto.Stock unidades</small>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="metodoPago" class="form-label">💳 Método de Pago</label>
+                            <select class="form-select" id="metodoPago" name="metodoPago" required>
+                                <option value="transferencia">Transferencia Bancaria</option>
+                                <option value="qr">QR (Pago Móvil)</option>
+                                <option value="efectivo">Efectivo (Al retirar)</option>
+                            </select>
+                        </div>
+
+                        <div class="card bg-light mb-3">
+                            <div class="card-body">
+                                <div class="d-flex justify-content-between align-items-center">
+                                    <div>
+                                        <h5 class="mb-0">Total a Pagar</h5>
+                                        <small class="text-muted">Precio unitario × Cantidad</small>
+                                    </div>
+                                    <div class="text-end">
+                                        <h3 class="text-success mb-0" id="totalPagar">
+                                            $@producto.PrecioVenta.ToString("N2")
+                                        </h3>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+                            <a asp-action="Index" class="btn btn-secondary">Cancelar</a>
+                            <button type="submit" class="btn btn-success btn-lg">
+                                ✅ Confirmar Compra
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        const precioUnitario = @producto.PrecioVenta;
+
+        function calcularTotal() {
+            const cantidad = parseInt(document.getElementById('cantidad').value) || 1;
+            const total = precioUnitario * cantidad;
+            document.getElementById('totalPagar').textContent = '$' + total.toFixed(2);
+        }
+
+        // Validar cantidad al enviar
+        document.getElementById('compraForm').addEventListener('submit', function(e) {
+            const cantidad = parseInt(document.getElementById('cantidad').value);
+            const stockMaximo = @producto.Stock;
+
+            if (cantidad <= 0) {
+                e.preventDefault();
+                alert('La cantidad debe ser mayor a 0');
+                return false;
+            }
+
+            if (cantidad > stockMaximo) {
+                e.preventDefault();
+                alert('No hay suficiente stock disponible. Máximo: ' + stockMaximo + ' unidades');
+                return false;
+            }
+        });
+    </script>
+}

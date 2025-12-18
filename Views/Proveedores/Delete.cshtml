@@ -1,0 +1,83 @@
+@model Tienda_Repuestos_Demo.Models.Proveedor
+
+@{
+    ViewData["Title"] = "Eliminar Proveedor";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="container-fluid">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <div>
+            <h2 class="mb-1" style="color: var(--text-dark); font-weight: 700;">🗑️ Eliminar Proveedor</h2>
+            <p class="text-muted mb-0">¿Estás seguro de que deseas eliminar este proveedor?</p>
+        </div>
+    </div>
+
+    @if (TempData["Error"] != null)
+    {
+        <div class="alert alert-danger alert-dismissible fade show" role="alert">
+            <strong>⚠️ Error:</strong> @TempData["Error"]
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    }
+
+    <div class="row">
+        <div class="col-md-8">
+            <div class="card border-danger">
+                <div class="card-header bg-danger text-white">
+                    <h5 class="mb-0">⚠️ Confirmar Eliminación</h5>
+                </div>
+                <div class="card-body">
+                    <div class="alert alert-warning">
+                        <strong>⚠️ Advertencia:</strong> Esta acción no se puede deshacer.
+                    </div>
+
+                    <dl class="row">
+                        <dt class="col-sm-4">🏢 Nombre:</dt>
+                        <dd class="col-sm-8"><strong>@Model.Nombre</strong></dd>
+
+                        <dt class="col-sm-4">👤 Contacto:</dt>
+                        <dd class="col-sm-8">@(Model.Contacto ?? "N/A")</dd>
+
+                        <dt class="col-sm-4">📞 Teléfono:</dt>
+                        <dd class="col-sm-8">@(Model.Telefono ?? "N/A")</dd>
+
+                        <dt class="col-sm-4">📧 Correo:</dt>
+                        <dd class="col-sm-8">@(Model.Correo ?? "N/A")</dd>
+
+                        <dt class="col-sm-4">📦 Productos:</dt>
+                        <dd class="col-sm-8">
+                            <span class="badge bg-info">@Model.Productos.Count producto(s)</span>
+                            @if (Model.Productos.Any())
+                            {
+                                <div class="alert alert-danger mt-2">
+                                    <strong>⚠️ No se puede eliminar:</strong> Este proveedor tiene productos asociados. 
+                                    Primero debe eliminar o cambiar el proveedor de esos productos.
+                                </div>
+                            }
+                        </dd>
+                    </dl>
+
+                    <form asp-action="Delete" method="post">
+                        @Html.AntiForgeryToken()
+                        <input type="hidden" asp-for="IdProveedor" />
+                        
+                        <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+                            <a asp-action="Index" class="btn btn-secondary">Cancelar</a>
+                            @if (!Model.Productos.Any())
+                            {
+                                <button type="submit" class="btn btn-danger">🗑️ Eliminar Definitivamente</button>
+                            }
+                            else
+                            {
+                                <button type="button" class="btn btn-danger" disabled>
+                                    No se puede eliminar
+                                </button>
+                            }
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

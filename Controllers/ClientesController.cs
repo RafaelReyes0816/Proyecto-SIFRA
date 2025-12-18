@@ -81,6 +81,10 @@ namespace Tienda_Repuestos_Demo.Controllers
                 cliente.Contraseña = contraseña;
             }
 
+            // Remover validación de campos que manejamos manualmente
+            ModelState.Remove("Contraseña");
+            ModelState.Remove("FotoCI");
+
             if (ModelState.IsValid)
             {
                 // Verificar si el correo ya existe
@@ -96,6 +100,7 @@ namespace Tienda_Repuestos_Demo.Controllers
                 cliente.FechaRegistro = DateTime.Now;
                 _context.Add(cliente);
                 await _context.SaveChangesAsync();
+                TempData["Success"] = "Cliente creado correctamente";
                 return RedirectToAction(nameof(Index));
             }
             return View(cliente);
@@ -132,47 +137,43 @@ namespace Tienda_Repuestos_Demo.Controllers
                 return NotFound();
             }
 
-            // Obtener el cliente actual de la base de datos SIN rastreo
+            // Obtener el cliente actual de la base de datos sin tracking
             var clienteActual = await _context.Clientes.AsNoTracking().FirstOrDefaultAsync(c => c.IdCliente == id);
             if (clienteActual == null)
             {
                 return NotFound();
             }
 
-            // Preservar la foto de CI actual
-            cliente.FotoCI = clienteActual.FotoCI;
-
-            // Manejar el estado de verificación desde el checkbox
-            // Si Verificado viene como "true" (string), significa que el checkbox estaba marcado
-            cliente.Verificado = Verificado == "true";
-
-            // Manejar contraseña
-            if (!string.IsNullOrEmpty(contraseña))
-            {
-                cliente.Contraseña = contraseña;
-            }
-            else
+            // Preservar la contraseña actual si no se proporciona una nueva
+            if (string.IsNullOrEmpty(contraseña))
             {
                 cliente.Contraseña = clienteActual.Contraseña;
             }
+            else
+            {
+                cliente.Contraseña = contraseña;
+            }
 
-            // Limpiar errores de validación para campos que manejamos manualmente
+            // Preservar la foto CI actual
+            cliente.FotoCI = clienteActual.FotoCI;
+
+            // Manejar el estado de verificación desde el checkbox
+            cliente.Verificado = Verificado == "true";
+
+            // Remover validación de campos que manejamos manualmente
             ModelState.Remove("Contraseña");
             ModelState.Remove("FotoCI");
             ModelState.Remove("Verificado");
 
-            // Validar manualmente los campos requeridos
+            // Validación manual básica
             if (string.IsNullOrWhiteSpace(cliente.Nombre))
             {
                 ModelState.AddModelError("Nombre", "El nombre es requerido");
             }
-            if (string.IsNullOrWhiteSpace(cliente.Correo))
+
+            if (string.IsNullOrWhiteSpace(cliente.Correo) || !cliente.Correo.Contains("@"))
             {
-                ModelState.AddModelError("Correo", "El correo es requerido");
-            }
-            else if (!cliente.Correo.Contains("@"))
-            {
-                ModelState.AddModelError("Correo", "El correo no es válido");
+                ModelState.AddModelError("Correo", "El correo electrónico es inválido");
             }
 
             if (ModelState.IsValid)
@@ -198,9 +199,7 @@ namespace Tienda_Repuestos_Demo.Controllers
                 catch (Exception ex)
                 {
                     ViewBag.Error = $"Error al guardar: {ex.Message}";
-                    // Recargar el cliente para la vista
-                    var clienteParaVista = await _context.Clientes.FindAsync(id);
-                    return View(clienteParaVista ?? clienteActual);
+                    return View(clienteActual);
                 }
             }
             
@@ -215,9 +214,7 @@ namespace Tienda_Repuestos_Demo.Controllers
                 ViewBag.Error = "Por favor, corrige los siguientes errores: " + string.Join(", ", errorMessages);
             }
             
-            // Recargar el cliente para la vista
-            var clienteVista = await _context.Clientes.FindAsync(id);
-            return View(clienteVista ?? clienteActual);
+            return View(clienteActual);
         }
 
         // GET: Clientes/Delete/5
@@ -251,10 +248,21 @@ namespace Tienda_Repuestos_Demo.Controllers
             var cliente = await _context.Clientes.FindAsync(id);
             if (cliente != null)
             {
+                // Eliminar foto CI si existe
+                if (!string.IsNullOrEmpty(cliente.FotoCI))
+                {
+                    var filePath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", cliente.FotoCI.TrimStart('/'));
+                    if (System.IO.File.Exists(filePath))
+                    {
+                        System.IO.File.Delete(filePath);
+                    }
+                }
+
                 _context.Clientes.Remove(cliente);
+                await _context.SaveChangesAsync();
+                TempData["Success"] = "Cliente eliminado correctamente";
             }
 
-            await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
 
