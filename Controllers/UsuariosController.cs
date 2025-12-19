@@ -230,8 +230,20 @@ namespace Tienda_Repuestos_Demo.Controllers
             {
                 try
                 {
+                    // Verificar si el correo ya existe en otro usuario
+                    var existe = await _context.Usuarios
+                        .AnyAsync(u => u.Correo == usuario.Correo && u.IdUsuario != id);
+
+                    if (existe)
+                    {
+                        ModelState.AddModelError("Correo", "Este correo electrónico ya está registrado en otro usuario");
+                        ViewData["Roles"] = new SelectList(new[] { "admin", "vendedor" }, usuario.Rol);
+                        return View(usuario);
+                    }
+
                     _context.Update(usuario);
                     await _context.SaveChangesAsync();
+                    TempData["Success"] = "Usuario actualizado correctamente";
                 }
                 catch (DbUpdateConcurrencyException)
                 {

@@ -158,17 +158,49 @@ namespace Tienda_Repuestos_Demo.Controllers
                 return NotFound();
             }
 
+            // Validaciones manuales adicionales
+            if (string.IsNullOrWhiteSpace(proveedor.Nombre))
+            {
+                ModelState.AddModelError("Nombre", "El nombre del proveedor es requerido");
+            }
+            else if (proveedor.Nombre.Length > 100)
+            {
+                ModelState.AddModelError("Nombre", "El nombre del proveedor no puede exceder 100 caracteres");
+            }
+
+            if (!string.IsNullOrWhiteSpace(proveedor.Contacto) && proveedor.Contacto.Length > 100)
+            {
+                ModelState.AddModelError("Contacto", "El contacto no puede exceder 100 caracteres");
+            }
+
+            if (!string.IsNullOrWhiteSpace(proveedor.Telefono) && proveedor.Telefono.Length > 20)
+            {
+                ModelState.AddModelError("Telefono", "El teléfono no puede exceder 20 caracteres");
+            }
+
+            if (!string.IsNullOrWhiteSpace(proveedor.Correo))
+            {
+                if (!proveedor.Correo.Contains("@") || !proveedor.Correo.Contains("."))
+                {
+                    ModelState.AddModelError("Correo", "El correo electrónico no es válido");
+                }
+                else if (proveedor.Correo.Length > 100)
+                {
+                    ModelState.AddModelError("Correo", "El correo electrónico no puede exceder 100 caracteres");
+                }
+            }
+
             if (ModelState.IsValid)
             {
                 try
                 {
                     // Verificar si el nombre ya existe en otro proveedor
-                    var existe = await _context.Proveedores
+                    var existeNombre = await _context.Proveedores
                         .AnyAsync(p => p.Nombre.ToLower() == proveedor.Nombre.ToLower() && p.IdProveedor != id);
 
-                    if (existe)
+                    if (existeNombre)
                     {
-                        ViewBag.Error = "Ya existe otro proveedor con este nombre";
+                        ModelState.AddModelError("Nombre", "Ya existe otro proveedor con este nombre");
                         return View(proveedor);
                     }
 
@@ -190,7 +222,7 @@ namespace Tienda_Repuestos_Demo.Controllers
                 }
                 catch (Exception ex)
                 {
-                    ViewBag.Error = $"Error al guardar: {ex.Message}";
+                    ModelState.AddModelError("", $"Error al guardar: {ex.Message}");
                     return View(proveedor);
                 }
             }

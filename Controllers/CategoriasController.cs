@@ -136,6 +136,16 @@ namespace Tienda_Repuestos_Demo.Controllers
                 return NotFound();
             }
 
+            // Validaciones manuales adicionales
+            if (string.IsNullOrWhiteSpace(categoria.Nombre))
+            {
+                ModelState.AddModelError("Nombre", "El nombre de la categoría es requerido");
+            }
+            else if (categoria.Nombre.Length > 50)
+            {
+                ModelState.AddModelError("Nombre", "El nombre de la categoría no puede exceder 50 caracteres");
+            }
+
             if (ModelState.IsValid)
             {
                 try
@@ -146,7 +156,7 @@ namespace Tienda_Repuestos_Demo.Controllers
 
                     if (existe)
                     {
-                        ViewBag.Error = "Ya existe otra categoría con este nombre";
+                        ModelState.AddModelError("Nombre", "Ya existe otra categoría con este nombre");
                         return View(categoria);
                     }
 
@@ -168,7 +178,7 @@ namespace Tienda_Repuestos_Demo.Controllers
                 }
                 catch (Exception ex)
                 {
-                    ViewBag.Error = $"Error al guardar: {ex.Message}";
+                    ModelState.AddModelError("", $"Error al guardar: {ex.Message}");
                     return View(categoria);
                 }
             }

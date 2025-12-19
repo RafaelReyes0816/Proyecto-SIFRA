@@ -307,10 +307,12 @@ namespace Tienda_Repuestos_Demo.Controllers
                 await _context.SaveChangesAsync();
 
                 // Crear detalles de venta y actualizar stock
-                for (int i = 0; i < productos.Length; i++)
+                if (productos != null && cantidades != null)
                 {
-                    var producto = await _context.Productos.FindAsync(productos[i]);
-                    if (producto != null && cantidades != null && i < cantidades.Length)
+                    for (int i = 0; i < productos.Length; i++)
+                    {
+                        var producto = await _context.Productos.FindAsync(productos[i]);
+                        if (producto != null && i < cantidades.Length)
                     {
                         // Verificar stock nuevamente antes de crear el detalle
                         if (cantidades[i] > producto.Stock)
@@ -338,6 +340,7 @@ namespace Tienda_Repuestos_Demo.Controllers
                         producto.Stock -= cantidades[i];
                         _context.Productos.Update(producto);
                     }
+                }
                 }
 
                 await _context.SaveChangesAsync();
