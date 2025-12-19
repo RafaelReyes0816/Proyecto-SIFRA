@@ -75,6 +75,38 @@ namespace Tienda_Repuestos_Demo.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("Nombre,Contacto,Telefono,Correo")] Proveedor proveedor)
         {
+            // Validaciones manuales adicionales
+            if (string.IsNullOrWhiteSpace(proveedor.Nombre))
+            {
+                ModelState.AddModelError("Nombre", "El nombre del proveedor es requerido");
+            }
+            else if (proveedor.Nombre.Length > 100)
+            {
+                ModelState.AddModelError("Nombre", "El nombre del proveedor no puede exceder 100 caracteres");
+            }
+
+            if (!string.IsNullOrWhiteSpace(proveedor.Contacto) && proveedor.Contacto.Length > 100)
+            {
+                ModelState.AddModelError("Contacto", "El contacto no puede exceder 100 caracteres");
+            }
+
+            if (!string.IsNullOrWhiteSpace(proveedor.Telefono) && proveedor.Telefono.Length > 20)
+            {
+                ModelState.AddModelError("Telefono", "El teléfono no puede exceder 20 caracteres");
+            }
+
+            if (!string.IsNullOrWhiteSpace(proveedor.Correo))
+            {
+                if (!proveedor.Correo.Contains("@") || !proveedor.Correo.Contains("."))
+                {
+                    ModelState.AddModelError("Correo", "El correo electrónico no es válido");
+                }
+                else if (proveedor.Correo.Length > 100)
+                {
+                    ModelState.AddModelError("Correo", "El correo electrónico no puede exceder 100 caracteres");
+                }
+            }
+
             if (ModelState.IsValid)
             {
                 // Verificar si el nombre ya existe
@@ -83,7 +115,7 @@ namespace Tienda_Repuestos_Demo.Controllers
 
                 if (existe)
                 {
-                    ViewBag.Error = "Ya existe un proveedor con este nombre";
+                    ModelState.AddModelError("Nombre", "Ya existe un proveedor con este nombre");
                     return View(proveedor);
                 }
 

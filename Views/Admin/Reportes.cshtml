@@ -29,7 +29,7 @@
             <div class="stat-card-dark bg-dark-primary">
                 <h5>💰 Ingresos Totales</h5>
                 <!-- Agregamos ? para verificar nulos antes de usar ToString -->
-                <h2>$@(stats?.IngresosTotales?.ToString("N2") ?? "0.00")</h2>
+                <h2>BS @(stats?.IngresosTotales?.ToString("N2") ?? "0.00")</h2>
             </div>
         </div>
         <div class="col-md-3 mb-3">
@@ -41,7 +41,7 @@
         <div class="col-md-3 mb-3">
             <div class="stat-card-dark bg-dark-info">
                 <h5>📈 Promedio por Venta</h5>
-                <h2>$@(stats?.PromedioVenta?.ToString("N2") ?? "0.00")</h2>
+                <h2>BS @(stats?.PromedioVenta?.ToString("N2") ?? "0.00")</h2>
             </div>
         </div>
         <div class="col-md-3 mb-3">
@@ -92,7 +92,7 @@
                                                 <span class="badge bg-info">@producto.CantidadVendida unidades</span>
                                             </td>
                                             <!-- Aquí corregimos la advertencia CS8602 usando ?.ToString -->
-                                            <td><strong>$@(producto.TotalVentas?.ToString("N2") ?? "0.00")</strong></td>
+                                            <td><strong>BS @(producto.TotalVentas?.ToString("N2") ?? "0.00")</strong></td>
                                         </tr>
                                         posicion++;
                                     }
@@ -151,7 +151,7 @@
                                                 <span class="badge bg-info">@cliente.TotalCompras compras</span>
                                             </td>
                                             <!-- Corregido CS8602 -->
-                                            <td><strong>$@(cliente.TotalGastado?.ToString("N2") ?? "0.00")</strong></td>
+                                            <td><strong>BS @(cliente.TotalGastado?.ToString("N2") ?? "0.00")</strong></td>
                                         </tr>
                                         pos++;
                                     }
@@ -202,7 +202,7 @@
                                     <span class="badge bg-primary">@metodo.Cantidad ventas</span>
                                 </div>
                                 <!-- Corregido CS8602 -->
-                                <h5 class="mb-0" style="color: #4facfe;">$@(metodo.Total?.ToString("N2") ?? "0.00")</h5>
+                                <h5 class="mb-0" style="color: #4facfe;">BS @(metodo.Total?.ToString("N2") ?? "0.00")</h5>
                             </div>
                         }
                     }
@@ -245,7 +245,7 @@
                                                 <span class="badge bg-info">@mes.Cantidad ventas</span>
                                             </td>
                                             <!-- Corregido CS8602 -->
-                                            <td><strong style="color: #38ef7d;">$@(mes.Total?.ToString("N2") ?? "0.00")</strong></td>
+                                            <td><strong style="color: #38ef7d;">BS @(mes.Total?.ToString("N2") ?? "0.00")</strong></td>
                                         </tr>
                                     }
                                 </tbody>

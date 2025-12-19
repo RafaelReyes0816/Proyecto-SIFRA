@@ -75,6 +75,49 @@ namespace Tienda_Repuestos_Demo.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Registro([Bind("Nombre,Correo,Contraseña,Telefono,Direccion")] Cliente cliente, IFormFile? fotoCI)
         {
+            // Validaciones manuales adicionales
+            if (string.IsNullOrWhiteSpace(cliente.Nombre))
+            {
+                ModelState.AddModelError("Nombre", "El nombre es requerido");
+            }
+            else if (cliente.Nombre.Length > 100)
+            {
+                ModelState.AddModelError("Nombre", "El nombre no puede exceder 100 caracteres");
+            }
+
+            if (string.IsNullOrWhiteSpace(cliente.Correo))
+            {
+                ModelState.AddModelError("Correo", "El correo electrónico es requerido");
+            }
+            else if (!cliente.Correo.Contains("@") || !cliente.Correo.Contains("."))
+            {
+                ModelState.AddModelError("Correo", "El correo electrónico no es válido");
+            }
+            else if (cliente.Correo.Length > 100)
+            {
+                ModelState.AddModelError("Correo", "El correo electrónico no puede exceder 100 caracteres");
+            }
+
+            if (string.IsNullOrWhiteSpace(cliente.Contraseña))
+            {
+                ModelState.AddModelError("Contraseña", "La contraseña es requerida");
+            }
+            else if (cliente.Contraseña.Length < 6)
+            {
+                ModelState.AddModelError("Contraseña", "La contraseña debe tener al menos 6 caracteres");
+            }
+            else if (cliente.Contraseña.Length > 255)
+            {
+                ModelState.AddModelError("Contraseña", "La contraseña no puede exceder 255 caracteres");
+            }
+
+            if (!string.IsNullOrWhiteSpace(cliente.Telefono) && cliente.Telefono.Length > 20)
+            {
+                ModelState.AddModelError("Telefono", "El teléfono no puede exceder 20 caracteres");
+            }
+
+            // FotoCI es opcional, no se valida
+
             if (ModelState.IsValid)
             {
                 // Verificar si el correo ya existe
@@ -83,7 +126,7 @@ namespace Tienda_Repuestos_Demo.Controllers
 
                 if (existe)
                 {
-                    ViewBag.Error = "Este correo electrónico ya está registrado";
+                    ModelState.AddModelError("Correo", "Este correo electrónico ya está registrado");
                     return View(cliente);
                 }
 
@@ -184,6 +227,36 @@ namespace Tienda_Repuestos_Demo.Controllers
             {
                 return NotFound();
             }
+
+            // Validaciones manuales adicionales
+            if (string.IsNullOrWhiteSpace(cliente.Nombre))
+            {
+                ModelState.AddModelError("Nombre", "El nombre es requerido");
+            }
+            else if (cliente.Nombre.Length > 100)
+            {
+                ModelState.AddModelError("Nombre", "El nombre no puede exceder 100 caracteres");
+            }
+
+            if (string.IsNullOrWhiteSpace(cliente.Correo))
+            {
+                ModelState.AddModelError("Correo", "El correo electrónico es requerido");
+            }
+            else if (!cliente.Correo.Contains("@") || !cliente.Correo.Contains("."))
+            {
+                ModelState.AddModelError("Correo", "El correo electrónico no es válido");
+            }
+            else if (cliente.Correo.Length > 100)
+            {
+                ModelState.AddModelError("Correo", "El correo electrónico no puede exceder 100 caracteres");
+            }
+
+            if (!string.IsNullOrWhiteSpace(cliente.Telefono) && cliente.Telefono.Length > 20)
+            {
+                ModelState.AddModelError("Telefono", "El teléfono no puede exceder 20 caracteres");
+            }
+
+            // FotoCI es opcional, no se valida
 
             if (ModelState.IsValid)
             {

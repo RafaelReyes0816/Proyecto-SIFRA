@@ -28,6 +28,7 @@
                         <th>Tipo</th>
                         <th>Estado</th>
                         <th>Método Pago</th>
+                        <th>Comprobante</th>
                         <th>Total</th>
                         <th>Acciones</th>
                     </tr>
@@ -47,7 +48,10 @@
                                 </span>
                             </td>
                             <td>@item.MetodoPago</td>
-                            <td>$@item.Total.ToString("N2")</td>
+                            <td>
+                                <span class="badge bg-info text-dark">@(item.ComprobantePago ?? "N/A")</span>
+                            </td>
+                            <td>BS @item.Total.ToString("N2")</td>
                             <td>
                                 <div class="btn-group" role="group">
                                     <a asp-action="Details" asp-route-id="@item.IdVenta" class="btn btn-sm btn-info">👁️ Ver</a>

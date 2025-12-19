@@ -203,7 +203,21 @@ namespace Tienda_Repuestos_Demo.Controllers
             ModelState.Remove("Categoria");
             ModelState.Remove("Proveedor");
 
-            // Validación manual adicional
+            // Validaciones manuales adicionales
+            if (string.IsNullOrWhiteSpace(producto.Nombre))
+            {
+                ModelState.AddModelError("Nombre", "El nombre del producto es requerido");
+            }
+            else if (producto.Nombre.Length > 150)
+            {
+                ModelState.AddModelError("Nombre", "El nombre del producto no puede exceder 150 caracteres");
+            }
+
+            if (!string.IsNullOrWhiteSpace(producto.Codigo) && producto.Codigo.Length > 50)
+            {
+                ModelState.AddModelError("Codigo", "El código no puede exceder 50 caracteres");
+            }
+
             if (producto.IdCategoria <= 0)
             {
                 ModelState.AddModelError("IdCategoria", "Debe seleccionar una categoría");

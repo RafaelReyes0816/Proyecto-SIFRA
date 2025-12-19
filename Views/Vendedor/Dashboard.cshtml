@@ -38,7 +38,7 @@
         <div class="col-md-3 mb-3">
             <div class="stat-card bg-warning">
                 <h5>💵 Ingresos del Mes</h5>
-                <h2>$@(stats?.IngresosMes?.ToString("N2") ?? "0.00")</h2>
+                <h2>BS @(stats?.IngresosMes?.ToString("N2") ?? "0.00")</h2>
             </div>
         </div>
     </div>
@@ -75,7 +75,7 @@
                                                 @venta.Estado
                                             </span>
                                         </td>
-                                        <td>$@venta.Total.ToString("N2")</td>
+                                        <td>BS @venta.Total.ToString("N2")</td>
                                         <td>
                                             <a href="@Url.Action("Details", "Ventas", new { id = venta.IdVenta })" class="btn btn-sm btn-info">Ver</a>
                                         </td>

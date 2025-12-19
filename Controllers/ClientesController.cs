@@ -85,6 +85,36 @@ namespace Tienda_Repuestos_Demo.Controllers
             ModelState.Remove("Contraseña");
             ModelState.Remove("FotoCI");
 
+            // Validaciones manuales adicionales
+            if (string.IsNullOrWhiteSpace(cliente.Nombre))
+            {
+                ModelState.AddModelError("Nombre", "El nombre es requerido");
+            }
+            else if (cliente.Nombre.Length > 100)
+            {
+                ModelState.AddModelError("Nombre", "El nombre no puede exceder 100 caracteres");
+            }
+
+            if (string.IsNullOrWhiteSpace(cliente.Correo))
+            {
+                ModelState.AddModelError("Correo", "El correo electrónico es requerido");
+            }
+            else if (!cliente.Correo.Contains("@") || !cliente.Correo.Contains("."))
+            {
+                ModelState.AddModelError("Correo", "El correo electrónico no es válido");
+            }
+            else if (cliente.Correo.Length > 100)
+            {
+                ModelState.AddModelError("Correo", "El correo electrónico no puede exceder 100 caracteres");
+            }
+
+            if (!string.IsNullOrWhiteSpace(cliente.Telefono) && cliente.Telefono.Length > 20)
+            {
+                ModelState.AddModelError("Telefono", "El teléfono no puede exceder 20 caracteres");
+            }
+
+            // FotoCI es opcional, no se valida
+
             if (ModelState.IsValid)
             {
                 // Verificar si el correo ya existe
@@ -93,7 +123,7 @@ namespace Tienda_Repuestos_Demo.Controllers
 
                 if (existe)
                 {
-                    ViewBag.Error = "Este correo electrónico ya está registrado";
+                    ModelState.AddModelError("Correo", "Este correo electrónico ya está registrado");
                     return View(cliente);
                 }
 

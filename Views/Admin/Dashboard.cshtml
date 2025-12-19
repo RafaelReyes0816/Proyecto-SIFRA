@@ -99,7 +99,7 @@
             <div class="card">
                 <div class="card-body text-center">
                     <h5 class="card-title" style="color: var(--text-medium);">💵 Total Ingresos</h5>
-                    <h3 class="text-success mb-0" style="font-weight: 700;">$@(stats?.TotalIngresos?.ToString("N2") ?? "0.00")</h3>
+                    <h3 class="text-success mb-0" style="font-weight: 700;">BS @(stats?.TotalIngresos?.ToString("N2") ?? "0.00")</h3>
                 </div>
             </div>
         </div>
@@ -206,7 +206,7 @@
                                                     @venta.Estado
                                                 </span>
                                             </td>
-                                            <td><strong>$@venta.Total.ToString("N2")</strong></td>
+                                            <td><strong>BS @venta.Total.ToString("N2")</strong></td>
                                             <td>
                                                 <a href="@Url.Action("Details", "Ventas", new { id = venta.IdVenta })" class="btn btn-sm btn-info">
                                                     👁️ Ver

@@ -13,46 +13,108 @@
 </div>
 
 <div class="row">
-    <div class="col-md-6">
-        <form asp-action="Create">
-            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+    <div class="col-md-12">
+        <form asp-action="Create" method="post" id="ventaForm">
+            @Html.AntiForgeryToken()
+            <div asp-validation-summary="All" class="alert alert-danger" role="alert" style="display: none;"></div>
             
-            <div class="mb-3">
-                <label asp-for="IdCliente" class="form-label">Cliente</label>
-                <select asp-for="IdCliente" class="form-select" asp-items="ViewBag.IdCliente" required></select>
-                <span asp-validation-for="IdCliente" class="text-danger"></span>
+            <!-- Sección de Productos - Ahora primero y más visible -->
+            <div class="card mb-3">
+                <div class="card-header d-flex justify-content-between align-items-center bg-primary text-white">
+                    <h5 class="mb-0">📦 Productos de la Venta <span class="text-danger">*</span></h5>
+                    <button type="button" class="btn btn-sm btn-light" id="agregarProducto">
+                        ➕ Agregar Producto
+                    </button>
+                </div>
+                <div class="card-body">
+                    <div id="productosContainer">
+                        <!-- Los productos se agregarán dinámicamente aquí -->
+                    </div>
+                    <div id="sinProductos" class="alert alert-info mb-0">
+                        <strong>ℹ️</strong> No hay productos agregados. Haz clic en "Agregar Producto" para comenzar.
+                    </div>
+                </div>
+            </div>
+
+            <!-- Información de la Venta y Resumen en la misma fila -->
+            <div class="row">
+                <div class="col-md-8">
+                    <div class="card mb-3">
+                        <div class="card-header">
+                            <h5 class="mb-0">📋 Información de la Venta</h5>
+                        </div>
+                        <div class="card-body">
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="mb-3">
+                                        <label asp-for="IdCliente" class="form-label">Cliente <span class="text-danger">*</span></label>
+                                        <select asp-for="IdCliente" class="form-select" asp-items="ViewBag.IdCliente" id="clienteSelect">
+                                            <option value="">-- Seleccione un cliente --</option>
+                                        </select>
+                                        <span asp-validation-for="IdCliente" class="text-danger"></span>
+                                    </div>
+                                </div>
+
+                                <div class="col-md-6">
+                                    <div class="mb-3">
+                                        <label asp-for="TipoVenta" class="form-label">Tipo de Venta <span class="text-danger">*</span></label>
+                                        <select asp-for="TipoVenta" class="form-select">
+                                            <option value="">-- Seleccione el tipo de venta --</option>
+                                            <option value="presencial">Presencial</option>
+                                            <option value="web">Web</option>
+                                        </select>
+                                        <span asp-validation-for="TipoVenta" class="text-danger"></span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="mb-3">
+                                        <label asp-for="MetodoPago" class="form-label">Método de Pago <span class="text-danger">*</span></label>
+                                        <select asp-for="MetodoPago" class="form-select">
+                                            <option value="">-- Seleccione el método de pago --</option>
+                                            <option value="efectivo">Efectivo</option>
+                                            <option value="qr">QR</option>
+                                            <option value="transferencia">Transferencia</option>
+                                        </select>
+                                        <span asp-validation-for="MetodoPago" class="text-danger"></span>
+                                    </div>
+                                </div>
+
+                                <div class="col-md-6">
+                                    <div class="mb-3">
+                                        <label asp-for="ComprobantePago" class="form-label">Comprobante de Pago</label>
+                                        <input asp-for="ComprobantePago" class="form-control" maxlength="255" placeholder="Se generará automáticamente" />
+                                        <span asp-validation-for="ComprobantePago" class="text-danger"></span>
+                                        <small class="text-muted">Opcional - Se genera automáticamente</small>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-md-4">
+                    <div class="card mb-3">
+                        <div class="card-header bg-success text-white">
+                            <h5 class="mb-0">💰 Resumen</h5>
+                        </div>
+                        <div class="card-body">
+                            <div class="mb-3">
+                                <label for="totalCalculado" class="form-label">Total Calculado <span class="text-danger">*</span></label>
+                                <input type="text" class="form-control" id="totalCalculado" readonly style="background-color: #f8f9fa; font-weight: 700; font-size: 1.5rem; text-align: center; color: #28a745;" value="BS 0.00" />
+                                <input type="hidden" asp-for="Total" id="totalHidden" value="0" />
+                                <small class="text-muted d-block text-center mt-2">Se calcula automáticamente</small>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
 
             <div class="mb-3">
-                <label asp-for="TipoVenta" class="form-label">Tipo de Venta</label>
-                <select asp-for="TipoVenta" class="form-select" required>
-                    <option value="">Seleccione...</option>
-                    <option value="presencial">Presencial</option>
-                    <option value="web">Web</option>
-                </select>
-                <span asp-validation-for="TipoVenta" class="text-danger"></span>
-            </div>
-
-            <div class="mb-3">
-                <label asp-for="MetodoPago" class="form-label">Método de Pago</label>
-                <select asp-for="MetodoPago" class="form-select" required>
-                    <option value="">Seleccione...</option>
-                    <option value="efectivo">Efectivo</option>
-                    <option value="qr">QR</option>
-                    <option value="transferencia">Transferencia</option>
-                </select>
-                <span asp-validation-for="MetodoPago" class="text-danger"></span>
-            </div>
-
-            <div class="mb-3">
-                <label asp-for="Total" class="form-label">Total</label>
-                <input asp-for="Total" class="form-control" type="number" step="0.01" required />
-                <span asp-validation-for="Total" class="text-danger"></span>
-            </div>
-
-            <div class="mb-3">
-                <button type="submit" class="btn btn-primary">Crear Venta</button>
-                <a asp-action="Index" class="btn btn-secondary">Cancelar</a>
+                <button type="submit" class="btn btn-primary">💾 Crear Venta</button>
+                <a asp-action="Index" class="btn btn-secondary">❌ Cancelar</a>
             </div>
         </form>
     </div>
@@ -60,4 +122,223 @@
 
 @section Scripts {
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    <script>
+        var contadorProductos = 0;
+        var productosData = {};
+
+        // Cargar datos de productos disponibles desde ViewBag
+        @if (ViewBag.ProductosJson != null)
+        {
+            <text>
+            var productosJson = @Html.Raw(ViewBag.ProductosJson);
+            productosJson.forEach(function(producto) {
+                productosData[producto.id] = {
+                    id: producto.id,
+                    nombre: producto.nombre,
+                    precio: producto.precio,
+                    stock: producto.stock,
+                    codigo: producto.codigo
+                };
+            });
+            </text>
+        }
+
+        function llenarSelectProductos(selectElement) {
+            selectElement.html('<option value="">-- Seleccione un producto --</option>');
+            for (var id in productosData) {
+                var producto = productosData[id];
+                var optionText = producto.nombre + ' - Stock: ' + producto.stock + ' - BS ' + parseFloat(producto.precio).toFixed(2);
+                selectElement.append($('<option>', {
+                    value: producto.id,
+                    text: optionText,
+                    'data-precio': producto.precio,
+                    'data-stock': producto.stock
+                }));
+            }
+        }
+
+        function agregarFilaProducto() {
+            contadorProductos++;
+            var html = `
+                <div class="card mb-2 producto-fila border" data-index="${contadorProductos}" style="background-color: #f8f9fa;">
+                    <div class="card-body p-3">
+                        <div class="row align-items-end">
+                            <div class="col-md-5">
+                                <label class="form-label">Producto <span class="text-danger">*</span></label>
+                                <select name="productos" class="form-select producto-select" data-index="${contadorProductos}" required>
+                                    <option value="">-- Seleccione un producto --</option>
+                                </select>
+                            </div>
+                            <div class="col-md-2">
+                                <label class="form-label">Cantidad <span class="text-danger">*</span></label>
+                                <input type="number" name="cantidades" class="form-control cantidad-input" data-index="${contadorProductos}" min="1" value="1" required />
+                                <small class="text-muted stock-info" data-index="${contadorProductos}" style="font-size: 0.75rem;"></small>
+                            </div>
+                            <div class="col-md-2">
+                                <label class="form-label">Precio Unit.</label>
+                                <input type="text" class="form-control precio-unitario" data-index="${contadorProductos}" readonly style="background-color: #ffffff; font-weight: 600;" />
+                            </div>
+                            <div class="col-md-2">
+                                <label class="form-label">Subtotal</label>
+                                <input type="text" class="form-control subtotal" data-index="${contadorProductos}" readonly style="background-color: #ffffff; font-weight: 700; color: #28a745;" />
+                            </div>
+                            <div class="col-md-1">
+                                <button type="button" class="btn btn-sm btn-danger w-100 eliminar-producto" data-index="${contadorProductos}" title="Eliminar producto">
+                                    🗑️
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            `;
+            
+            $('#productosContainer').append(html);
+            $('#sinProductos').hide();
+            
+            // Llenar el select con productos disponibles
+            var nuevoSelect = $(`.producto-select[data-index="${contadorProductos}"]`);
+            llenarSelectProductos(nuevoSelect);
+            
+            // Agregar event listeners
+            nuevoSelect.on('change', function() {
+                actualizarProducto($(this).data('index'));
+            });
+            
+            $(`.cantidad-input[data-index="${contadorProductos}"]`).on('input', function() {
+                actualizarProducto($(this).data('index'));
+                calcularTotal();
+            });
+            
+            $(`.eliminar-producto[data-index="${contadorProductos}"]`).on('click', function() {
+                eliminarProducto($(this).data('index'));
+            });
+        }
+
+        function actualizarProducto(index) {
+            var select = $(`.producto-select[data-index="${index}"]`);
+            var productoId = select.val();
+            var cantidadInput = $(`.cantidad-input[data-index="${index}"]`);
+            var precioInput = $(`.precio-unitario[data-index="${index}"]`);
+            var subtotalInput = $(`.subtotal[data-index="${index}"]`);
+            var stockInfo = $(`.stock-info[data-index="${index}"]`);
+            
+            if (productoId && productosData[productoId]) {
+                var producto = productosData[productoId];
+                precioInput.val('BS ' + parseFloat(producto.precio).toFixed(2));
+                stockInfo.text('Stock disponible: ' + producto.stock);
+                stockInfo.removeClass('text-danger text-warning').addClass('text-success');
+                
+                // Validar cantidad contra stock
+                var cantidad = parseInt(cantidadInput.val()) || 0;
+                if (cantidad > producto.stock) {
+                    stockInfo.removeClass('text-success').addClass('text-danger');
+                    stockInfo.text('⚠️ Stock insuficiente. Disponible: ' + producto.stock);
+                    cantidadInput.addClass('is-invalid');
+                } else {
+                    cantidadInput.removeClass('is-invalid');
+                }
+                
+                actualizarSubtotal(index);
+            } else {
+                precioInput.val('');
+                subtotalInput.val('');
+                stockInfo.text('');
+            }
+        }
+
+        function actualizarSubtotal(index) {
+            var select = $(`.producto-select[data-index="${index}"]`);
+            var cantidadInput = $(`.cantidad-input[data-index="${index}"]`);
+            var subtotalInput = $(`.subtotal[data-index="${index}"]`);
+            
+            var productoId = select.val();
+            var cantidad = parseFloat(cantidadInput.val()) || 0;
+            
+            if (productoId && productosData[productoId] && cantidad > 0) {
+                var precio = parseFloat(productosData[productoId].precio);
+                var subtotal = precio * cantidad;
+                subtotalInput.val('BS ' + subtotal.toFixed(2));
+            } else {
+                subtotalInput.val('');
+            }
+            
+            calcularTotal();
+        }
+
+        function calcularTotal() {
+            var total = 0;
+            $('.subtotal').each(function() {
+                var subtotalText = $(this).val();
+                if (subtotalText) {
+                    var subtotal = parseFloat(subtotalText.replace('BS ', '').replace(',', '').trim());
+                    if (!isNaN(subtotal)) {
+                        total += subtotal;
+                    }
+                }
+            });
+            
+            $('#totalCalculado').val('BS ' + total.toFixed(2));
+            $('#totalHidden').val(total.toFixed(2));
+        }
+
+        function eliminarProducto(index) {
+            $(`.producto-fila[data-index="${index}"]`).remove();
+            calcularTotal();
+            
+            if ($('.producto-fila').length === 0) {
+                $('#sinProductos').show();
+            }
+        }
+
+        // Event listeners
+        $(document).ready(function() {
+            // Mostrar errores de validación si existen
+            var validationSummary = $('.alert-danger');
+            if (validationSummary.find('li').length > 0 || validationSummary.text().trim() !== '') {
+                validationSummary.show();
+            }
+
+            // Agregar primer producto
+            $('#agregarProducto').on('click', function() {
+                agregarFilaProducto();
+            });
+
+            // Validar formulario antes de enviar
+            $('#ventaForm').on('submit', function(e) {
+                var tieneProductos = $('.producto-fila').length > 0;
+                if (!tieneProductos) {
+                    e.preventDefault();
+                    alert('Debe agregar al menos un producto a la venta');
+                    return false;
+                }
+                
+                // Validar que todos los productos tengan selección y cantidad válida
+                var valido = true;
+                $('.producto-select').each(function() {
+                    if (!$(this).val() || $(this).val() === '') {
+                        valido = false;
+                        $(this).addClass('is-invalid');
+                    } else {
+                        $(this).removeClass('is-invalid');
+                    }
+                });
+                
+                $('.cantidad-input').each(function() {
+                    var cantidad = parseInt($(this).val()) || 0;
+                    if (cantidad <= 0) {
+                        valido = false;
+                        $(this).addClass('is-invalid');
+                    } else {
+                        $(this).removeClass('is-invalid');
+                    }
+                });
+                
+                if (!valido) {
+                    e.preventDefault();
+                    alert('Por favor complete todos los campos de productos correctamente');
+                    return false;
+                }
+            });
+        });
+    </script>
 }

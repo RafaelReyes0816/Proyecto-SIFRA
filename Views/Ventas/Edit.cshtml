@@ -14,20 +14,24 @@
 
 <div class="row">
     <div class="col-md-6">
-        <form asp-action="Edit">
-            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+        <form asp-action="Edit" method="post">
+            @Html.AntiForgeryToken()
+            <div asp-validation-summary="All" class="alert alert-danger" role="alert" style="display: none;"></div>
             <input type="hidden" asp-for="IdVenta" />
             <input type="hidden" asp-for="IdVendedor" />
             
             <div class="mb-3">
-                <label asp-for="IdCliente" class="form-label">Cliente</label>
-                <select asp-for="IdCliente" class="form-select" asp-items="ViewBag.IdCliente" required></select>
+                <label asp-for="IdCliente" class="form-label">Cliente <span class="text-danger">*</span></label>
+                <select asp-for="IdCliente" class="form-select" asp-items="ViewBag.IdCliente">
+                    <option value="">-- Seleccione un cliente --</option>
+                </select>
                 <span asp-validation-for="IdCliente" class="text-danger"></span>
             </div>
 
             <div class="mb-3">
-                <label asp-for="TipoVenta" class="form-label">Tipo de Venta</label>
-                <select asp-for="TipoVenta" class="form-select" required>
+                <label asp-for="TipoVenta" class="form-label">Tipo de Venta <span class="text-danger">*</span></label>
+                <select asp-for="TipoVenta" class="form-select">
+                    <option value="">-- Seleccione el tipo de venta --</option>
                     <option value="presencial" selected="@(Model.TipoVenta == "presencial")">Presencial</option>
                     <option value="web" selected="@(Model.TipoVenta == "web")">Web</option>
                 </select>
@@ -35,8 +39,9 @@
             </div>
 
             <div class="mb-3">
-                <label asp-for="Estado" class="form-label">Estado</label>
-                <select asp-for="Estado" class="form-select" required>
+                <label asp-for="Estado" class="form-label">Estado <span class="text-danger">*</span></label>
+                <select asp-for="Estado" class="form-select">
+                    <option value="">-- Seleccione el estado --</option>
                     <option value="pendiente" selected="@(Model.Estado == "pendiente")">Pendiente</option>
                     <option value="confirmada" selected="@(Model.Estado == "confirmada")">Confirmada</option>
                     <option value="cancelada" selected="@(Model.Estado == "cancelada")">Cancelada</option>
@@ -45,8 +50,9 @@
             </div>
 
             <div class="mb-3">
-                <label asp-for="MetodoPago" class="form-label">Método de Pago</label>
-                <select asp-for="MetodoPago" class="form-select" required>
+                <label asp-for="MetodoPago" class="form-label">Método de Pago <span class="text-danger">*</span></label>
+                <select asp-for="MetodoPago" class="form-select">
+                    <option value="">-- Seleccione el método de pago --</option>
                     <option value="efectivo" selected="@(Model.MetodoPago == "efectivo")">Efectivo</option>
                     <option value="qr" selected="@(Model.MetodoPago == "qr")">QR</option>
                     <option value="transferencia" selected="@(Model.MetodoPago == "transferencia")">Transferencia</option>
@@ -56,14 +62,16 @@
 
             <div class="mb-3">
                 <label asp-for="ComprobantePago" class="form-label">Comprobante de Pago</label>
-                <input asp-for="ComprobantePago" class="form-control" />
+                <input asp-for="ComprobantePago" class="form-control" maxlength="255" />
                 <span asp-validation-for="ComprobantePago" class="text-danger"></span>
+                <small class="text-muted">Opcional - Máximo 255 caracteres</small>
             </div>
 
             <div class="mb-3">
-                <label asp-for="Total" class="form-label">Total</label>
-                <input asp-for="Total" class="form-control" type="number" step="0.01" required />
+                <label asp-for="Total" class="form-label">Total <span class="text-danger">*</span></label>
+                <input asp-for="Total" class="form-control" type="number" step="0.01" min="0.01" />
                 <span asp-validation-for="Total" class="text-danger"></span>
+                <small class="text-muted">El total debe ser mayor a 0</small>
             </div>
 
             <div class="mb-3">
@@ -76,4 +84,13 @@
 
 @section Scripts {
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    <script>
+        // Mostrar errores de validación si existen
+        $(document).ready(function() {
+            var validationSummary = $('.alert-danger');
+            if (validationSummary.find('li').length > 0 || validationSummary.text().trim() !== '') {
+                validationSummary.show();
+            }
+        });
+    </script>
 }

@@ -73,6 +73,55 @@ namespace Tienda_Repuestos_Demo.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("Nombre,Correo,Contraseña,Rol,Activo")] Usuario usuario)
         {
+            // Validaciones manuales adicionales
+            if (string.IsNullOrWhiteSpace(usuario.Nombre))
+            {
+                ModelState.AddModelError("Nombre", "El nombre es requerido");
+            }
+            else if (usuario.Nombre.Length > 100)
+            {
+                ModelState.AddModelError("Nombre", "El nombre no puede exceder 100 caracteres");
+            }
+
+            if (string.IsNullOrWhiteSpace(usuario.Correo))
+            {
+                ModelState.AddModelError("Correo", "El correo electrónico es requerido");
+            }
+            else if (!usuario.Correo.Contains("@") || !usuario.Correo.Contains("."))
+            {
+                ModelState.AddModelError("Correo", "El correo electrónico no es válido");
+            }
+            else if (usuario.Correo.Length > 100)
+            {
+                ModelState.AddModelError("Correo", "El correo electrónico no puede exceder 100 caracteres");
+            }
+
+            if (string.IsNullOrWhiteSpace(usuario.Contraseña))
+            {
+                ModelState.AddModelError("Contraseña", "La contraseña es requerida");
+            }
+            else if (usuario.Contraseña.Length < 6)
+            {
+                ModelState.AddModelError("Contraseña", "La contraseña debe tener al menos 6 caracteres");
+            }
+            else if (usuario.Contraseña.Length > 255)
+            {
+                ModelState.AddModelError("Contraseña", "La contraseña no puede exceder 255 caracteres");
+            }
+
+            if (string.IsNullOrWhiteSpace(usuario.Rol))
+            {
+                ModelState.AddModelError("Rol", "El rol es requerido");
+            }
+            else if (usuario.Rol != "admin" && usuario.Rol != "vendedor")
+            {
+                ModelState.AddModelError("Rol", "El rol debe ser 'admin' o 'vendedor'");
+            }
+            else if (usuario.Rol.Length > 20)
+            {
+                ModelState.AddModelError("Rol", "El rol no puede exceder 20 caracteres");
+            }
+
             if (ModelState.IsValid)
             {
                 // Verificar si el correo ya existe
@@ -81,7 +130,7 @@ namespace Tienda_Repuestos_Demo.Controllers
 
                 if (existe)
                 {
-                    ViewBag.Error = "Este correo electrónico ya está registrado";
+                    ModelState.AddModelError("Correo", "Este correo electrónico ya está registrado");
                     ViewData["Roles"] = new SelectList(new[] { "admin", "vendedor" }, usuario.Rol);
                     return View(usuario);
                 }
@@ -127,6 +176,54 @@ namespace Tienda_Repuestos_Demo.Controllers
             if (id != usuario.IdUsuario)
             {
                 return NotFound();
+            }
+
+            // Validaciones manuales adicionales
+            if (string.IsNullOrWhiteSpace(usuario.Nombre))
+            {
+                ModelState.AddModelError("Nombre", "El nombre es requerido");
+            }
+            else if (usuario.Nombre.Length > 100)
+            {
+                ModelState.AddModelError("Nombre", "El nombre no puede exceder 100 caracteres");
+            }
+
+            if (string.IsNullOrWhiteSpace(usuario.Correo))
+            {
+                ModelState.AddModelError("Correo", "El correo electrónico es requerido");
+            }
+            else if (!usuario.Correo.Contains("@") || !usuario.Correo.Contains("."))
+            {
+                ModelState.AddModelError("Correo", "El correo electrónico no es válido");
+            }
+            else if (usuario.Correo.Length > 100)
+            {
+                ModelState.AddModelError("Correo", "El correo electrónico no puede exceder 100 caracteres");
+            }
+
+            if (!string.IsNullOrWhiteSpace(usuario.Contraseña))
+            {
+                if (usuario.Contraseña.Length < 6)
+                {
+                    ModelState.AddModelError("Contraseña", "La contraseña debe tener al menos 6 caracteres");
+                }
+                else if (usuario.Contraseña.Length > 255)
+                {
+                    ModelState.AddModelError("Contraseña", "La contraseña no puede exceder 255 caracteres");
+                }
+            }
+
+            if (string.IsNullOrWhiteSpace(usuario.Rol))
+            {
+                ModelState.AddModelError("Rol", "El rol es requerido");
+            }
+            else if (usuario.Rol != "admin" && usuario.Rol != "vendedor")
+            {
+                ModelState.AddModelError("Rol", "El rol debe ser 'admin' o 'vendedor'");
+            }
+            else if (usuario.Rol.Length > 20)
+            {
+                ModelState.AddModelError("Rol", "El rol no puede exceder 20 caracteres");
             }
 
             if (ModelState.IsValid)

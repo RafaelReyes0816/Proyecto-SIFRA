@@ -65,7 +65,7 @@
                                             <td><strong>@(producto.Codigo ?? "N/A")</strong></td>
                                             <td>@producto.Nombre</td>
                                             <td>@producto.Proveedor?.Nombre</td>
-                                            <td>$@producto.PrecioVenta.ToString("N2")</td>
+                                            <td>BS @producto.PrecioVenta.ToString("N2")</td>
                                             <td>
                                                 <span class="badge @(producto.Stock > 0 ? "bg-success" : "bg-danger")">
                                                     @producto.Stock unidades

@@ -47,7 +47,7 @@
                         <dd class="col-sm-7">@(Model.ComprobantePago ?? "N/A")</dd>
 
                         <dt class="col-sm-5"><strong>Total:</strong></dt>
-                        <dd class="col-sm-7"><strong>$@Model.Total.ToString("N2")</strong></dd>
+                        <dd class="col-sm-7"><strong>BS @Model.Total.ToString("N2")</strong></dd>
                     </dl>
                 </div>
             </div>
@@ -76,8 +76,8 @@
                                     <tr>
                                         <td>@detalle.Producto?.Nombre</td>
                                         <td>@detalle.Cantidad</td>
-                                        <td>$@detalle.PrecioUnitario.ToString("N2")</td>
-                                        <td>$@((detalle.Cantidad * detalle.PrecioUnitario).ToString("N2"))</td>
+                                        <td>BS @detalle.PrecioUnitario.ToString("N2")</td>
+                                        <td>BS @((detalle.Cantidad * detalle.PrecioUnitario).ToString("N2"))</td>
                                     </tr>
                                 }
                             </tbody>

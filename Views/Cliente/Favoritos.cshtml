@@ -100,7 +100,7 @@
                                             </td>
                                             <td>
                                                 <strong style="color: #38ef7d; font-size: 1.1rem;">
-                                                    $@(((decimal)(producto.Precio ?? 0)).ToString("N2"))
+                                                    BS @(((decimal)(producto.Precio ?? 0)).ToString("N2"))
                                                 </strong>
                                             </td>
                                             <td>
@@ -110,7 +110,7 @@
                                             </td>
                                             <td>
                                                 <strong style="color: #4facfe;">
-                                                    $@(((decimal)(producto.TotalGastado ?? 0)).ToString("N2"))
+                                                    BS @(((decimal)(producto.TotalGastado ?? 0)).ToString("N2"))
                                                 </strong>
                                             </td>
                                             <td>
@@ -162,7 +162,7 @@
                                     <div style="font-size: 2rem; margin-bottom: 0.5rem;">💰</div>
                                     <h6 style="color: #ffffff;">Total Invertido</h6>
                                     <p class="text-muted small mb-0">
-                                        $@{
+                                        BS @{
                                             var totalInvertido = 0m;
                                             foreach (var p in productosFavoritos)
                                             {

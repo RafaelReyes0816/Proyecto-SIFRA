@@ -81,7 +81,7 @@
                                                 <span class="badge bg-@(tipo == "success" ? "success" : tipo == "warning" ? "warning" : "danger")">
                                                     @estado
                                                 </span>
-                                                <strong style="color: #4facfe;">$@(total != null ? total.ToString("N2") : "0.00")</strong>
+                                                <strong style="color: #4facfe;">BS @(total != null ? total.ToString("N2") : "0.00")</strong>
                                             </div>
                                             <a href="@Url.Action("Details", "Ventas", new { id = ventaId })" class="btn btn-sm btn-outline-light">
                                                 👁️ Ver Detalles de la Compra
