@@ -1,73 +1,69 @@
 @{
     ViewData["Title"] = "Iniciar Sesión";
-    Layout = "~/Views/Shared/_Layout.cshtml";
+    Layout = null;
 }
 
-<div class="login-container my-4">
-    <div class="login-card mx-auto">
-        <div class="login-header">
-            <h3>🔧 Tienda de Repuestos</h3>
-            <p class="mb-0 mt-2" style="opacity: 0.9;">Sistema de Gestión</p>
-        </div>
-        <div class="login-body">
-            @if (ViewBag.Error != null)
-            {
-                <div class="alert alert-danger" role="alert">
-                    <strong>⚠️ Error:</strong> @ViewBag.Error
-                </div>
-            }
-
-            <form asp-action="Login" method="post">
-                <div class="mb-3">
-                    <label class="form-label">👤 Tipo de Usuario</label>
-                    <div class="btn-group w-100" role="group">
-                        <input type="radio" class="btn-check" name="tipoUsuario" id="tipoUsuario" value="usuario" checked>
-                        <label class="btn btn-outline-primary" for="tipoUsuario">👨‍💼 Empleado</label>
-                        
-                        <input type="radio" class="btn-check" name="tipoUsuario" id="tipoCliente" value="cliente">
-                        <label class="btn btn-outline-primary" for="tipoCliente">🛒 Cliente</label>
-                    </div>
-                </div>
-                <div class="mb-4">
-                    <label for="correo" class="form-label">📧 Correo Electrónico</label>
-                    <input type="email" class="form-control" id="correo" name="correo" required autofocus placeholder="tu@correo.com">
-                </div>
-                <div class="mb-4">
-                    <label for="contraseña" class="form-label">🔒 Contraseña</label>
-                    <input type="password" class="form-control" id="contraseña" name="contraseña" required placeholder="Ingresa tu contraseña">
-                </div>
-                <div class="d-grid mb-3">
-                    <button type="submit" class="btn btn-primary btn-lg">
-                        <strong>Iniciar Sesión</strong>
-                    </button>
-                </div>
-            </form>
-            
-            <div class="text-center mb-3">
-                <p class="mb-0" style="color: var(--text-medium);">¿Eres cliente nuevo?</p>
-                <a asp-controller="Cliente" asp-action="Registro" class="btn btn-link" style="text-decoration: none; color: var(--primary-color);">
-                    📝 Regístrate aquí
-                </a>
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - Tienda de Repuestos</title>
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+</head>
+<body class="login-page-body">
+    <div class="login-container">
+        <div class="login-card mx-auto">
+            <div class="login-header">
+                <h3>🔧 Tienda de Repuestos</h3>
+                <p class="mb-0 mt-2" style="opacity: 0.9;">Sistema de Gestión</p>
             </div>
+            <div class="login-body">
+                @if (ViewBag.Error != null)
+                {
+                    <div class="alert alert-danger" role="alert">
+                        <strong>⚠️ Error:</strong> @ViewBag.Error
+                    </div>
+                }
 
-            <hr class="my-4">
-            <div class="text-center">
-                <p class="mb-2" style="color: var(--text-medium); font-weight: 600;">👥 Usuarios de Prueba</p>
-                <div class="small" style="color: var(--text-light);">
-                    <div class="mb-1">
-                        <strong>👨‍💼 Admin:</strong> rafael.reyes@tienda.com / Rafael123!
+                <form asp-action="Login" method="post">
+                    <div class="mb-3">
+                        <label class="form-label" style="color: #212529 !important; font-weight: 600;">👤 Tipo de Usuario</label>
+                        <div class="btn-group w-100" role="group">
+                            <input type="radio" class="btn-check" name="tipoUsuario" id="tipoUsuario" value="usuario" checked>
+                            <label class="btn btn-outline-primary" for="tipoUsuario" style="color: #212529 !important; font-weight: 600;">👨‍💼 Empleado</label>
+                            
+                            <input type="radio" class="btn-check" name="tipoUsuario" id="tipoCliente" value="cliente">
+                            <label class="btn btn-outline-primary" for="tipoCliente" style="color: #212529 !important; font-weight: 600;">🛒 Cliente</label>
+                        </div>
                     </div>
-                    <div class="mb-1">
-                        <strong>👤 Vendedor:</strong> david.cruz@tienda.com / David123!
+                    <div class="mb-3">
+                        <label for="correo" class="form-label" style="color: #212529 !important; font-weight: 600;">📧 Correo Electrónico</label>
+                        <input type="email" class="form-control" id="correo" name="correo" required autofocus placeholder="tu@correo.com" style="color: #212529 !important;">
                     </div>
-                    <div class="mb-1">
-                        <strong>🛒 Cliente 1:</strong> marco.benitez@tienda.com / Marco123!
+                    <div class="mb-3">
+                        <label for="contraseña" class="form-label" style="color: #212529 !important; font-weight: 600;">🔒 Contraseña</label>
+                        <input type="password" class="form-control" id="contraseña" name="contraseña" required placeholder="Ingresa tu contraseña" style="color: #212529 !important;">
                     </div>
-                    <div>
-                        <strong>🛒 Cliente 2:</strong> carlos.aranibar@tienda.com / Carlos123!
+                    <div class="d-grid mb-3">
+                        <button type="submit" class="btn btn-primary btn-lg">
+                            <strong>Iniciar Sesión</strong>
+                        </button>
                     </div>
+                </form>
+                
+                <div class="text-center mt-3">
+                    <p class="mb-1" style="color: #495057 !important; font-size: 0.9rem; font-weight: 500;">¿Eres cliente nuevo?</p>
+                    <a asp-controller="Cliente" asp-action="Registro" class="btn btn-link p-0" style="text-decoration: none; color: var(--primary-color) !important; font-size: 0.9rem; font-weight: 600;">
+                        📝 Regístrate aquí
+                    </a>
                 </div>
             </div>
         </div>
     </div>
-</div>
+    
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

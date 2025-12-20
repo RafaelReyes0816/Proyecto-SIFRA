@@ -15,10 +15,7 @@
 
     @if (ViewBag.Error != null)
     {
-        <div class="alert alert-danger alert-dismissible fade show" role="alert">
-            <strong>⚠️ Error:</strong> @ViewBag.Error
-            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-        </div>
+        <div class="d-none" id="viewBagError" data-error="@ViewBag.Error"></div>
     }
 
     <div class="row">
@@ -27,7 +24,7 @@
                 <div class="card-body">
                     <form asp-action="Edit" method="post">
                         @Html.AntiForgeryToken()
-                        <div asp-validation-summary="All" class="alert alert-danger" role="alert" style="display: none;"></div>
+                        <div asp-validation-summary="ModelOnly" class="d-none"></div>
                         <input type="hidden" asp-for="IdProveedor" />
                         
                         <div class="mb-3">

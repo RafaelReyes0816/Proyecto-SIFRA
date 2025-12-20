@@ -6,14 +6,14 @@
 }
 
 <div class="container-fluid">
-    <div class="d-flex justify-content-between align-items-center mb-4">
-        <div>
+    <div class="d-flex justify-content-between align-items-center mb-4 flex-column flex-md-row">
+        <div class="mb-3 mb-md-0 flex-grow-1">
             <h2 class="mb-1" style="color: #ffffff; font-weight: 700;">👤 Gestión de Clientes</h2>
             <p class="text-muted mb-0">Administra la base de clientes</p>
         </div>
         @if (Context.Session.GetString("UsuarioRol") == "admin")
         {
-            <a asp-action="Create" class="btn btn-primary">
+            <a asp-action="Create" class="btn btn-primary w-100 w-md-auto flex-shrink-0">
                 ➕ Nuevo Cliente
             </a>
         }
@@ -29,51 +29,105 @@
 
     <div class="card">
         <div class="card-body">
-            <table class="table table-striped table-hover">
-                <thead>
-                    <tr>
-                        <th>Nombre</th>
-                        <th>Correo</th>
-                        <th>Teléfono</th>
-                        <th>Dirección</th>
-                        <th>Verificado</th>
-                        <th>Fecha Registro</th>
-                        <th>Acciones</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    @foreach (var item in Model)
-                    {
-                        <tr>
-                            <td>@item.Nombre</td>
-                            <td>@item.Correo</td>
-                            <td>@(item.Telefono ?? "N/A")</td>
-                            <td>@(item.Direccion ?? "N/A")</td>
-                            <td>
+            <!-- Versión Desktop: Tabla -->
+            <div class="d-none d-md-block">
+                <div class="table-responsive">
+                    <table class="table table-striped table-hover">
+                        <thead>
+                            <tr>
+                                <th>Nombre</th>
+                                <th>Correo</th>
+                                <th>Teléfono</th>
+                                <th>Dirección</th>
+                                <th>Verificado</th>
+                                <th>Fecha Registro</th>
+                                <th>Acciones</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var item in Model)
+                            {
+                                <tr>
+                                    <td>@item.Nombre</td>
+                                    <td>@item.Correo</td>
+                                    <td>@(item.Telefono ?? "N/A")</td>
+                                    <td>@(item.Direccion ?? "N/A")</td>
+                                    <td>
+                                        @if (item.Verificado)
+                                        {
+                                            <span class="badge bg-success">Sí</span>
+                                        }
+                                        else
+                                        {
+                                            <span class="badge bg-warning">No</span>
+                                        }
+                                    </td>
+                                    <td>@item.FechaRegistro.ToString("dd/MM/yyyy")</td>
+                                    <td>
+                                        <div class="btn-group" role="group">
+                                            <a asp-action="Details" asp-route-id="@item.IdCliente" class="btn btn-sm btn-info">👁️ Ver</a>
+                                            @if (Context.Session.GetString("UsuarioRol") == "admin")
+                                            {
+                                                <a asp-action="Edit" asp-route-id="@item.IdCliente" class="btn btn-sm btn-warning">✏️ Editar</a>
+                                                <a asp-action="Delete" asp-route-id="@item.IdCliente" class="btn btn-sm btn-danger">🗑️ Eliminar</a>
+                                            }
+                                        </div>
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Versión Móvil: Cards -->
+            <div class="d-block d-md-none">
+                @foreach (var item in Model)
+                {
+                    <div class="card mb-3" style="border-left: 4px solid var(--primary-color);">
+                        <div class="card-body">
+                            <div class="d-flex justify-content-between align-items-start mb-2">
+                                <div>
+                                    <h6 class="mb-1" style="color: #212529; font-weight: 700;">@item.Nombre</h6>
+                                    <small class="text-muted">📧 @item.Correo</small>
+                                </div>
                                 @if (item.Verificado)
                                 {
-                                    <span class="badge bg-success">Sí</span>
+                                    <span class="badge bg-success">✓ Verificado</span>
                                 }
                                 else
                                 {
-                                    <span class="badge bg-warning">No</span>
+                                    <span class="badge bg-warning">⏳ Pendiente</span>
                                 }
-                            </td>
-                            <td>@item.FechaRegistro.ToString("dd/MM/yyyy")</td>
-                            <td>
-                                <div class="btn-group" role="group">
-                                    <a asp-action="Details" asp-route-id="@item.IdCliente" class="btn btn-sm btn-info">👁️ Ver</a>
-                                    @if (Context.Session.GetString("UsuarioRol") == "admin")
-                                    {
-                                        <a asp-action="Edit" asp-route-id="@item.IdCliente" class="btn btn-sm btn-warning">✏️ Editar</a>
-                                        <a asp-action="Delete" asp-route-id="@item.IdCliente" class="btn btn-sm btn-danger">🗑️ Eliminar</a>
-                                    }
-                                </div>
-                            </td>
-                        </tr>
-                    }
-                </tbody>
-            </table>
+                            </div>
+                            
+                            <div class="mb-2">
+                                <strong style="color: #495057;">📞 Teléfono:</strong>
+                                <span style="color: #212529;">@(item.Telefono ?? "N/A")</span>
+                            </div>
+                            
+                            <div class="mb-2">
+                                <strong style="color: #495057;">📍 Dirección:</strong>
+                                <span style="color: #212529;">@(item.Direccion ?? "N/A")</span>
+                            </div>
+                            
+                            <div class="mb-3">
+                                <strong style="color: #495057;">📅 Registro:</strong>
+                                <span style="color: #212529;">@item.FechaRegistro.ToString("dd/MM/yyyy")</span>
+                            </div>
+                            
+                            <div class="d-grid gap-2">
+                                <a asp-action="Details" asp-route-id="@item.IdCliente" class="btn btn-sm btn-info">👁️ Ver Detalles</a>
+                                @if (Context.Session.GetString("UsuarioRol") == "admin")
+                                {
+                                    <a asp-action="Edit" asp-route-id="@item.IdCliente" class="btn btn-sm btn-warning">✏️ Editar</a>
+                                    <a asp-action="Delete" asp-route-id="@item.IdCliente" class="btn btn-sm btn-danger">🗑️ Eliminar</a>
+                                }
+                            </div>
+                        </div>
+                    </div>
+                }
+            </div>
         </div>
     </div>
 </div>

@@ -10,11 +10,17 @@
 }
 
 <div class="container-fluid">
-    <div class="d-flex justify-content-between align-items-center mb-4">
-        <div>
+    <div class="d-flex justify-content-between align-items-center mb-4 flex-column flex-md-row">
+        <div class="mb-3 mb-md-0 flex-grow-1">
             <h2 class="mb-1" style="color: #ffffff; font-weight: 700;">📦 Gestión de Productos</h2>
             <p class="text-muted mb-0">Administra el catálogo de productos</p>
         </div>
+        @if (Context.Session.GetString("UsuarioRol") == "admin")
+        {
+            <a asp-action="Create" class="btn btn-primary w-100 w-md-auto flex-shrink-0 mb-3 mb-md-0">
+                ➕ Nuevo Producto
+            </a>
+        }
     </div>
 
     @if (TempData["Success"] != null)
@@ -24,13 +30,6 @@
             <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
         </div>
     }
-        @if (Context.Session.GetString("UsuarioRol") == "admin")
-        {
-            <a asp-action="Create" class="btn btn-primary">
-                ➕ Nuevo Producto
-            </a>
-        }
-    </div>
 
     @if (productosBajoStock.Any())
     {
@@ -47,59 +46,124 @@
 
     <div class="card">
         <div class="card-body">
-            <table class="table table-striped table-hover">
-                <thead>
-                    <tr>
-                        <th>Código</th>
-                        <th>Nombre</th>
-                        <th>Categoría</th>
-                        <th>Proveedor</th>
-                        <th>Precio Venta</th>
-                        <th>Stock</th>
-                        <th>Stock Mínimo</th>
-                        <th>Acciones</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    @foreach (var item in Model)
-                    {
-                        var stockBajo = item.Stock <= item.StockMinimo;
-                        var stockCritico = item.Stock <= 0 || (item.StockMinimo > 0 && item.Stock <= (item.StockMinimo * 0.5));
-                        var nivelAlerta = item.Stock <= 0 ? "Agotado" : 
-                                         item.Stock <= (item.StockMinimo * 0.5) ? "Crítico" : "Bajo";
-                        var badgeColor = item.Stock <= 0 ? "danger" : 
-                                        item.Stock <= (item.StockMinimo * 0.5) ? "danger" : "warning";
-                        
-                        <tr class="@(stockCritico ? "table-danger" : stockBajo ? "table-warning" : "")">
-                            <td><strong>@item.Codigo</strong></td>
-                            <td>@item.Nombre</td>
-                            <td>@item.Categoria?.Nombre</td>
-                            <td>@item.Proveedor?.Nombre</td>
-                            <td>BS @item.PrecioVenta.ToString("N2")</td>
-                            <td>
-                                <span class="@(stockBajo ? "text-danger fw-bold" : "")">
-                                    @item.Stock
-                                </span>
+            <!-- Versión Desktop: Tabla -->
+            <div class="d-none d-md-block">
+                <div class="table-responsive">
+                    <table class="table table-striped table-hover">
+                        <thead>
+                            <tr>
+                                <th>Código</th>
+                                <th>Nombre</th>
+                                <th>Categoría</th>
+                                <th>Proveedor</th>
+                                <th>Precio Venta</th>
+                                <th>Stock</th>
+                                <th>Stock Mínimo</th>
+                                <th>Acciones</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var item in Model)
+                            {
+                                var stockBajo = item.Stock <= item.StockMinimo;
+                                var stockCritico = item.Stock <= 0 || (item.StockMinimo > 0 && item.Stock <= (item.StockMinimo * 0.5));
+                                var nivelAlerta = item.Stock <= 0 ? "Agotado" : 
+                                                 item.Stock <= (item.StockMinimo * 0.5) ? "Crítico" : "Bajo";
+                                var badgeColor = item.Stock <= 0 ? "danger" : 
+                                                item.Stock <= (item.StockMinimo * 0.5) ? "danger" : "warning";
+                                
+                                <tr class="@(stockCritico ? "table-danger" : stockBajo ? "table-warning" : "")">
+                                    <td><strong>@item.Codigo</strong></td>
+                                    <td>@item.Nombre</td>
+                                    <td>@item.Categoria?.Nombre</td>
+                                    <td>@item.Proveedor?.Nombre</td>
+                                    <td>BS @item.PrecioVenta.ToString("N2")</td>
+                                    <td>
+                                        <span class="@(stockBajo ? "text-danger fw-bold" : "")">
+                                            @item.Stock
+                                        </span>
+                                        @if (stockBajo)
+                                        {
+                                            <span class="badge bg-@badgeColor ms-2">⚠️ @nivelAlerta</span>
+                                        }
+                                    </td>
+                                    <td>@item.StockMinimo</td>
+                                    <td>
+                                        <div class="btn-group" role="group">
+                                            <a asp-action="Details" asp-route-id="@item.IdProducto" class="btn btn-sm btn-info">👁️ Ver</a>
+                                            @if (Context.Session.GetString("UsuarioRol") == "admin")
+                                            {
+                                                <a asp-action="Edit" asp-route-id="@item.IdProducto" class="btn btn-sm btn-warning">✏️ Editar</a>
+                                                <a asp-action="Delete" asp-route-id="@item.IdProducto" class="btn btn-sm btn-danger">🗑️ Eliminar</a>
+                                            }
+                                        </div>
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Versión Móvil: Cards -->
+            <div class="d-block d-md-none">
+                @foreach (var item in Model)
+                {
+                    var stockBajo = item.Stock <= item.StockMinimo;
+                    var stockCritico = item.Stock <= 0 || (item.StockMinimo > 0 && item.Stock <= (item.StockMinimo * 0.5));
+                    var nivelAlerta = item.Stock <= 0 ? "Agotado" : 
+                                     item.Stock <= (item.StockMinimo * 0.5) ? "Crítico" : "Bajo";
+                    var badgeColor = item.Stock <= 0 ? "danger" : 
+                                    item.Stock <= (item.StockMinimo * 0.5) ? "danger" : "warning";
+                    var borderColor = stockCritico ? "#dc3545" : stockBajo ? "#ffc107" : "#28a745";
+                    
+                    <div class="card mb-3" style="border-left: 4px solid @borderColor;">
+                        <div class="card-body">
+                            <div class="d-flex justify-content-between align-items-start mb-2">
+                                <div>
+                                    <h6 class="mb-1" style="color: #212529; font-weight: 700;">@item.Nombre</h6>
+                                    <small class="text-muted">Código: <strong>@item.Codigo</strong></small>
+                                </div>
                                 @if (stockBajo)
                                 {
-                                    <span class="badge bg-@badgeColor ms-2">⚠️ @nivelAlerta</span>
+                                    <span class="badge bg-@badgeColor">⚠️ @nivelAlerta</span>
                                 }
-                            </td>
-                            <td>@item.StockMinimo</td>
-                            <td>
-                                <div class="btn-group" role="group">
-                                    <a asp-action="Details" asp-route-id="@item.IdProducto" class="btn btn-sm btn-info">👁️ Ver</a>
-                                    @if (Context.Session.GetString("UsuarioRol") == "admin")
-                                    {
-                                        <a asp-action="Edit" asp-route-id="@item.IdProducto" class="btn btn-sm btn-warning">✏️ Editar</a>
-                                        <a asp-action="Delete" asp-route-id="@item.IdProducto" class="btn btn-sm btn-danger">🗑️ Eliminar</a>
-                                    }
+                            </div>
+                            
+                            <div class="mb-2">
+                                <strong style="color: #495057;">Categoría:</strong>
+                                <span class="badge bg-info">@(item.Categoria?.Nombre ?? "N/A")</span>
+                            </div>
+                            
+                            <div class="mb-2">
+                                <strong style="color: #495057;">Proveedor:</strong>
+                                <span style="color: #212529;">@(item.Proveedor?.Nombre ?? "N/A")</span>
+                            </div>
+                            
+                            <div class="row mb-2">
+                                <div class="col-6">
+                                    <strong style="color: #495057;">Precio:</strong>
+                                    <span style="color: #28a745; font-weight: 700;">BS @item.PrecioVenta.ToString("N2")</span>
                                 </div>
-                            </td>
-                        </tr>
-                    }
-                </tbody>
-            </table>
+                                <div class="col-6">
+                                    <strong style="color: #495057;">Stock:</strong>
+                                    <span class="@(stockBajo ? "text-danger fw-bold" : "")">@item.Stock</span>
+                                    <small class="text-muted">/ @item.StockMinimo min</small>
+                                </div>
+                            </div>
+                            
+                            <div class="d-grid gap-2">
+                                <a asp-action="Details" asp-route-id="@item.IdProducto" class="btn btn-sm btn-info">👁️ Ver Detalles</a>
+                                @if (Context.Session.GetString("UsuarioRol") == "admin")
+                                {
+                                    <a asp-action="Edit" asp-route-id="@item.IdProducto" class="btn btn-sm btn-warning">✏️ Editar</a>
+                                    <a asp-action="Delete" asp-route-id="@item.IdProducto" class="btn btn-sm btn-danger">🗑️ Eliminar</a>
+                                }
+                            </div>
+                        </div>
+                    </div>
+                }
+            </div>
         </div>
     </div>
 </div>

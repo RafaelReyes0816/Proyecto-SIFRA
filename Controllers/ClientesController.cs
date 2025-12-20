@@ -160,7 +160,7 @@ namespace Tienda_Repuestos_Demo.Controllers
         // POST: Clientes/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("IdCliente,Nombre,Correo,Telefono,Direccion,FechaRegistro")] Cliente cliente, string? contraseña, string? Verificado)
+        public async Task<IActionResult> Edit(int id, [Bind("IdCliente,Nombre,Correo,Telefono,Direccion,FechaRegistro")] Cliente cliente, string? contraseña, string? Verificado, IFormFile? fotoCI)
         {
             if (id != cliente.IdCliente)
             {
@@ -184,11 +184,65 @@ namespace Tienda_Repuestos_Demo.Controllers
                 cliente.Contraseña = contraseña;
             }
 
-            // Preservar la foto CI actual
-            cliente.FotoCI = clienteActual.FotoCI;
+            // Procesar nueva foto del CI si se subió
+            if (fotoCI != null && fotoCI.Length > 0)
+            {
+                var uploadsFolder = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "uploads", "ci");
+                
+                // Crear directorio si no existe
+                if (!Directory.Exists(uploadsFolder))
+                {
+                    Directory.CreateDirectory(uploadsFolder);
+                }
 
-            // Manejar el estado de verificación desde el checkbox
-            cliente.Verificado = Verificado == "true";
+                // Eliminar foto anterior si existe
+                if (!string.IsNullOrEmpty(clienteActual.FotoCI))
+                {
+                    var oldFilePath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", clienteActual.FotoCI.TrimStart('/'));
+                    if (System.IO.File.Exists(oldFilePath))
+                    {
+                        System.IO.File.Delete(oldFilePath);
+                    }
+                }
+
+                // Generar nombre único para el archivo
+                var fileName = $"cliente_{id}_{DateTime.Now:yyyyMMddHHmmss}_{Path.GetFileName(fotoCI.FileName)}";
+                var filePath = Path.Combine(uploadsFolder, fileName);
+
+                // Guardar archivo
+                using (var stream = new FileStream(filePath, FileMode.Create))
+                {
+                    await fotoCI.CopyToAsync(stream);
+                }
+
+                // Guardar ruta relativa en la base de datos
+                cliente.FotoCI = $"/uploads/ci/{fileName}";
+                
+                // Si subió un CI nuevo, se marca como verificado automáticamente (siempre)
+                cliente.Verificado = true;
+            }
+            else
+            {
+                // Si no se subió nueva foto, mantener la foto actual
+                cliente.FotoCI = clienteActual.FotoCI;
+                
+                // Si el admin marca manualmente el checkbox, respetar esa decisión
+                if (Verificado == "true")
+                {
+                    cliente.Verificado = true;
+                }
+                else if (!string.IsNullOrEmpty(cliente.FotoCI))
+                {
+                    // Si tiene foto CI pero el checkbox no está marcado, mantener el estado actual
+                    // Esto permite que si ya estaba verificado, se mantenga verificado
+                    cliente.Verificado = clienteActual.Verificado;
+                }
+                else
+                {
+                    // Si no tiene foto CI y el checkbox no está marcado, no verificado
+                    cliente.Verificado = false;
+                }
+            }
 
             // Remover validación de campos que manejamos manualmente
             ModelState.Remove("Contraseña");

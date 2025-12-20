@@ -294,8 +294,24 @@ namespace Tienda_Repuestos_Demo.Controllers
             if (ModelState.IsValid)
             {
                 venta.IdVendedor = GetUsuarioId();
-                venta.Estado = "confirmada";
                 venta.Fecha = DateTime.Now;
+                
+                // Establecer estado según el método de pago
+                // QR y Transferencia se confirman automáticamente (pago digital verificado)
+                // Efectivo queda pendiente para verificación manual del admin
+                if (venta.MetodoPago == "qr" || venta.MetodoPago == "transferencia")
+                {
+                    venta.Estado = "confirmada";
+                }
+                else if (venta.MetodoPago == "efectivo")
+                {
+                    venta.Estado = "pendiente";
+                }
+                else
+                {
+                    // Por defecto, pendiente si el método de pago no es reconocido
+                    venta.Estado = "pendiente";
+                }
                 
                 // Generar comprobante automático si no se proporcionó uno
                 if (string.IsNullOrWhiteSpace(venta.ComprobantePago))
@@ -484,6 +500,22 @@ namespace Tienda_Repuestos_Demo.Controllers
             if (!string.IsNullOrWhiteSpace(venta.ComprobantePago) && venta.ComprobantePago.Length > 255)
             {
                 ModelState.AddModelError("ComprobantePago", "El comprobante de pago no puede exceder 255 caracteres");
+            }
+            
+            // Obtener la venta actual para comparar método de pago
+            var ventaActual = await _context.Ventas.AsNoTracking().FirstOrDefaultAsync(v => v.IdVenta == id);
+            if (ventaActual != null)
+            {
+                // Si se cambió el método de pago a QR o Transferencia, confirmar automáticamente
+                // (solo si el método de pago cambió y la venta no estaba cancelada)
+                if (venta.Estado != "cancelada" && 
+                    ventaActual.MetodoPago != venta.MetodoPago &&
+                    (venta.MetodoPago == "qr" || venta.MetodoPago == "transferencia"))
+                {
+                    venta.Estado = "confirmada";
+                }
+                // Si se cambió a efectivo y estaba confirmada, permitir que el admin decida
+                // (mantener el estado que el admin seleccionó)
             }
             
             // Si no hay comprobante, generar uno automáticamente

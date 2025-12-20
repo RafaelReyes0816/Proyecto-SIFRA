@@ -9,35 +9,35 @@
     var ventasRecientes = ViewBag.VentasRecientes as List<Tienda_Repuestos_Demo.Models.Venta>;
 }
 
-<div class="container-fluid">
-    <div class="d-flex justify-content-between align-items-center mb-4">
-        <div>
+<div class="container-fluid" style="padding: 2rem;">
+    <div class="d-flex justify-content-between align-items-center mb-4 flex-column flex-lg-row">
+        <div class="mb-3 mb-lg-0 flex-grow-1">
             <h2 class="mb-1" style="color: #ffffff; font-weight: 700;">🛒 Mi Cuenta</h2>
-            <p class="text-muted mb-0">Bienvenido, @cliente?.Nombre</p>
+            <p class="mb-0" style="color: #b8b8b8;">Bienvenido, @cliente?.Nombre</p>
         </div>
-        <a asp-action="Perfil" class="btn btn-primary">✏️ Editar Perfil</a>
+        <a asp-action="Perfil" class="btn btn-primary w-100 w-lg-auto flex-shrink-0">✏️ Editar Perfil</a>
     </div>
 
-    <div class="row mb-4">
-        <div class="col-md-3 mb-3">
+    <div class="row mb-4 g-3">
+        <div class="col-12 col-sm-6 col-md-3 mb-3">
             <div class="stat-card bg-primary">
                 <h5>🛍️ Total Compras</h5>
                 <h2>@stats?.TotalCompras</h2>
             </div>
         </div>
-        <div class="col-md-3 mb-3">
+        <div class="col-12 col-sm-6 col-md-3 mb-3">
             <div class="stat-card bg-warning">
                 <h5>⏳ Pendientes</h5>
                 <h2>@stats?.ComprasPendientes</h2>
             </div>
         </div>
-        <div class="col-md-3 mb-3">
+        <div class="col-12 col-sm-6 col-md-3 mb-3">
             <div class="stat-card bg-success">
                 <h5>✅ Confirmadas</h5>
                 <h2>@stats?.ComprasConfirmadas</h2>
             </div>
         </div>
-        <div class="col-md-3 mb-3">
+        <div class="col-12 col-sm-6 col-md-3 mb-3">
             <div class="stat-card bg-info">
                 <h5>💵 Total Gastado</h5>
                 <h2>BS @(stats?.TotalGastado?.ToString("N2") ?? "0.00")</h2>
@@ -45,8 +45,8 @@
         </div>
     </div>
 
-    <div class="row">
-        <div class="col-md-8">
+    <div class="row g-3">
+        <div class="col-12 col-md-8 mb-3 mb-md-0">
             <div class="card">
                 <div class="card-header">
                     <h5 class="mb-0">📋 Mis Compras Recientes</h5>
@@ -54,37 +54,78 @@
                 <div class="card-body">
                     @if (ventasRecientes != null && ventasRecientes.Any())
                     {
-                        <table class="table table-striped">
-                            <thead>
-                                <tr>
-                                    <th>Fecha</th>
-                                    <th>ID Venta</th>
-                                    <th>Tipo</th>
-                                    <th>Estado</th>
-                                    <th>Total</th>
-                                    <th>Acciones</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                @foreach (var venta in ventasRecientes)
-                                {
-                                    <tr>
-                                        <td>@venta.Fecha.ToString("dd/MM/yyyy HH:mm")</td>
-                                        <td>#@venta.IdVenta</td>
-                                        <td>@venta.TipoVenta</td>
-                                        <td>
+                        <!-- Versión Desktop: Tabla -->
+                        <div class="d-none d-md-block">
+                            <div class="table-responsive">
+                                <table class="table table-striped">
+                                    <thead>
+                                        <tr>
+                                            <th>Fecha</th>
+                                            <th>ID Venta</th>
+                                            <th>Tipo</th>
+                                            <th>Estado</th>
+                                            <th>Total</th>
+                                            <th>Acciones</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        @foreach (var venta in ventasRecientes)
+                                        {
+                                            <tr>
+                                                <td>@venta.Fecha.ToString("dd/MM/yyyy HH:mm")</td>
+                                                <td>#@venta.IdVenta</td>
+                                                <td>@venta.TipoVenta</td>
+                                                <td>
+                                                    <span class="badge bg-@(venta.Estado == "confirmada" ? "success" : venta.Estado == "pendiente" ? "warning" : "danger")">
+                                                        @venta.Estado
+                                                    </span>
+                                                </td>
+                                                <td><strong>BS @venta.Total.ToString("N2")</strong></td>
+                                                <td>
+                                                    <a href="@Url.Action("Details", "Ventas", new { id = venta.IdVenta })" class="btn btn-sm btn-info">👁️ Ver</a>
+                                                </td>
+                                            </tr>
+                                        }
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+
+                        <!-- Versión Móvil: Cards -->
+                        <div class="d-block d-md-none">
+                            @foreach (var venta in ventasRecientes)
+                            {
+                                <div class="card mb-3" style="border-left: 4px solid var(--primary-color);">
+                                    <div class="card-body">
+                                        <div class="d-flex justify-content-between align-items-start mb-2">
+                                            <div>
+                                                <h6 class="mb-1" style="color: #212529; font-weight: 700;">Compra #@venta.IdVenta</h6>
+                                                <small class="text-muted">@venta.Fecha.ToString("dd/MM/yyyy HH:mm")</small>
+                                            </div>
                                             <span class="badge bg-@(venta.Estado == "confirmada" ? "success" : venta.Estado == "pendiente" ? "warning" : "danger")">
                                                 @venta.Estado
                                             </span>
-                                        </td>
-                                        <td><strong>BS @venta.Total.ToString("N2")</strong></td>
-                                        <td>
-                                            <a href="@Url.Action("Details", "Ventas", new { id = venta.IdVenta })" class="btn btn-sm btn-info">👁️ Ver</a>
-                                        </td>
-                                    </tr>
-                                }
-                            </tbody>
-                        </table>
+                                        </div>
+                                        
+                                        <div class="row mb-2">
+                                            <div class="col-6">
+                                                <strong style="color: #495057;">Tipo:</strong>
+                                                <span class="badge bg-info">@venta.TipoVenta</span>
+                                            </div>
+                                            <div class="col-6">
+                                                <strong style="color: #495057;">Total:</strong>
+                                                <span style="color: #28a745; font-weight: 700;">BS @venta.Total.ToString("N2")</span>
+                                            </div>
+                                        </div>
+                                        
+                                        <div class="d-grid">
+                                            <a href="@Url.Action("Details", "Ventas", new { id = venta.IdVenta })" class="btn btn-sm btn-info">👁️ Ver Detalles</a>
+                                        </div>
+                                    </div>
+                                </div>
+                            }
+                        </div>
+                        
                         <div class="text-center mt-3">
                             <a asp-action="MisCompras" class="btn btn-primary">Ver Todas mis Compras</a>
                         </div>
@@ -99,7 +140,7 @@
                 </div>
             </div>
         </div>
-        <div class="col-md-4">
+        <div class="col-12 col-md-4">
             <div class="card">
                 <div class="card-header">
                     <h5 class="mb-0">👤 Información</h5>

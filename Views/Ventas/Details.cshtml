@@ -61,27 +61,60 @@
                 <div class="card-body">
                     @if (Model.DetallesVenta != null && Model.DetallesVenta.Any())
                     {
-                        <table class="table table-sm">
-                            <thead>
-                                <tr>
-                                    <th>Producto</th>
-                                    <th>Cantidad</th>
-                                    <th>Precio Unit.</th>
-                                    <th>Subtotal</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                @foreach (var detalle in Model.DetallesVenta)
-                                {
-                                    <tr>
-                                        <td>@detalle.Producto?.Nombre</td>
-                                        <td>@detalle.Cantidad</td>
-                                        <td>BS @detalle.PrecioUnitario.ToString("N2")</td>
-                                        <td>BS @((detalle.Cantidad * detalle.PrecioUnitario).ToString("N2"))</td>
-                                    </tr>
-                                }
-                            </tbody>
-                        </table>
+                        <!-- Versión Desktop: Tabla -->
+                        <div class="d-none d-md-block">
+                            <div class="table-responsive">
+                                <table class="table table-sm">
+                                    <thead>
+                                        <tr>
+                                            <th>Producto</th>
+                                            <th>Cantidad</th>
+                                            <th>Precio Unit.</th>
+                                            <th>Subtotal</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        @foreach (var detalle in Model.DetallesVenta)
+                                        {
+                                            <tr>
+                                                <td>@detalle.Producto?.Nombre</td>
+                                                <td>@detalle.Cantidad</td>
+                                                <td>BS @detalle.PrecioUnitario.ToString("N2")</td>
+                                                <td>BS @((detalle.Cantidad * detalle.PrecioUnitario).ToString("N2"))</td>
+                                            </tr>
+                                        }
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+
+                        <!-- Versión Móvil: Cards -->
+                        <div class="d-block d-md-none">
+                            @foreach (var detalle in Model.DetallesVenta)
+                            {
+                                <div class="card mb-3" style="border-left: 4px solid #17a2b8;">
+                                    <div class="card-body">
+                                        <h6 class="mb-2" style="color: #212529; font-weight: 700;">@detalle.Producto?.Nombre</h6>
+                                        
+                                        <div class="row mb-2">
+                                            <div class="col-6">
+                                                <strong style="color: #495057;">Cantidad:</strong>
+                                                <span style="color: #212529;">@detalle.Cantidad</span>
+                                            </div>
+                                            <div class="col-6">
+                                                <strong style="color: #495057;">Precio Unit.:</strong>
+                                                <span style="color: #212529;">BS @detalle.PrecioUnitario.ToString("N2")</span>
+                                            </div>
+                                        </div>
+                                        
+                                        <div class="mb-0">
+                                            <strong style="color: #495057;">Subtotal:</strong>
+                                            <span style="color: #28a745; font-size: 1.1rem; font-weight: 700;">BS @((detalle.Cantidad * detalle.PrecioUnitario).ToString("N2"))</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            }
+                        </div>
                     }
                     else
                     {

@@ -6,14 +6,14 @@
 }
 
 <div class="container-fluid">
-    <div class="d-flex justify-content-between align-items-center mb-4">
-        <div>
+    <div class="d-flex justify-content-between align-items-center mb-4 flex-column flex-md-row">
+        <div class="mb-3 mb-md-0 flex-grow-1">
             <h2 class="mb-1" style="color: #ffffff; font-weight: 700;">📂 Gestión de Categorías</h2>
             <p class="text-muted mb-0">Administra las categorías de productos</p>
         </div>
         @if (Context.Session.GetString("UsuarioRol") == "admin")
         {
-            <a asp-action="Create" class="btn btn-primary">
+            <a asp-action="Create" class="btn btn-primary w-100 w-md-auto flex-shrink-0">
                 ➕ Nueva Categoría
             </a>
         }
@@ -37,39 +37,70 @@
 
     <div class="card">
         <div class="card-body">
-            <table class="table table-striped table-hover">
-                <thead>
-                    <tr>
-                        <th>Nombre</th>
-                        <th>Productos</th>
-                        <th>Acciones</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    @foreach (var item in Model)
-                    {
-                        <tr>
-                            <td>
-                                <strong>@item.Nombre</strong>
-                                <span class="badge bg-info ms-2">📂</span>
-                            </td>
-                            <td>
-                                <span class="badge bg-primary">@item.Productos.Count producto(s)</span>
-                            </td>
-                            <td>
-                                <div class="btn-group" role="group">
-                                    <a asp-action="Details" asp-route-id="@item.IdCategoria" class="btn btn-sm btn-info">👁️ Ver</a>
-                                    @if (Context.Session.GetString("UsuarioRol") == "admin")
-                                    {
-                                        <a asp-action="Edit" asp-route-id="@item.IdCategoria" class="btn btn-sm btn-warning">✏️ Editar</a>
-                                        <a asp-action="Delete" asp-route-id="@item.IdCategoria" class="btn btn-sm btn-danger">🗑️ Eliminar</a>
-                                    }
+            <!-- Versión Desktop: Tabla -->
+            <div class="d-none d-md-block">
+                <div class="table-responsive">
+                    <table class="table table-striped table-hover">
+                        <thead>
+                            <tr>
+                                <th>Nombre</th>
+                                <th>Productos</th>
+                                <th>Acciones</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var item in Model)
+                            {
+                                <tr>
+                                    <td>
+                                        <strong>@item.Nombre</strong>
+                                        <span class="badge bg-info ms-2">📂</span>
+                                    </td>
+                                    <td>
+                                        <span class="badge bg-primary">@item.Productos.Count producto(s)</span>
+                                    </td>
+                                    <td>
+                                        <div class="btn-group" role="group">
+                                            <a asp-action="Details" asp-route-id="@item.IdCategoria" class="btn btn-sm btn-info">👁️ Ver</a>
+                                            @if (Context.Session.GetString("UsuarioRol") == "admin")
+                                            {
+                                                <a asp-action="Edit" asp-route-id="@item.IdCategoria" class="btn btn-sm btn-warning">✏️ Editar</a>
+                                                <a asp-action="Delete" asp-route-id="@item.IdCategoria" class="btn btn-sm btn-danger">🗑️ Eliminar</a>
+                                            }
+                                        </div>
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Versión Móvil: Cards -->
+            <div class="d-block d-md-none">
+                @foreach (var item in Model)
+                {
+                    <div class="card mb-3" style="border-left: 4px solid #17a2b8;">
+                        <div class="card-body">
+                            <div class="d-flex justify-content-between align-items-start mb-2">
+                                <div>
+                                    <h6 class="mb-1" style="color: #212529; font-weight: 700;">📂 @item.Nombre</h6>
                                 </div>
-                            </td>
-                        </tr>
-                    }
-                </tbody>
-            </table>
+                                <span class="badge bg-primary">@item.Productos.Count producto(s)</span>
+                            </div>
+                            
+                            <div class="d-grid gap-2">
+                                <a asp-action="Details" asp-route-id="@item.IdCategoria" class="btn btn-sm btn-info">👁️ Ver Detalles</a>
+                                @if (Context.Session.GetString("UsuarioRol") == "admin")
+                                {
+                                    <a asp-action="Edit" asp-route-id="@item.IdCategoria" class="btn btn-sm btn-warning">✏️ Editar</a>
+                                    <a asp-action="Delete" asp-route-id="@item.IdCategoria" class="btn btn-sm btn-danger">🗑️ Eliminar</a>
+                                }
+                            </div>
+                        </div>
+                    </div>
+                }
+            </div>
         </div>
     </div>
 </div>

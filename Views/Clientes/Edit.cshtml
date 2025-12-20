@@ -14,17 +14,14 @@
 
 @if (ViewBag.Error != null)
 {
-    <div class="alert alert-danger alert-dismissible fade show" role="alert">
-        <strong>⚠️ Error:</strong> @ViewBag.Error
-        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-    </div>
+    <div class="d-none" id="viewBagError" data-error="@ViewBag.Error"></div>
 }
 
 <div class="row">
     <div class="col-md-6">
-        <form asp-action="Edit" method="post" id="editForm">
+        <form asp-action="Edit" method="post" enctype="multipart/form-data" id="editForm">
             @Html.AntiForgeryToken()
-            <div asp-validation-summary="All" class="alert alert-danger" role="alert" style="display: none;"></div>
+            <div asp-validation-summary="ModelOnly" class="d-none"></div>
             <input type="hidden" asp-for="IdCliente" />
             <input type="hidden" asp-for="FechaRegistro" />
             
@@ -59,12 +56,28 @@
             </div>
 
             <div class="mb-3">
+                <label for="fotoCI" class="form-label">🆔 Foto de Cédula de Identidad</label>
+                @if (!string.IsNullOrEmpty(Model.FotoCI))
+                {
+                    <div class="mb-2">
+                        <img src="@Model.FotoCI" alt="Foto CI" class="img-thumbnail" style="max-width: 200px; max-height: 200px;" />
+                        <p class="text-muted small mb-0">Foto actual del CI</p>
+                    </div>
+                }
+                <input type="file" class="form-control" id="fotoCI" name="fotoCI" accept="image/*" />
+                <small class="text-muted">
+                    Formatos permitidos: JPG, PNG, GIF. Tamaño máximo: 5MB. Dejar vacío para mantener la foto actual.<br>
+                    <strong class="text-success">✅ Si subes un CI nuevo, el cliente será verificado automáticamente</strong>
+                </small>
+            </div>
+
+            <div class="mb-3">
                 <div class="form-check">
                     <input type="hidden" name="Verificado" value="false" />
                     <input type="checkbox" name="Verificado" value="true" class="form-check-input" @(Model.Verificado ? "checked" : "") id="Verificado" />
                     <label class="form-check-label" for="Verificado">Cliente Verificado</label>
                 </div>
-                <small class="text-muted">Marca esta casilla para verificar al cliente manualmente</small>
+                <small class="text-muted">Marca esta casilla para verificar al cliente manualmente. Si subes un CI nuevo, se verificará automáticamente.</small>
             </div>
 
             <div class="mb-3">

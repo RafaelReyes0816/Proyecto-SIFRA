@@ -10,16 +10,12 @@
 </head>
 <body class="d-flex flex-column min-vh-100">
     <header>
-        <nav class="navbar navbar-expand-lg navbar-dark mb-3">
+        <nav class="navbar navbar-expand-lg navbar-dark mb-3" style="position: relative; z-index: 1030;">
             <div class="container-fluid">
                 <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">
                     <strong>🔧 Tienda de Repuestos</strong>
                 </a>
-                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
-                        aria-expanded="false" aria-label="Toggle navigation" style="border-color: rgba(255,255,255,0.5);">
-                    <span class="navbar-toggler-icon"></span>
-                </button>
-                <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
+                <div class="navbar-collapse collapse show d-lg-flex justify-content-between">
                     @{
                         var usuarioRol = Context.Session.GetString("UsuarioRol");
                         var usuarioNombre = Context.Session.GetString("UsuarioNombre");
@@ -122,6 +118,37 @@
             <p class="mb-0">&copy; 2025 - Tienda de Repuestos | Sistema de Gestión de Inventario y Ventas</p>
         </div>
     </footer>
+
+    <!-- Modal de Error -->
+    <div class="modal fade" id="errorModal" tabindex="-1" aria-labelledby="errorModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content logout-modal-content">
+                <div class="modal-header logout-modal-header">
+                    <h5 class="modal-title" id="errorModalLabel">
+                        <span style="font-size: 1.5rem; margin-right: 0.5rem;">⚠️</span>
+                        Error de Validación
+                    </h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body logout-modal-body">
+                    <div class="text-center mb-3">
+                        <div style="font-size: 3rem; margin-bottom: 1rem;">❌</div>
+                        <p class="mb-2" style="font-size: 1.1rem; font-weight: 600;" id="errorModalMessage">
+                            Por favor, corrige los errores en el formulario.
+                        </p>
+                        <ul id="errorModalList" class="text-start" style="list-style: none; padding: 0;">
+                        </ul>
+                    </div>
+                </div>
+                <div class="modal-footer logout-modal-footer">
+                    <button type="button" class="btn btn-danger" data-bs-dismiss="modal">
+                        <span style="margin-right: 0.5rem;">✅</span>
+                        Entendido
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
 
     <!-- Modal de Confirmación para Cerrar Sesión -->
     <div class="modal fade" id="logoutModal" tabindex="-1" aria-labelledby="logoutModalLabel" aria-hidden="true">

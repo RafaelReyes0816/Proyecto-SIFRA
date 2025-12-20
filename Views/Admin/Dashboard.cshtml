@@ -114,50 +114,99 @@
                         <h5 class="mb-0">⚠️ Productos con Stock Bajo (@productosBajoStock.Count)</h5>
                     </div>
                     <div class="card-body">
-                        <div class="table-responsive">
-                            <table class="table table-hover">
-                                <thead>
-                                    <tr>
-                                        <th>Código</th>
-                                        <th>Producto</th>
-                                        <th>Categoría</th>
-                                        <th>Stock Actual</th>
-                                        <th>Stock Mínimo</th>
-                                        <th>Estado</th>
-                                        <th>Acción</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    @foreach (var producto in productosBajoStock)
-                                    {
-                                        var porcentajeStock = producto.StockMinimo > 0 ? (producto.Stock * 100.0 / producto.StockMinimo) : 0;
-                                        var nivelAlerta = producto.Stock <= 0 ? "Agotado" : 
-                                                         producto.Stock <= (producto.StockMinimo * 0.5) ? "Crítico" : "Bajo";
-                                        var badgeColor = producto.Stock <= 0 ? "danger" : 
-                                                        producto.Stock <= (producto.StockMinimo * 0.5) ? "danger" : "warning";
-                                        
-                                        <tr class="@(producto.Stock <= 0 ? "table-danger" : "table-warning")">
-                                            <td><strong>@producto.Codigo</strong></td>
-                                            <td>@producto.Nombre</td>
-                                            <td>@producto.Categoria?.Nombre</td>
-                                            <td>
-                                                <span class="badge bg-@badgeColor" style="font-size: 1rem;">
-                                                    @producto.Stock unidades
-                                                </span>
-                                            </td>
-                                            <td>@producto.StockMinimo unidades</td>
-                                            <td>
-                                                <span class="badge bg-@badgeColor">⚠️ @nivelAlerta</span>
-                                            </td>
-                                            <td>
-                                                <a href="@Url.Action("Edit", "Productos", new { id = producto.IdProducto })" class="btn btn-sm btn-warning">
-                                                    ✏️ Actualizar Stock
-                                                </a>
-                                            </td>
+                        <!-- Versión Desktop: Tabla -->
+                        <div class="d-none d-md-block">
+                            <div class="table-responsive">
+                                <table class="table table-hover">
+                                    <thead>
+                                        <tr>
+                                            <th>Código</th>
+                                            <th>Producto</th>
+                                            <th>Categoría</th>
+                                            <th>Stock Actual</th>
+                                            <th>Stock Mínimo</th>
+                                            <th>Estado</th>
+                                            <th>Acción</th>
                                         </tr>
-                                    }
-                                </tbody>
-                            </table>
+                                    </thead>
+                                    <tbody>
+                                        @foreach (var producto in productosBajoStock)
+                                        {
+                                            var porcentajeStock = producto.StockMinimo > 0 ? (producto.Stock * 100.0 / producto.StockMinimo) : 0;
+                                            var nivelAlerta = producto.Stock <= 0 ? "Agotado" : 
+                                                             producto.Stock <= (producto.StockMinimo * 0.5) ? "Crítico" : "Bajo";
+                                            var badgeColor = producto.Stock <= 0 ? "danger" : 
+                                                            producto.Stock <= (producto.StockMinimo * 0.5) ? "danger" : "warning";
+                                            
+                                            <tr class="@(producto.Stock <= 0 ? "table-danger" : "table-warning")">
+                                                <td><strong>@producto.Codigo</strong></td>
+                                                <td>@producto.Nombre</td>
+                                                <td>@producto.Categoria?.Nombre</td>
+                                                <td>
+                                                    <span class="badge bg-@badgeColor" style="font-size: 1rem;">
+                                                        @producto.Stock unidades
+                                                    </span>
+                                                </td>
+                                                <td>@producto.StockMinimo unidades</td>
+                                                <td>
+                                                    <span class="badge bg-@badgeColor">⚠️ @nivelAlerta</span>
+                                                </td>
+                                                <td>
+                                                    <a href="@Url.Action("Edit", "Productos", new { id = producto.IdProducto })" class="btn btn-sm btn-warning">
+                                                        ✏️ Actualizar Stock
+                                                    </a>
+                                                </td>
+                                            </tr>
+                                        }
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+
+                        <!-- Versión Móvil: Cards -->
+                        <div class="d-block d-md-none">
+                            @foreach (var producto in productosBajoStock)
+                            {
+                                var nivelAlerta = producto.Stock <= 0 ? "Agotado" : 
+                                                 producto.Stock <= (producto.StockMinimo * 0.5) ? "Crítico" : "Bajo";
+                                var badgeColor = producto.Stock <= 0 ? "danger" : 
+                                                producto.Stock <= (producto.StockMinimo * 0.5) ? "danger" : "warning";
+                                var borderColor = producto.Stock <= 0 ? "#dc3545" : "#ffc107";
+                                
+                                <div class="card mb-3" style="border-left: 4px solid @borderColor;">
+                                    <div class="card-body">
+                                        <div class="d-flex justify-content-between align-items-start mb-2">
+                                            <div>
+                                                <h6 class="mb-1" style="color: #212529; font-weight: 700;">@producto.Nombre</h6>
+                                                <small class="text-muted">Código: <strong>@producto.Codigo</strong></small>
+                                            </div>
+                                            <span class="badge bg-@badgeColor">⚠️ @nivelAlerta</span>
+                                        </div>
+                                        
+                                        <div class="mb-2">
+                                            <strong style="color: #495057;">Categoría:</strong>
+                                            <span class="badge bg-info">@(producto.Categoria?.Nombre ?? "N/A")</span>
+                                        </div>
+                                        
+                                        <div class="row mb-3">
+                                            <div class="col-6">
+                                                <strong style="color: #495057;">Stock Actual:</strong>
+                                                <span class="badge bg-@badgeColor">@producto.Stock unidades</span>
+                                            </div>
+                                            <div class="col-6">
+                                                <strong style="color: #495057;">Stock Mínimo:</strong>
+                                                <span style="color: #212529;">@producto.StockMinimo unidades</span>
+                                            </div>
+                                        </div>
+                                        
+                                        <div class="d-grid">
+                                            <a href="@Url.Action("Edit", "Productos", new { id = producto.IdProducto })" class="btn btn-sm btn-warning">
+                                                ✏️ Actualizar Stock
+                                            </a>
+                                        </div>
+                                    </div>
+                                </div>
+                            }
                         </div>
                         <div class="mt-3">
                             <a href="@Url.Action("Index", "Productos")" class="btn btn-primary">
@@ -180,42 +229,86 @@
                 <div class="card-body">
                     @if (ultimasVentas != null && ultimasVentas.Any())
                     {
-                        <div class="table-responsive">
-                            <table class="table table-hover table-sm">
-                                <thead>
-                                    <tr>
-                                        <th>ID</th>
-                                        <th>Fecha</th>
-                                        <th>Cliente</th>
-                                        <th>Vendedor</th>
-                                        <th>Estado</th>
-                                        <th>Total</th>
-                                        <th>Acción</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    @foreach (var venta in ultimasVentas)
-                                    {
+                        <!-- Versión Desktop: Tabla -->
+                        <div class="d-none d-md-block">
+                            <div class="table-responsive">
+                                <table class="table table-hover table-sm">
+                                    <thead>
                                         <tr>
-                                            <td><strong>#@venta.IdVenta</strong></td>
-                                            <td>@venta.Fecha.ToString("dd/MM/yyyy HH:mm")</td>
-                                            <td>@venta.Cliente?.Nombre</td>
-                                            <td>@venta.Vendedor?.Nombre</td>
-                                            <td>
-                                                <span class="badge bg-@(venta.Estado == "confirmada" ? "success" : venta.Estado == "pendiente" ? "warning" : "danger")">
-                                                    @venta.Estado
-                                                </span>
-                                            </td>
-                                            <td><strong>BS @venta.Total.ToString("N2")</strong></td>
-                                            <td>
-                                                <a href="@Url.Action("Details", "Ventas", new { id = venta.IdVenta })" class="btn btn-sm btn-info">
-                                                    👁️ Ver
-                                                </a>
-                                            </td>
+                                            <th>ID</th>
+                                            <th>Fecha</th>
+                                            <th>Cliente</th>
+                                            <th>Vendedor</th>
+                                            <th>Estado</th>
+                                            <th>Total</th>
+                                            <th>Acción</th>
                                         </tr>
-                                    }
-                                </tbody>
-                            </table>
+                                    </thead>
+                                    <tbody>
+                                        @foreach (var venta in ultimasVentas)
+                                        {
+                                            <tr>
+                                                <td><strong>#@venta.IdVenta</strong></td>
+                                                <td>@venta.Fecha.ToString("dd/MM/yyyy HH:mm")</td>
+                                                <td>@venta.Cliente?.Nombre</td>
+                                                <td>@venta.Vendedor?.Nombre</td>
+                                                <td>
+                                                    <span class="badge bg-@(venta.Estado == "confirmada" ? "success" : venta.Estado == "pendiente" ? "warning" : "danger")">
+                                                        @venta.Estado
+                                                    </span>
+                                                </td>
+                                                <td><strong>BS @venta.Total.ToString("N2")</strong></td>
+                                                <td>
+                                                    <a href="@Url.Action("Details", "Ventas", new { id = venta.IdVenta })" class="btn btn-sm btn-info">
+                                                        👁️ Ver
+                                                    </a>
+                                                </td>
+                                            </tr>
+                                        }
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+
+                        <!-- Versión Móvil: Cards -->
+                        <div class="d-block d-md-none">
+                            @foreach (var venta in ultimasVentas)
+                            {
+                                <div class="card mb-3" style="border-left: 4px solid var(--primary-color);">
+                                    <div class="card-body">
+                                        <div class="d-flex justify-content-between align-items-start mb-2">
+                                            <div>
+                                                <h6 class="mb-1" style="color: #212529; font-weight: 700;">Venta #@venta.IdVenta</h6>
+                                                <small class="text-muted">@venta.Fecha.ToString("dd/MM/yyyy HH:mm")</small>
+                                            </div>
+                                            <span class="badge bg-@(venta.Estado == "confirmada" ? "success" : venta.Estado == "pendiente" ? "warning" : "danger")">
+                                                @venta.Estado
+                                            </span>
+                                        </div>
+                                        
+                                        <div class="mb-2">
+                                            <strong style="color: #495057;">Cliente:</strong>
+                                            <span style="color: #212529;">@venta.Cliente?.Nombre</span>
+                                        </div>
+                                        
+                                        <div class="mb-2">
+                                            <strong style="color: #495057;">Vendedor:</strong>
+                                            <span style="color: #212529;">@venta.Vendedor?.Nombre</span>
+                                        </div>
+                                        
+                                        <div class="mb-3">
+                                            <strong style="color: #495057;">Total:</strong>
+                                            <span style="color: #28a745; font-size: 1.2rem; font-weight: 700;">BS @venta.Total.ToString("N2")</span>
+                                        </div>
+                                        
+                                        <div class="d-grid">
+                                            <a href="@Url.Action("Details", "Ventas", new { id = venta.IdVenta })" class="btn btn-sm btn-info">
+                                                👁️ Ver Detalles
+                                            </a>
+                                        </div>
+                                    </div>
+                                </div>
+                            }
                         </div>
                         <div class="mt-2">
                             <a href="@Url.Action("Index", "Ventas")" class="btn btn-sm btn-outline-primary">

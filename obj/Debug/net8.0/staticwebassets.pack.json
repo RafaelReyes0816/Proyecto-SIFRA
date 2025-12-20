@@ -253,6 +253,22 @@
       "PackagePath": "staticwebassets/uploads/ci/cliente_20251218092319_DNI.jpg"
     },
     {
+      "Id": "/home/rafaelreyes/Documentos/Proyectos web/Tienda-Repuestos-Demo/wwwroot/uploads/ci/cliente_20251220134355_DNI.jpg",
+      "PackagePath": "staticwebassets/uploads/ci/cliente_20251220134355_DNI.jpg"
+    },
+    {
+      "Id": "/home/rafaelreyes/Documentos/Proyectos web/Tienda-Repuestos-Demo/wwwroot/uploads/ci/cliente_20251220142126_DNI.jpg",
+      "PackagePath": "staticwebassets/uploads/ci/cliente_20251220142126_DNI.jpg"
+    },
+    {
+      "Id": "/home/rafaelreyes/Documentos/Proyectos web/Tienda-Repuestos-Demo/wwwroot/uploads/ci/cliente_20251220154434_DNI.jpg",
+      "PackagePath": "staticwebassets/uploads/ci/cliente_20251220154434_DNI.jpg"
+    },
+    {
+      "Id": "/home/rafaelreyes/Documentos/Proyectos web/Tienda-Repuestos-Demo/wwwroot/uploads/ci/cliente_2_20251220133845_DNI.jpg",
+      "PackagePath": "staticwebassets/uploads/ci/cliente_2_20251220133845_DNI.jpg"
+    },
+    {
       "Id": "obj/Debug/net8.0/staticwebassets/msbuild.Tienda-Repuestos-Demo.Microsoft.AspNetCore.StaticWebAssets.props",
       "PackagePath": "build\\Microsoft.AspNetCore.StaticWebAssets.props"
     },

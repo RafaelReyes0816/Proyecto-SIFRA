@@ -11,12 +11,12 @@
 }
 
 <div class="container-fluid dark-theme" style="min-height: 100vh; padding: 2rem;">
-    <div class="d-flex justify-content-between align-items-center mb-4 fade-in-up">
-        <div>
-            <h2 class="mb-1" style="font-weight: 700;">🔔 Mis Notificaciones</h2>
-            <p class="text-muted mb-0">Centro de notificaciones de tus compras</p>
+    <div class="d-flex justify-content-between align-items-center mb-4 fade-in-up flex-column flex-lg-row">
+        <div class="mb-3 mb-lg-0 flex-grow-1">
+            <h2 class="mb-1" style="font-weight: 700; color: #ffffff;">🔔 Mis Notificaciones</h2>
+            <p class="mb-0" style="color: #b8b8b8;">Centro de notificaciones de tus compras</p>
         </div>
-        <a asp-action="Dashboard" class="btn btn-outline-light">
+        <a asp-action="Dashboard" class="btn btn-outline-light w-100 w-lg-auto flex-shrink-0">
             ← Volver al Dashboard
         </a>
     </div>
@@ -72,18 +72,18 @@
                                         <div class="flex-grow-1">
                                             <div class="d-flex align-items-center mb-2">
                                                 <span style="font-size: 1.5rem; margin-right: 0.5rem;">@iconoNotif</span>
-                                                <h6 class="mb-0" style="color: #ffffff;">@mensaje</h6>
+                                                <h6 class="mb-0" style="color: #212529; font-weight: 600;">@mensaje</h6>
                                             </div>
                                             <div class="d-flex align-items-center gap-3 mb-2">
-                                                <small class="text-muted">
+                                                <small style="color: #495057; font-weight: 500;">
                                                     🕒 @(fecha != null ? fecha.ToString("dd/MM/yyyy HH:mm") : "")
                                                 </small>
                                                 <span class="badge bg-@(tipo == "success" ? "success" : tipo == "warning" ? "warning" : "danger")">
                                                     @estado
                                                 </span>
-                                                <strong style="color: #4facfe;">BS @(total != null ? total.ToString("N2") : "0.00")</strong>
+                                                <strong style="color: #0d6efd; font-weight: 700;">BS @(total != null ? total.ToString("N2") : "0.00")</strong>
                                             </div>
-                                            <a href="@Url.Action("Details", "Ventas", new { id = ventaId })" class="btn btn-sm btn-outline-light">
+                                            <a href="@Url.Action("Details", "Ventas", new { id = ventaId })" class="btn btn-sm" style="background-color: #dc3545; color: #ffffff; border: 1px solid #dc3545; font-weight: 600;">
                                                 👁️ Ver Detalles de la Compra
                                             </a>
                                         </div>
@@ -96,11 +96,11 @@
                         <div class="mt-4 p-3" style="background: rgba(26, 31, 58, 0.5); border-radius: 10px;">
                             <div class="row">
                                 <div class="col-md-12 text-center">
-                                    <p class="text-muted mb-3">¿Necesitas más información sobre tus compras?</p>
-                                    <a asp-action="MisCompras" class="btn btn-primary me-2">
+                                    <p class="mb-3" style="color: #ffffff; font-weight: 500;">¿Necesitas más información sobre tus compras?</p>
+                                    <a asp-action="MisCompras" class="btn btn-primary me-2" style="font-weight: 600;">
                                         🛍️ Ver Todas mis Compras
                                     </a>
-                                    <a asp-controller="Productos" asp-action="Index" class="btn btn-success">
+                                    <a asp-controller="Productos" asp-action="Index" class="btn btn-success" style="font-weight: 600;">
                                         🛒 Ir al Catálogo
                                     </a>
                                 </div>
@@ -111,9 +111,9 @@
                     {
                         <div class="text-center py-5">
                             <div style="font-size: 4rem; margin-bottom: 1rem; opacity: 0.5;">🔔</div>
-                            <h5 class="mb-3" style="color: #b0b0b0;">No tienes notificaciones</h5>
-                            <p class="text-muted mb-4">Cuando realices compras, aparecerán notificaciones aquí</p>
-                            <a asp-controller="Productos" asp-action="Index" class="btn btn-primary btn-lg">
+                            <h5 class="mb-3" style="color: #e8e8e8; font-weight: 600;">No tienes notificaciones</h5>
+                            <p class="mb-4" style="color: #b8b8b8;">Cuando realices compras, aparecerán notificaciones aquí</p>
+                            <a asp-controller="Productos" asp-action="Index" class="btn btn-primary btn-lg" style="font-weight: 600;">
                                 🛒 Explorar Catálogo de Productos
                             </a>
                         </div>

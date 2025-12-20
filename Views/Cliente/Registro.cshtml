@@ -16,9 +16,7 @@
                 <div class="card-body">
                     @if (ViewBag.Error != null)
                     {
-                        <div class="alert alert-danger" role="alert">
-                            <strong>⚠️ Error:</strong> @ViewBag.Error
-                        </div>
+                        <div class="d-none" id="viewBagError" data-error="@ViewBag.Error"></div>
                     }
 
                     <form asp-action="Registro" method="post" enctype="multipart/form-data">
