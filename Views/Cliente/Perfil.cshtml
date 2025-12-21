@@ -13,6 +13,22 @@
         </div>
     </div>
 
+    @if (TempData["Success"] != null)
+    {
+        <div class="alert alert-success alert-dismissible fade show" role="alert">
+            <strong>✅ Éxito:</strong> @TempData["Success"]
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+    }
+    
+    @if (TempData["Error"] != null)
+    {
+        <div class="alert alert-danger alert-dismissible fade show" role="alert">
+            <strong>❌ Error:</strong> @TempData["Error"]
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+    }
+    
     @if (ViewBag.Success != null)
     {
         <div class="alert alert-success alert-dismissible fade show" role="alert">
@@ -29,7 +45,8 @@
                 </div>
                 <div class="card-body">
                     <form asp-action="Perfil" method="post" enctype="multipart/form-data">
-                        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                        @Html.AntiForgeryToken()
+                        <div asp-validation-summary="ModelOnly" class="d-none"></div>
                         <input type="hidden" asp-for="IdCliente" />
                         <input type="hidden" asp-for="FechaRegistro" />
                         

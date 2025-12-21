@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using System.Linq;
 using Tienda_Repuestos_Demo.Data;
 using Tienda_Repuestos_Demo.Models;
 
@@ -221,12 +222,33 @@ namespace Tienda_Repuestos_Demo.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Perfil(int id, [Bind("IdCliente,Nombre,Correo,Telefono,Direccion,FechaRegistro")] Cliente cliente, IFormFile? fotoCI)
+        public async Task<IActionResult> Perfil([Bind("IdCliente,Nombre,Correo,Telefono,Direccion,FechaRegistro")] Cliente cliente, IFormFile? fotoCI)
         {
-            if (id != cliente.IdCliente)
+            // Verificar autenticación
+            if (!IsCliente())
             {
-                return NotFound();
+                return RedirectToAction("Login", "Account");
             }
+
+            var clienteId = GetClienteId();
+            
+            // Si el IdCliente es 0 o no coincide, obtenerlo de la sesión
+            if (cliente.IdCliente == 0 || cliente.IdCliente != clienteId)
+            {
+                cliente.IdCliente = clienteId;
+            }
+            
+            // Verificar que el cliente esté editando su propio perfil
+            if (cliente.IdCliente == 0 || cliente.IdCliente != clienteId)
+            {
+                TempData["Error"] = "Error de autenticación. Por favor, inicia sesión nuevamente.";
+                return RedirectToAction("Login", "Account");
+            }
+
+            // Excluir Contraseña de la validación del ModelState ya que lo asignamos manualmente
+            ModelState.Remove("Contraseña");
+            ModelState.Remove("Verificado");
+            ModelState.Remove("FotoCI");
 
             // Validaciones manuales adicionales
             if (string.IsNullOrWhiteSpace(cliente.Nombre))
@@ -263,70 +285,91 @@ namespace Tienda_Repuestos_Demo.Controllers
                 try
                 {
                     // Obtener el cliente actual de la base de datos
-                    var clienteActual = await _context.Clientes.FindAsync(id);
+                    var clienteActual = await _context.Clientes.FindAsync(cliente.IdCliente);
                     if (clienteActual == null)
                     {
                         return NotFound();
                     }
 
-                    // Mantener la contraseña actual
-                    cliente.Contraseña = clienteActual.Contraseña;
+                    // Actualizar las propiedades directamente en la entidad rastreada
+                    clienteActual.Nombre = cliente.Nombre;
+                    clienteActual.Correo = cliente.Correo;
+                    clienteActual.Telefono = cliente.Telefono;
+                    clienteActual.Direccion = cliente.Direccion;
                     
                     // Procesar nueva foto del CI si se subió
                     if (fotoCI != null && fotoCI.Length > 0)
                     {
-                        var uploadsFolder = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "uploads", "ci");
+                        // Validar que realmente es un archivo de imagen válido
+                        var allowedExtensions = new[] { ".jpg", ".jpeg", ".png", ".gif" };
+                        var fileExtension = Path.GetExtension(fotoCI.FileName).ToLowerInvariant();
                         
-                        // Crear directorio si no existe
-                        if (!Directory.Exists(uploadsFolder))
+                        if (!allowedExtensions.Contains(fileExtension))
                         {
-                            Directory.CreateDirectory(uploadsFolder);
+                            ModelState.AddModelError("fotoCI", "Solo se permiten archivos de imagen (JPG, JPEG, PNG, GIF)");
                         }
-
-                        // Eliminar foto anterior si existe
-                        if (!string.IsNullOrEmpty(clienteActual.FotoCI))
+                        else if (fotoCI.Length > 5 * 1024 * 1024) // 5MB
                         {
-                            var oldFilePath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", clienteActual.FotoCI.TrimStart('/'));
-                            if (System.IO.File.Exists(oldFilePath))
+                            ModelState.AddModelError("fotoCI", "El archivo no puede exceder 5MB");
+                        }
+                        else
+                        {
+                            var uploadsFolder = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "uploads", "ci");
+                            
+                            // Crear directorio si no existe
+                            if (!Directory.Exists(uploadsFolder))
                             {
-                                System.IO.File.Delete(oldFilePath);
+                                Directory.CreateDirectory(uploadsFolder);
                             }
+
+                            // Eliminar foto anterior si existe
+                            if (!string.IsNullOrEmpty(clienteActual.FotoCI))
+                            {
+                                var oldFilePath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", clienteActual.FotoCI.TrimStart('/'));
+                                if (System.IO.File.Exists(oldFilePath))
+                                {
+                                    System.IO.File.Delete(oldFilePath);
+                                }
+                            }
+
+                            // Generar nombre único para el archivo
+                            var fileName = $"cliente_{cliente.IdCliente}_{DateTime.Now:yyyyMMddHHmmss}{fileExtension}";
+                            var filePath = Path.Combine(uploadsFolder, fileName);
+
+                            // Guardar archivo
+                            using (var stream = new FileStream(filePath, FileMode.Create))
+                            {
+                                await fotoCI.CopyToAsync(stream);
+                            }
+
+                            // Guardar ruta relativa en la base de datos
+                            clienteActual.FotoCI = $"/uploads/ci/{fileName}";
+                            
+                            // Solo si se subió un CI nuevo, se marca como verificado automáticamente
+                            clienteActual.Verificado = true;
                         }
-
-                        // Generar nombre único para el archivo
-                        var fileName = $"cliente_{id}_{DateTime.Now:yyyyMMddHHmmss}_{Path.GetFileName(fotoCI.FileName)}";
-                        var filePath = Path.Combine(uploadsFolder, fileName);
-
-                        // Guardar archivo
-                        using (var stream = new FileStream(filePath, FileMode.Create))
-                        {
-                            await fotoCI.CopyToAsync(stream);
-                        }
-
-                        // Guardar ruta relativa en la base de datos
-                        cliente.FotoCI = $"/uploads/ci/{fileName}";
-                        
-                        // Si subió un CI nuevo, se marca como verificado automáticamente
-                        cliente.Verificado = true;
                     }
-                    else
-                    {
-                        // Si no se subió nueva foto, mantener la foto actual
-                        cliente.FotoCI = clienteActual.FotoCI;
-                        
-                        // Verificar automáticamente el estado de verificación basado en si tiene fotoCI
-                        // Si tiene fotoCI, debe estar verificado; si no tiene, no verificado
-                        cliente.Verificado = !string.IsNullOrEmpty(cliente.FotoCI);
-                    }
+                    // Si no se subió nueva foto, NO cambiar el estado de verificación
+                    // Mantener el estado actual (ya sea verificado o no)
 
-                    _context.Update(cliente);
+                    // No necesitamos Update() porque estamos modificando la entidad rastreada directamente
                     await _context.SaveChangesAsync();
 
                     // Actualizar sesión
-                    HttpContext.Session.SetString("ClienteNombre", cliente.Nombre);
-                    HttpContext.Session.SetString("ClienteCorreo", cliente.Correo);
+                    HttpContext.Session.SetString("ClienteNombre", clienteActual.Nombre);
+                    HttpContext.Session.SetString("ClienteCorreo", clienteActual.Correo);
 
-                    ViewBag.Success = "Perfil actualizado correctamente";
+                    // Mensaje de éxito según si se subió imagen o no
+                    if (fotoCI != null && fotoCI.Length > 0 && ModelState.IsValid)
+                    {
+                        TempData["Success"] = "Perfil actualizado correctamente. Tu cuenta ha sido verificada automáticamente.";
+                    }
+                    else
+                    {
+                        TempData["Success"] = "Perfil actualizado correctamente.";
+                    }
+                    
+                    return RedirectToAction("Perfil");
                 }
                 catch (DbUpdateConcurrencyException)
                 {
@@ -341,7 +384,32 @@ namespace Tienda_Repuestos_Demo.Controllers
                 }
             }
 
-            return View(cliente);
+            // Si hay errores de validación, recargar el cliente desde la BD y mostrar la vista con los errores
+            var clienteParaVista = await _context.Clientes.FindAsync(cliente.IdCliente);
+            if (clienteParaVista == null)
+            {
+                TempData["Error"] = "No se pudo encontrar el cliente. Por favor, inicia sesión nuevamente.";
+                return RedirectToAction("Login", "Account");
+            }
+            
+            // Mantener los valores del formulario pero con los datos completos de la BD
+            clienteParaVista.Nombre = cliente.Nombre;
+            clienteParaVista.Correo = cliente.Correo;
+            clienteParaVista.Telefono = cliente.Telefono;
+            clienteParaVista.Direccion = cliente.Direccion;
+            
+            // Mostrar errores de validación
+            var errores = ModelState.Values.SelectMany(v => v.Errors).Select(e => e.ErrorMessage).ToList();
+            if (errores.Any())
+            {
+                TempData["Error"] = string.Join(" ", errores);
+            }
+            else
+            {
+                TempData["Error"] = "Por favor, corrige los errores en el formulario.";
+            }
+            
+            return View(clienteParaVista);
         }
 
         // ============================================
