@@ -1,9 +1,12 @@
 @model Tienda_Repuestos_Demo.Models.Producto
+@using Microsoft.AspNetCore.Http
 
 @{
     ViewData["Title"] = "Comprar Producto";
     Layout = "~/Views/Shared/_Layout.cshtml";
     var producto = ViewBag.Producto as Tienda_Repuestos_Demo.Models.Producto;
+    var clienteNoVerificado = ViewBag.ClienteNoVerificado as bool? ?? false;
+    var clienteId = ViewBag.ClienteId;
 }
 
 @if (producto == null)
@@ -105,9 +108,18 @@
 
                         <div class="d-grid gap-2 d-md-flex justify-content-md-end">
                             <a asp-action="Index" class="btn btn-secondary">Cancelar</a>
-                            <button type="submit" class="btn btn-success btn-lg">
-                                ✅ Confirmar Compra
-                            </button>
+                            @if (clienteNoVerificado)
+                            {
+                                <button type="button" class="btn btn-success btn-lg" data-bs-toggle="modal" data-bs-target="#modalVerificacion">
+                                    ✅ Confirmar Compra
+                                </button>
+                            }
+                            else
+                            {
+                                <button type="submit" class="btn btn-success btn-lg">
+                                    ✅ Confirmar Compra
+                                </button>
+                            }
                         </div>
                     </form>
                 </div>
@@ -116,8 +128,80 @@
     </div>
 </div>
 
+<!-- Modal de Verificación Requerida -->
+@if (clienteNoVerificado)
+{
+    <div class="modal fade" id="modalVerificacion" tabindex="-1" aria-labelledby="modalVerificacionLabel" aria-hidden="true" data-bs-backdrop="false" data-bs-keyboard="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content logout-modal-content">
+                <div class="modal-header logout-modal-header">
+                    <h5 class="modal-title" id="modalVerificacionLabel">
+                        <span style="font-size: 1.5rem; margin-right: 0.5rem;">🆔</span>
+                        Verificación Requerida
+                    </h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body logout-modal-body">
+                    <div class="text-center mb-3">
+                        <div style="font-size: 3rem; margin-bottom: 1rem;">⚠️</div>
+                        <p class="mb-2" style="font-size: 1.1rem; font-weight: 600; color: #ffffff;">
+                            Para realizar compras, necesitas verificar tu identidad
+                        </p>
+                        <p class="mb-3" style="font-size: 0.95rem; color: rgba(255, 255, 255, 0.8);">
+                            Por favor, sube una foto de tu cédula de identidad (CI) en tu perfil para poder realizar compras en nuestra tienda.
+                        </p>
+                        <div class="alert alert-info" style="background-color: rgba(23, 162, 184, 0.2); border-color: #17a2b8; color: #ffffff; text-align: left;">
+                            <strong>📋 Pasos a seguir:</strong>
+                            <ol class="mb-0 mt-2" style="padding-left: 1.5rem;">
+                                <li>Ve a tu perfil</li>
+                                <li>Sube una foto clara de tu CI</li>
+                                <li>Tu cuenta será verificada automáticamente</li>
+                                <li>¡Listo! Ya podrás realizar compras</li>
+                            </ol>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer logout-modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                        <span style="margin-right: 0.5rem;">❌</span>
+                        Cancelar
+                    </button>
+                    <a asp-controller="Cliente" asp-action="Perfil" class="btn btn-primary">
+                        <span style="margin-right: 0.5rem;">👤</span>
+                        Ir a Mi Perfil
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+
 @section Scripts {
     <script>
+        // Eliminar cualquier backdrop que aparezca
+        document.addEventListener('DOMContentLoaded', function() {
+            // Limpiar inmediatamente
+            var backdrops = document.querySelectorAll('.modal-backdrop');
+            backdrops.forEach(function(backdrop) {
+                backdrop.remove();
+            });
+            document.body.classList.remove('modal-open');
+            
+            // Limpiar cada 100ms
+            setInterval(function() {
+                var backdrops = document.querySelectorAll('.modal-backdrop');
+                backdrops.forEach(function(backdrop) {
+                    backdrop.remove();
+                });
+                var modalsAbiertos = document.querySelectorAll('.modal.show');
+                if (modalsAbiertos.length === 0) {
+                    document.body.classList.remove('modal-open');
+                    document.body.style.overflow = '';
+                    document.body.style.paddingRight = '';
+                }
+            }, 100);
+        });
+
         const precioUnitario = @producto.PrecioVenta;
 
         function calcularTotal() {

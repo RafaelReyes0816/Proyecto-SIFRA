@@ -3,6 +3,9 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using Tienda_Repuestos_Demo.Data;
 using Tienda_Repuestos_Demo.Models;
+using QuestPDF.Fluent;
+using QuestPDF.Helpers;
+using QuestPDF.Infrastructure;
 
 namespace Tienda_Repuestos_Demo.Controllers
 {
@@ -17,13 +20,21 @@ namespace Tienda_Repuestos_Demo.Controllers
 
         private bool IsAuthenticated()
         {
-            return !string.IsNullOrEmpty(HttpContext.Session.GetString("UsuarioId"));
+            // Verificar si es usuario (admin/vendedor) o cliente
+            return !string.IsNullOrEmpty(HttpContext.Session.GetString("UsuarioId")) ||
+                   !string.IsNullOrEmpty(HttpContext.Session.GetString("ClienteId"));
         }
 
         private int GetUsuarioId()
         {
             var usuarioId = HttpContext.Session.GetString("UsuarioId");
             return int.TryParse(usuarioId, out int id) ? id : 0;
+        }
+
+        private int GetClienteId()
+        {
+            var clienteId = HttpContext.Session.GetString("ClienteId");
+            return int.TryParse(clienteId, out int id) ? id : 0;
         }
 
         /// <summary>
@@ -109,11 +120,23 @@ namespace Tienda_Repuestos_Demo.Controllers
                 return NotFound();
             }
 
-            // Verificar que el vendedor solo vea sus propias ventas
+            // Verificar permisos según el rol
             var rol = HttpContext.Session.GetString("UsuarioRol");
+            
+            // Si es vendedor, solo puede ver sus propias ventas
             if (rol == "vendedor" && venta.IdVendedor != GetUsuarioId())
             {
                 return RedirectToAction("Index");
+            }
+            
+            // Si es cliente, solo puede ver sus propias ventas
+            if (rol == "cliente")
+            {
+                var clienteId = GetClienteId();
+                if (clienteId == 0 || venta.IdCliente != clienteId)
+                {
+                    return RedirectToAction("Login", "Account");
+                }
             }
 
             return View(venta);
@@ -562,6 +585,233 @@ namespace Tienda_Repuestos_Demo.Controllers
         private bool VentaExists(int id)
         {
             return _context.Ventas.Any(e => e.IdVenta == id);
+        }
+
+        // GET: Ventas/DescargarComprobante/5
+        public async Task<IActionResult> DescargarComprobante(int? id)
+        {
+            if (!IsAuthenticated())
+            {
+                return RedirectToAction("Login", "Account");
+            }
+
+            if (id == null)
+            {
+                return NotFound();
+            }
+
+            var venta = await _context.Ventas
+                .Include(v => v.Cliente)
+                .Include(v => v.Vendedor)
+                .Include(v => v.DetallesVenta)
+                    .ThenInclude(d => d.Producto)
+                .FirstOrDefaultAsync(m => m.IdVenta == id);
+
+            if (venta == null)
+            {
+                return NotFound();
+            }
+
+            // Verificar permisos según el rol
+            var rol = HttpContext.Session.GetString("UsuarioRol");
+            
+            // Si es vendedor, solo puede ver sus propias ventas
+            if (rol == "vendedor" && venta.IdVendedor != GetUsuarioId())
+            {
+                return RedirectToAction("Index");
+            }
+            
+            // Si es cliente, solo puede ver sus propias ventas
+            if (rol == "cliente")
+            {
+                var clienteId = GetClienteId();
+                if (clienteId == 0 || venta.IdCliente != clienteId)
+                {
+                    return RedirectToAction("Login", "Account");
+                }
+            }
+
+            // Solo permitir descargar comprobante si la venta está confirmada
+            if (venta.Estado != "confirmada")
+            {
+                TempData["Error"] = "Solo se puede descargar el comprobante de ventas confirmadas";
+                return RedirectToAction("Details", new { id = venta.IdVenta });
+            }
+
+            // Configurar QuestPDF
+            QuestPDF.Settings.License = LicenseType.Community;
+
+            // Generar el PDF
+            var pdfBytes = Document.Create(container =>
+            {
+                container.Page(page =>
+                {
+                    page.Size(PageSizes.A4);
+                    page.Margin(2, Unit.Centimetre);
+                    page.PageColor(Colors.White);
+                    page.DefaultTextStyle(x => x.FontSize(10));
+
+                    page.Header()
+                        .Row(row =>
+                        {
+                            row.RelativeItem().Column(column =>
+                            {
+                                column.Item().Text("🔧 TIENDA DE REPUESTOS")
+                                    .FontSize(20)
+                                    .Bold()
+                                    .FontColor(Colors.Red.Medium);
+                                
+                                column.Item().Text("Sistema de Gestión")
+                                    .FontSize(12)
+                                    .FontColor(Colors.Grey.Darken1);
+                            });
+
+                            row.ConstantItem(100).AlignRight().Text($"#{venta.IdVenta}")
+                                .FontSize(16)
+                                .Bold()
+                                .FontColor(Colors.Red.Medium);
+                        });
+
+                    page.Content()
+                        .PaddingVertical(1, Unit.Centimetre)
+                        .Column(column =>
+                        {
+                            column.Spacing(20);
+
+                            // Información de la venta
+                            column.Item().Text("COMPROBANTE DE VENTA")
+                                .FontSize(16)
+                                .Bold()
+                                .FontColor(Colors.Red.Medium);
+
+                            column.Item().Row(row =>
+                            {
+                                row.RelativeItem().Column(col =>
+                                {
+                                    col.Item().Text("Cliente:").FontSize(9).FontColor(Colors.Grey.Darken2);
+                                    col.Item().Text(venta.Cliente.Nombre).FontSize(11).Bold();
+                                    
+                                    col.Item().PaddingTop(5).Text("Correo:").FontSize(9).FontColor(Colors.Grey.Darken2);
+                                    col.Item().Text(venta.Cliente.Correo ?? "N/A").FontSize(10);
+                                    
+                                    if (!string.IsNullOrEmpty(venta.Cliente.Telefono))
+                                    {
+                                        col.Item().PaddingTop(5).Text("Teléfono:").FontSize(9).FontColor(Colors.Grey.Darken2);
+                                        col.Item().Text(venta.Cliente.Telefono).FontSize(10);
+                                    }
+                                });
+
+                                row.RelativeItem().Column(col =>
+                                {
+                                    col.Item().Text("Fecha:").FontSize(9).FontColor(Colors.Grey.Darken2);
+                                    col.Item().Text(venta.Fecha.ToString("dd/MM/yyyy HH:mm")).FontSize(10);
+                                    
+                                    col.Item().PaddingTop(5).Text("Vendedor:").FontSize(9).FontColor(Colors.Grey.Darken2);
+                                    col.Item().Text(venta.Vendedor?.Nombre ?? "N/A").FontSize(10);
+                                    
+                                    col.Item().PaddingTop(5).Text("Comprobante:").FontSize(9).FontColor(Colors.Grey.Darken2);
+                                    col.Item().Text(venta.ComprobantePago ?? "N/A").FontSize(10).Bold();
+                                });
+                            });
+
+                            // Tabla de productos
+                            column.Item().PaddingTop(10).Table(table =>
+                            {
+                                table.ColumnsDefinition(columns =>
+                                {
+                                    columns.RelativeColumn(3);
+                                    columns.RelativeColumn(1);
+                                    columns.RelativeColumn(1.5f);
+                                    columns.RelativeColumn(1.5f);
+                                });
+
+                                // Encabezados
+                                table.Header(header =>
+                                {
+                                    header.Cell().Element(CellStyle).Text("Producto").Bold();
+                                    header.Cell().Element(CellStyle).AlignCenter().Text("Cantidad").Bold();
+                                    header.Cell().Element(CellStyle).AlignRight().Text("Precio Unit.").Bold();
+                                    header.Cell().Element(CellStyle).AlignRight().Text("Subtotal").Bold();
+
+                                    static IContainer CellStyle(IContainer container)
+                                    {
+                                        return container
+                                            .BorderBottom(1)
+                                            .BorderColor(Colors.Grey.Lighten1)
+                                            .PaddingVertical(5)
+                                            .PaddingHorizontal(5)
+                                            .Background(Colors.Grey.Lighten4);
+                                    }
+                                });
+
+                                // Filas de productos
+                                foreach (var detalle in venta.DetallesVenta)
+                                {
+                                    var subtotal = detalle.Cantidad * detalle.PrecioUnitario;
+
+                                    table.Cell().Element(CellStyle).Text(detalle.Producto?.Nombre ?? "N/A");
+                                    table.Cell().Element(CellStyle).AlignCenter().Text(detalle.Cantidad.ToString());
+                                    table.Cell().Element(CellStyle).AlignRight().Text($"BS {detalle.PrecioUnitario:N2}");
+                                    table.Cell().Element(CellStyle).AlignRight().Text($"BS {subtotal:N2}");
+
+                                    static IContainer CellStyle(IContainer container)
+                                    {
+                                        return container
+                                            .BorderBottom(1)
+                                            .BorderColor(Colors.Grey.Lighten2)
+                                            .PaddingVertical(8)
+                                            .PaddingHorizontal(5);
+                                    }
+                                }
+                            });
+
+                            // Total
+                            column.Item().AlignRight().PaddingTop(10).Row(row =>
+                            {
+                                row.ConstantItem(150);
+                                row.RelativeItem().Column(col =>
+                                {
+                                    col.Item().Text("TOTAL:")
+                                        .FontSize(14)
+                                        .Bold()
+                                        .FontColor(Colors.Red.Medium);
+                                    col.Item().Text($"BS {venta.Total:N2}")
+                                        .FontSize(16)
+                                        .Bold()
+                                        .FontColor(Colors.Red.Medium);
+                                });
+                            });
+
+                            // Información adicional
+                            column.Item().PaddingTop(20).Column(col =>
+                            {
+                                col.Item().Text($"Método de Pago: {venta.MetodoPago.ToUpper()}").FontSize(9);
+                                col.Item().Text($"Tipo de Venta: {venta.TipoVenta.ToUpper()}").FontSize(9);
+                                col.Item().PaddingTop(10).Text("Gracias por su compra!")
+                                    .FontSize(10)
+                                    .Italic()
+                                    .FontColor(Colors.Grey.Darken1);
+                            });
+                        });
+
+                    page.Footer()
+                        .AlignCenter()
+                        .Text(text =>
+                        {
+                            text.Span("Este documento es un comprobante generado automáticamente. ")
+                                .FontSize(8)
+                                .FontColor(Colors.Grey.Darken1);
+                            text.Span($"Fecha de emisión: {DateTime.Now:dd/MM/yyyy HH:mm}")
+                                .FontSize(8)
+                                .FontColor(Colors.Grey.Medium);
+                        });
+                });
+            })
+            .GeneratePdf();
+
+            // Retornar el PDF como descarga
+            var fileName = $"Comprobante_{venta.ComprobantePago ?? $"Venta_{venta.IdVenta}"}_{DateTime.Now:yyyyMMdd}.pdf";
+            return File(pdfBytes, "application/pdf", fileName);
         }
     }
 }

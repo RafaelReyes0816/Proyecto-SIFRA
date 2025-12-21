@@ -397,11 +397,14 @@ namespace Tienda_Repuestos_Demo.Controllers
             var clienteId = GetClienteId();
 
             // Obtener los productos que el cliente ha comprado más frecuentemente
+            // Solo mostrar productos con stock disponible (Stock > 0)
             var productosFavoritos = await _context.DetallesVenta
                 .Include(d => d.Venta)
                 .Include(d => d.Producto)
                     .ThenInclude(p => p.Categoria)
-                .Where(d => d.Venta.IdCliente == clienteId && d.Venta.Estado == "confirmada")
+                .Where(d => d.Venta.IdCliente == clienteId && 
+                           d.Venta.Estado == "confirmada" &&
+                           d.Producto.Stock > 0) // Solo productos con stock disponible
                 .GroupBy(d => d.Producto.IdProducto)
                 .Select(g => new {
                     ProductoId = g.Key,

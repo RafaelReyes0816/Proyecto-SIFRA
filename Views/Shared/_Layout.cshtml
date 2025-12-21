@@ -10,11 +10,11 @@
 </head>
 <body class="d-flex flex-column min-vh-100">
     <header>
-        <nav class="navbar navbar-expand-lg navbar-dark mb-3" style="position: relative; z-index: 1030;">
+        <nav class="navbar navbar-expand-lg navbar-dark mb-2" style="position: relative; z-index: 1030;">
             <div class="container-fluid">
-                <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">
+                <span class="navbar-brand" style="cursor: default;">
                     <strong>🔧 Tienda de Repuestos</strong>
-                </a>
+                </span>
                 <div class="navbar-collapse collapse show d-lg-flex justify-content-between">
                     @{
                         var usuarioRol = Context.Session.GetString("UsuarioRol");
@@ -107,7 +107,7 @@
             </div>
         </nav>
     </header>
-    <div class="container-fluid px-3 px-md-4 py-4 py-md-5 flex-grow-1">
+    <div class="container-fluid px-3 px-md-4 py-3 py-md-4 flex-grow-1">
         <main role="main" class="pb-4 fade-in">
             @RenderBody()
         </main>

@@ -1,4 +1,5 @@
 @model Tienda_Repuestos_Demo.Models.Venta
+@using Microsoft.AspNetCore.Http
 
 @{
     ViewData["Title"] = "Detalles de la Venta";
@@ -126,7 +127,30 @@
     </div>
 
     <div class="mt-3">
-        <a asp-action="Index" class="btn btn-secondary">Volver a la Lista</a>
-        <a asp-action="Edit" asp-route-id="@Model.IdVenta" class="btn btn-warning">Editar</a>
+        @{
+            var rol = Context.Session.GetString("UsuarioRol");
+            
+            // Botón "Volver" según el rol
+            if (rol == "cliente")
+            {
+                <a asp-controller="Cliente" asp-action="MisCompras" class="btn btn-secondary">Volver a Mis Compras</a>
+            }
+            else
+            {
+                <a asp-action="Index" class="btn btn-secondary">Volver a la Lista</a>
+            }
+            
+            // Solo mostrar botón de editar para admin y vendedor (no para clientes)
+            if (rol != "cliente")
+            {
+                <a asp-action="Edit" asp-route-id="@Model.IdVenta" class="btn btn-warning">Editar</a>
+            }
+        }
+        @if (Model.Estado == "confirmada")
+        {
+            <a asp-action="DescargarComprobante" asp-route-id="@Model.IdVenta" class="btn btn-success">
+                📄 Descargar Comprobante PDF
+            </a>
+        }
     </div>
 </div>

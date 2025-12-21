@@ -3,6 +3,93 @@
 
 // Write your JavaScript code.
 
+// SOLUCIÓN ULTRA AGRESIVA: Eliminar COMPLETAMENTE los backdrops usando MutationObserver
+(function() {
+    // Función para eliminar TODOS los backdrops
+    function eliminarTodosLosBackdrops() {
+        var backdrops = document.querySelectorAll('.modal-backdrop');
+        backdrops.forEach(function(backdrop) {
+            backdrop.style.display = 'none';
+            backdrop.style.visibility = 'hidden';
+            backdrop.style.opacity = '0';
+            backdrop.style.pointerEvents = 'none';
+            backdrop.remove();
+        });
+        document.body.classList.remove('modal-open');
+        document.body.style.overflow = '';
+        document.body.style.paddingRight = '';
+        document.body.style.position = '';
+    }
+    
+    // Usar MutationObserver para detectar cuando se crea un backdrop y eliminarlo INMEDIATAMENTE
+    var observer = new MutationObserver(function(mutations) {
+        mutations.forEach(function(mutation) {
+            mutation.addedNodes.forEach(function(node) {
+                if (node.nodeType === 1) { // Element node
+                    if (node.classList && node.classList.contains('modal-backdrop')) {
+                        node.remove();
+                    }
+                    // También buscar dentro del nodo
+                    var backdrops = node.querySelectorAll ? node.querySelectorAll('.modal-backdrop') : [];
+                    backdrops.forEach(function(backdrop) {
+                        backdrop.remove();
+                    });
+                }
+            });
+        });
+        // Limpiar cualquier backdrop que exista
+        eliminarTodosLosBackdrops();
+    });
+    
+    // Observar cambios en el body
+    if (document.body) {
+        observer.observe(document.body, {
+            childList: true,
+            subtree: true
+        });
+    } else {
+        document.addEventListener('DOMContentLoaded', function() {
+            observer.observe(document.body, {
+                childList: true,
+                subtree: true
+            });
+        });
+    }
+    
+    // Limpiar inmediatamente
+    eliminarTodosLosBackdrops();
+    
+    // Limpiar al cargar la página
+    if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', eliminarTodosLosBackdrops);
+    } else {
+        eliminarTodosLosBackdrops();
+    }
+    
+    // Limpiar cuando se cierra cualquier modal
+    document.addEventListener('hidden.bs.modal', eliminarTodosLosBackdrops);
+    document.addEventListener('hide.bs.modal', function() {
+        setTimeout(eliminarTodosLosBackdrops, 10);
+    });
+    
+    // Limpiar cada 50ms - ULTRA AGRESIVO
+    setInterval(eliminarTodosLosBackdrops, 50);
+    
+    // Interceptar el método _setEscapeEvent de Bootstrap para prevenir backdrop
+    if (typeof bootstrap !== 'undefined' && bootstrap.Modal) {
+        var originalConstructor = bootstrap.Modal;
+        bootstrap.Modal = function(element, config) {
+            if (config && config.backdrop !== false) {
+                config.backdrop = false;
+            }
+            return new originalConstructor(element, config || { backdrop: false });
+        };
+        // Copiar propiedades estáticas
+        Object.setPrototypeOf(bootstrap.Modal, originalConstructor);
+        Object.assign(bootstrap.Modal, originalConstructor);
+    }
+})();
+
 // Manejo de errores de validación - Mostrar modal y mensajes debajo de campos
 document.addEventListener('DOMContentLoaded', function() {
     // Ocultar completamente todos los validation-summary

@@ -42,6 +42,18 @@ namespace Tienda_Repuestos_Demo.Controllers
             // Si es cliente, usar vista de catálogo
             if (rol == "cliente")
             {
+                // Verificar estado de verificación del cliente para mostrar en la vista
+                var clienteIdStr = HttpContext.Session.GetString("ClienteId");
+                if (!string.IsNullOrEmpty(clienteIdStr) && int.TryParse(clienteIdStr, out int clienteId))
+                {
+                    var cliente = await _context.Clientes.FindAsync(clienteId);
+                    ViewBag.ClienteVerificado = cliente?.Verificado ?? false;
+                }
+                else
+                {
+                    ViewBag.ClienteVerificado = false;
+                }
+                
                 ViewBag.Categorias = await _context.Categorias.ToListAsync();
                 return View("Catalogo", productos);
             }
@@ -71,6 +83,29 @@ namespace Tienda_Repuestos_Demo.Controllers
             if (producto == null)
             {
                 return NotFound();
+            }
+
+            // Si es cliente y el producto no tiene stock, redirigir al catálogo
+            var rol = HttpContext.Session.GetString("UsuarioRol");
+            if (rol == "cliente" && producto.Stock <= 0)
+            {
+                TempData["Error"] = "Este producto no tiene stock disponible";
+                return RedirectToAction("Index");
+            }
+
+            // Si es cliente, verificar estado de verificación
+            if (rol == "cliente")
+            {
+                var clienteIdStr = HttpContext.Session.GetString("ClienteId");
+                if (!string.IsNullOrEmpty(clienteIdStr) && int.TryParse(clienteIdStr, out int clienteId))
+                {
+                    var cliente = await _context.Clientes.FindAsync(clienteId);
+                    ViewBag.ClienteVerificado = cliente?.Verificado ?? false;
+                }
+                else
+                {
+                    ViewBag.ClienteVerificado = false;
+                }
             }
 
             return View(producto);
@@ -345,6 +380,30 @@ namespace Tienda_Repuestos_Demo.Controllers
                 return NotFound();
             }
 
+            // Verificar si el cliente está verificado
+            var clienteIdStr = HttpContext.Session.GetString("ClienteId");
+            if (string.IsNullOrEmpty(clienteIdStr) || !int.TryParse(clienteIdStr, out int clienteId))
+            {
+                TempData["Error"] = "Debes iniciar sesión como cliente";
+                return RedirectToAction("Login", "Account");
+            }
+
+            var cliente = await _context.Clientes.FindAsync(clienteId);
+            if (cliente == null)
+            {
+                TempData["Error"] = "Cliente no encontrado";
+                return RedirectToAction("Login", "Account");
+            }
+
+            // Si el cliente no está verificado, mostrar mensaje y redirigir
+            if (!cliente.Verificado)
+            {
+                TempData["Error"] = "Necesitas verificar tu identidad para realizar compras. Por favor, sube tu cédula de identidad en tu perfil.";
+                ViewBag.ClienteNoVerificado = true;
+                ViewBag.ClienteId = clienteId;
+                // No redirigir, mostrar la vista con el modal
+            }
+
             var producto = await _context.Productos
                 .Include(p => p.Categoria)
                 .FirstOrDefaultAsync(p => p.IdProducto == id);
@@ -380,6 +439,20 @@ namespace Tienda_Repuestos_Demo.Controllers
             {
                 TempData["Error"] = "Debes iniciar sesión como cliente";
                 return RedirectToAction("Login", "Account");
+            }
+
+            // Verificar si el cliente está verificado
+            var cliente = await _context.Clientes.FindAsync(clienteId);
+            if (cliente == null)
+            {
+                TempData["Error"] = "Cliente no encontrado";
+                return RedirectToAction("Login", "Account");
+            }
+
+            if (!cliente.Verificado)
+            {
+                TempData["Error"] = "Necesitas verificar tu identidad para realizar compras. Por favor, sube tu cédula de identidad en tu perfil.";
+                return RedirectToAction("Comprar", new { id });
             }
 
             var producto = await _context.Productos.FindAsync(id);
