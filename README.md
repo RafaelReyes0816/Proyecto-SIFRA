@@ -211,50 +211,224 @@ La base de datos `sifra_db` contiene las siguientes tablas:
 ```
 Tienda-Repuestos-Demo/
 │
-├── Controllers/              # Controladores MVC
-│   ├── AccountController.cs      # Autenticación (login/logout)
-│   ├── AdminController.cs        # Dashboard y funciones de admin
-│   ├── ClienteController.cs      # Portal del cliente (e-commerce)
-│   ├── ClientesController.cs     # CRUD de clientes (admin)
-│   ├── ProductosController.cs    # CRUD de productos
-│   ├── UsuariosController.cs     # CRUD de usuarios (admin)
-│   ├── VendedorController.cs     # Dashboard del vendedor
-│   └── VentasController.cs       # Gestión de ventas
+├── Controllers/                          # Controladores MVC (Lógica de negocio)
+│   ├── AccountController.cs             # Autenticación (login/logout/registro)
+│   ├── AdminController.cs               # Dashboard y funciones administrativas
+│   ├── CategoriasController.cs          # CRUD de categorías de productos
+│   ├── ClienteController.cs             # Portal del cliente (e-commerce)
+│   │                                     #   - Dashboard cliente
+│   │                                     #   - Mis compras
+│   │                                     #   - Favoritos
+│   │                                     #   - Perfil y verificación
+│   │                                     #   - Notificaciones
+│   ├── ClientesController.cs            # CRUD de clientes (solo admin)
+│   ├── HomeController.cs                # Página principal
+│   ├── ProductosController.cs            # CRUD de productos y catálogo
+│   │                                     #   - Gestión de productos (admin/vendedor)
+│   │                                     #   - Catálogo público (cliente)
+│   │                                     #   - Proceso de compra
+│   ├── ProveedoresController.cs         # CRUD de proveedores
+│   ├── UsuariosController.cs            # CRUD de usuarios del sistema (admin)
+│   ├── VendedorController.cs            # Dashboard del vendedor
+│   └── VentasController.cs              # Gestión de ventas
+│                                         #   - Crear/editar ventas
+│                                         #   - Generación de comprobantes PDF
 │
-├── Models/                  # Modelos de datos
-│   ├── Usuario.cs
-│   ├── Cliente.cs
-│   ├── Producto.cs
-│   ├── Venta.cs
-│   └── ...
+├── Models/                               # Modelos de datos (Entidades)
+│   ├── Categoria.cs                     # Categorías de productos
+│   ├── Cliente.cs                       # Clientes del e-commerce
+│   ├── DetalleVenta.cs                 # Detalles de cada venta
+│   ├── ErrorViewModel.cs                # Modelo para páginas de error
+│   ├── Producto.cs                      # Productos del inventario
+│   ├── Proveedor.cs                     # Proveedores
+│   ├── Usuario.cs                       # Usuarios del sistema (admin/vendedor)
+│   └── Venta.cs                         # Ventas realizadas
 │
-├── Views/                   # Vistas Razor
-│   ├── Account/             # Login
-│   ├── Admin/               # Dashboard admin
-│   ├── Cliente/             # Portal cliente
-│   ├── Clientes/            # CRUD clientes
-│   ├── Productos/           # CRUD productos
-│   ├── Usuarios/            # CRUD usuarios
-│   ├── Vendedor/            # Dashboard vendedor
-│   └── Ventas/              # Gestión ventas
+├── Views/                               # Vistas Razor (Interfaz de usuario)
+│   ├── _ViewImports.cshtml             # Imports globales
+│   ├── _ViewStart.cshtml                # Layout por defecto
+│   │
+│   ├── Account/                         # Autenticación
+│   │   └── Login.cshtml                 # Página de inicio de sesión
+│   │
+│   ├── Admin/                           # Panel administrativo
+│   │   ├── Actividad.cshtml            # Actividad del sistema
+│   │   ├── Configuracion.cshtml        # Configuración general
+│   │   ├── Dashboard.cshtml             # Dashboard principal
+│   │   └── Reportes.cshtml             # Reportes y estadísticas
+│   │
+│   ├── Categorias/                     # Gestión de categorías
+│   │   ├── Index.cshtml                # Lista de categorías
+│   │   ├── Create.cshtml                # Crear categoría
+│   │   ├── Edit.cshtml                 # Editar categoría
+│   │   ├── Details.cshtml              # Detalles de categoría
+│   │   └── Delete.cshtml                # Eliminar categoría
+│   │
+│   ├── Cliente/                         # Portal del cliente
+│   │   ├── Dashboard.cshtml             # Dashboard personalizado
+│   │   ├── Favoritos.cshtml             # Productos favoritos
+│   │   ├── MisCompras.cshtml           # Historial de compras
+│   │   ├── Notificaciones.cshtml        # Notificaciones del cliente
+│   │   ├── Perfil.cshtml                # Perfil y configuración
+│   │   └── Registro.cshtml             # Registro de nuevos clientes
+│   │
+│   ├── Clientes/                        # Gestión de clientes (admin)
+│   │   ├── Index.cshtml                 # Lista de clientes
+│   │   ├── Create.cshtml                # Crear cliente
+│   │   ├── Edit.cshtml                  # Editar cliente
+│   │   ├── Details.cshtml               # Detalles del cliente
+│   │   └── Delete.cshtml                # Eliminar cliente
+│   │
+│   ├── Home/                            # Páginas principales
+│   │   ├── Index.cshtml                 # Página de inicio
+│   │   └── Privacy.cshtml               # Política de privacidad
+│   │
+│   ├── Productos/                        # Gestión de productos
+│   │   ├── Index.cshtml                 # Lista de productos (admin/vendedor)
+│   │   ├── Catalogo.cshtml              # Catálogo público (cliente)
+│   │   ├── Details.cshtml               # Detalles del producto
+│   │   ├── Comprar.cshtml               # Proceso de compra (cliente)
+│   │   ├── Create.cshtml                # Crear producto
+│   │   ├── Edit.cshtml                  # Editar producto
+│   │   └── Delete.cshtml                # Eliminar producto
+│   │
+│   ├── Proveedores/                     # Gestión de proveedores
+│   │   ├── Index.cshtml                 # Lista de proveedores
+│   │   ├── Create.cshtml                # Crear proveedor
+│   │   ├── Edit.cshtml                  # Editar proveedor
+│   │   ├── Details.cshtml               # Detalles del proveedor
+│   │   └── Delete.cshtml                # Eliminar proveedor
+│   │
+│   ├── Shared/                          # Vistas compartidas
+│   │   ├── _Layout.cshtml              # Layout principal
+│   │   ├── _Layout.cshtml.css          # Estilos del layout
+│   │   ├── _ValidationScriptsPartial.cshtml  # Scripts de validación
+│   │   └── Error.cshtml                 # Página de error
+│   │
+│   ├── Usuarios/                        # Gestión de usuarios (admin)
+│   │   ├── Index.cshtml                 # Lista de usuarios
+│   │   ├── Create.cshtml                # Crear usuario
+│   │   ├── Edit.cshtml                  # Editar usuario
+│   │   ├── Details.cshtml               # Detalles del usuario
+│   │   └── Delete.cshtml                # Eliminar usuario
+│   │
+│   ├── Vendedor/                        # Panel del vendedor
+│   │   └── Dashboard.cshtml             # Dashboard personalizado
+│   │
+│   └── Ventas/                          # Gestión de ventas
+│       ├── Index.cshtml                  # Lista de ventas
+│       ├── Create.cshtml                 # Crear venta
+│       ├── Edit.cshtml                   # Editar venta
+│       └── Details.cshtml                # Detalles de venta + descarga PDF
 │
-├── Data/                    # Contexto de base de datos
-│   └── ApplicationDbContext.cs
+├── Data/                                 # Acceso a datos
+│   └── ApplicationDbContext.cs          # Contexto de Entity Framework
+│                                         #   - Configuración de DbContext
+│                                         #   - DbSets para todas las entidades
 │
-├── Database/                # Scripts SQL
-│   ├── sifra_db.sql         # Creación de BD
-│   ├── Datos_Prueba.sql     # Datos de prueba
-│   └── Usuarios_Prueba.md   # Documentación usuarios
+├── Database/                             # Scripts y datos de base de datos
+│   ├── sifra_db.sql                     # Script de creación de BD
+│   │                                     #   - Estructura de tablas
+│   │                                     #   - Relaciones y claves foráneas
+│   │                                     #   - Índices y constraints
+│   ├── Datos_Prueba.sql                 # Datos de prueba
+│   │                                     #   - Usuarios de prueba
+│   │                                     #   - Productos de ejemplo
+│   │                                     #   - Ventas de ejemplo
+│   ├── Usuarios_Prueba.md               # Documentación de usuarios de prueba
+│   └── README.md                         # Documentación de la base de datos
 │
-├── wwwroot/                 # Archivos estáticos
-│   ├── css/                 # Estilos personalizados
-│   ├── js/                  # JavaScript
-│   └── uploads/ci/          # Fotos de CI subidas
+├── Properties/                           # Configuración del proyecto
+│   └── launchSettings.json              # Configuración de ejecución
+│                                         #   - Perfiles de ejecución
+│                                         #   - URLs y puertos
 │
-├── Program.cs               # Configuración de la aplicación
-├── appsettings.json         # Configuración
-└── README.md                # Este archivo
+├── wwwroot/                              # Archivos estáticos (servidos directamente)
+│   ├── css/                              # Hojas de estilo
+│   │   └── site.css                      # Estilos personalizados
+│   │                                     #   - Variables CSS
+│   │                                     #   - Estilos responsive
+│   │                                     #   - Modales y componentes
+│   │
+│   ├── js/                               # Scripts JavaScript
+│   │   └── site.js                       # Scripts personalizados
+│   │                                     #   - Manejo de modales
+│   │                                     #   - Validación de formularios
+│   │                                     #   - Interactividad general
+│   │
+│   ├── lib/                              # Librerías de terceros
+│   │   ├── bootstrap/                    # Bootstrap 5
+│   │   ├── jquery/                       # jQuery
+│   │   ├── jquery-validation/            # Validación de formularios
+│   │   └── jquery-validation-unobtrusive/ # Validación no intrusiva
+│   │
+│   ├── uploads/                          # Archivos subidos por usuarios
+│   │   └── ci/                           # Fotos de Cédula de Identidad
+│   │                                     #   - Generadas automáticamente
+│   │                                     #   - Nombres únicos por cliente
+│   │
+│   └── favicon.ico                       # Icono del sitio
+│
+├── Program.cs                            # Punto de entrada de la aplicación
+│                                         #   - Configuración de servicios
+│                                         #   - Middleware pipeline
+│                                         #   - Configuración de sesiones
+│                                         #   - Configuración de Entity Framework
+│
+├── Tienda-Repuestos-Demo.csproj         # Archivo de proyecto
+│                                         #   - Referencias a paquetes NuGet
+│                                         #   - Configuración de compilación
+│
+├── appsettings.json                      # Configuración de la aplicación
+│                                         #   - Cadenas de conexión
+│                                         #   - Configuración de logging
+│
+├── appsettings.Development.json          # Configuración de desarrollo
+│
+├── .gitignore                            # Archivos ignorados por Git
+│
+├── README.md                              # Este archivo (documentación principal)
+│
+└── VISTAS_IMPLEMENTADAS.md               # Documentación de vistas implementadas
 ```
+
+### 📊 Descripción de Componentes Principales
+
+#### Controllers (Controladores)
+Los controladores manejan la lógica de negocio y coordinan entre las vistas y los modelos:
+- **AccountController**: Gestiona autenticación, login, logout y registro de clientes
+- **AdminController**: Dashboard y funciones administrativas del sistema
+- **ClienteController**: Portal completo del cliente (e-commerce) con todas sus funcionalidades
+- **ProductosController**: Gestión de productos y catálogo público
+- **VentasController**: Gestión de ventas y generación de comprobantes PDF
+
+#### Models (Modelos)
+Representan las entidades de la base de datos:
+- Cada modelo corresponde a una tabla en MySQL
+- Incluyen validaciones con Data Annotations
+- Definen relaciones entre entidades
+
+#### Views (Vistas)
+Interfaz de usuario construida con Razor Pages:
+- **Vistas compartidas**: Layout común, scripts de validación
+- **Vistas por rol**: Cada rol tiene vistas específicas
+- **Vistas responsive**: Adaptadas para móvil, tablet y desktop
+
+#### Data (Acceso a Datos)
+- **ApplicationDbContext**: Configuración de Entity Framework Core
+- Define DbSets para todas las entidades
+- Configuración de relaciones y mapeo a MySQL
+
+#### wwwroot (Archivos Estáticos)
+- **CSS**: Estilos personalizados con variables CSS y diseño responsive
+- **JavaScript**: Scripts para interactividad, modales y validaciones
+- **Librerías**: Bootstrap 5, jQuery y plugins de validación
+- **Uploads**: Almacenamiento de archivos subidos (fotos de CI)
+
+#### Database (Base de Datos)
+- **sifra_db.sql**: Script completo de creación de la base de datos
+- **Datos_Prueba.sql**: Datos iniciales para pruebas y desarrollo
+- Incluye estructura de tablas, relaciones y datos de ejemplo
 
 ---
 
